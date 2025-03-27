@@ -53,7 +53,7 @@
                 </h2>
                 <p class="reveal-text">
                   <span class="text-line">To initiate your project,</span>
-                  <span class="text-line">our base packages start at 90,000 PHP</span>
+                  <span class="text-line">our base packages start at 150,000 PHP</span>
                   <span class="text-line email-container">
                     <NuxtLink to="/contact" class="modern-button">Book a 15 min meeting today</NuxtLink>
                   </span>
