@@ -1,0 +1,562 @@
+<template>
+    <div>
+      <PageTransition v-if="showLoadingScreen" @finished="handleLoadingFinished" />
+  
+      <div v-show="!showLoadingScreen" class="main-container">
+        <div class="main">
+          <div class="left-box">
+            <client-only>
+              <spline-viewer url="https://prod.spline.design/9Iyv-ENrpxDILmsu/scene.splinecode"></spline-viewer>
+            </client-only>
+          </div>
+          <div class="right-box" data-lenis-prevent>
+            <div class="section section-1">
+              <div class="content">
+                <h1 class="reveal-text">
+                  <span class="text-line">web development studio</span>
+                </h1>
+                <p class="reveal-text">
+                  <span class="text-line">Your website should do more than just exist. It should turn</span>
+                  <span class="text-line">visitors into customers. MorrowLab builds high-performing</span>
+                  <span class="text-line">websites with fluid animations, immersive 3D elements,</span>
+                  <span class="text-line">and impactful branding. Designed to captivate and built to</span>
+                  <span class="text-line">last for years.</span>
+                </p>
+               
+                <!-- Added scroll down indicator with character span wrapping -->
+                <div class="scroll-down-indicator" id="scroll-indicator">
+                  <!-- Characters will be inserted via JS -->
+                </div>
+              </div>
+            </div>
+            <div class="section section-2">
+              <div class="content">
+                <h1 class="reveal-text">
+                  <span class="text-line">front-end development services</span>
+                </h1>
+                <div class="services-list">
+                  <h3 class="reveal-text hover-animate"><span class="text-line">Art Direction</span></h3>
+                  <h3 class="reveal-text hover-animate"><span class="text-line">Intuitive UI/UX Design</span></h3>
+                  <h3 class="reveal-text hover-animate"><span class="text-line">Brand Identity & Strategy</span></h3>
+                  <h3 class="reveal-text hover-animate"><span class="text-line">User-Centric Mobile Design</span></h3>
+                  <h3 class="reveal-text hover-animate"><span class="text-line">2D/3D Animations & Motion Graphics</span></h3>
+                  <h3 class="reveal-text hover-animate"><span class="text-line">Modern Website Design & Development</span></h3>
+                  <h3 class="reveal-text app hover-animate"><span class="text-line">App Development - Available Soon</span></h3>
+                </div>
+              </div>
+            </div>
+            <div class="section section-3">
+              <div class="content">
+                <h2 class="reveal-text">
+                  <span class="text-line">pricing | project rates</span>
+                </h2>
+                <p class="reveal-text">
+                  <span class="text-line">To initiate your project,</span>
+                  <span class="text-line">our base packages start at 150,000 PHP</span>
+                  <span class="text-line email-container">
+                    <NuxtLink to="/contact" class="modern-button">Book a 15 min meeting today</NuxtLink>
+                  </span>
+                </p>
+              </div>
+            </div>
+           
+            <!-- Move Footer inside the right-box for mobile -->
+            <div class="mobile-footer">
+              <Footer />
+            </div>
+          </div>
+        </div>
+  
+        <!-- Desktop Footer, hidden on mobile -->
+        <div class="desktop-footer">
+          <Footer />
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref, onMounted } from "vue";
+  import PageTransition from "@/components/PageTransition.vue";
+  import Footer from "@/components/Footer.vue";
+  import gsap from "gsap";
+  
+  const showLoadingScreen = ref(true);
+  
+  const handleLoadingFinished = () => {
+    showLoadingScreen.value = false;
+  };
+  
+  onMounted(() => {
+    // Set up letter-by-letter scroll down indicator animation
+    const scrollIndicator = document.getElementById('scroll-indicator');
+    const scrollText = "Scroll Down";
+   
+    if (scrollIndicator) {
+      // Split text into individual characters and wrap each in a span
+      scrollIndicator.innerHTML = '';
+      for (let i = 0; i < scrollText.length; i++) {
+        const charSpan = document.createElement('span');
+        charSpan.classList.add('scroll-char');
+        charSpan.textContent = scrollText[i];
+        scrollIndicator.appendChild(charSpan);
+      }
+     
+      const characters = scrollIndicator.querySelectorAll('.scroll-char');
+     
+      // Create a staggered animation for each character
+      gsap.fromTo(characters,
+        { opacity: 0.3 },
+        {
+          opacity: 1,
+          stagger: {
+            each: 0.1,
+            repeat: -1,
+            yoyo: true
+          },
+          duration: 0.8,
+          ease: "power1.inOut"
+        }
+      );
+     
+      // Make the indicator fade out when scrolling down
+      const rightBox = document.querySelector('.right-box');
+      if (rightBox) {
+        rightBox.addEventListener('scroll', () => {
+          if (rightBox.scrollTop > 50) {
+            gsap.to(scrollIndicator, {
+              opacity: 0,
+              duration: 0.5,
+              ease: "power2.out"
+            });
+          } else {
+            gsap.to(scrollIndicator, {
+              opacity: 1,
+              duration: 0.5,
+              ease: "power2.in"
+            });
+          }
+        });
+      }
+    }
+  
+    // Set up hover animations for h3 elements only
+    const h3Elements = document.querySelectorAll('.hover-animate');
+   
+    h3Elements.forEach(el => {
+      const textLine = el.querySelector('.text-line');
+     
+      el.addEventListener('mouseenter', () => {
+        gsap.fromTo(textLine,
+          {
+            y: "0%",
+            opacity: 1,
+          },
+          {
+            y: "100%",
+            opacity: 0,
+            rotationX: -20,
+            transformOrigin: "0% 50% -50",
+            duration: 0.4,
+            ease: "power3.out",
+            onComplete: () => {
+              gsap.fromTo(textLine,
+                {
+                  y: "100%",
+                  opacity: 0,
+                  rotationX: -20,
+                  transformOrigin: "0% 50% -50",
+                },
+                {
+                  y: "0%",
+                  opacity: 1,
+                  rotationX: 0,
+                  duration: 0.5,
+                  ease: "power3.out"
+                }
+              );
+            }
+          }
+        );
+      });
+    });
+  
+    // Set up GSAP animations when elements come into view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const textLines = entry.target.querySelectorAll('.text-line');
+         
+          // Clear any existing animations
+          gsap.killTweensOf(textLines);
+         
+          // Modern text reveal animation
+          gsap.fromTo(textLines,
+            {
+              y: "100%",
+              opacity: 0,
+              rotationX: -20,
+              transformOrigin: "0% 50% -50",
+            },
+            {
+              y: "0%",
+              opacity: 1,
+              rotationX: 0,
+              stagger: 0.08,
+              duration: 0.85,
+              ease: "power3.out",
+              onComplete: () => observer.unobserve(entry.target)
+            }
+          );
+        }
+      });
+    }, { threshold: 0.15 });
+  
+    // Apply to all reveal-text elements
+    document.querySelectorAll('.reveal-text').forEach(el => {
+      observer.observe(el);
+    });
+  });
+  
+  // SEO
+  useHead({
+    title: 'Services | Web development in the Philippines',
+    meta: [
+      { name: 'description', 
+        content: 'High-end web design, immersive 3D animations, professional React and Nuxt, websites, and front-end web and app solutions tailored for premium brands looking for innovative digital transformation.' }
+    ]
+  })
+  </script>
+  
+  <style scoped>
+  /* Main container to help with footer positioning */
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .main {
+    display: flex;
+    height: 100dvh;
+    flex: 1;
+  }
+  
+  h1,
+  h2,
+  h3,
+  p {
+    font-family: 'Geist', sans-serif;
+    letter-spacing: -0.03em;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1,
+  h2 {
+    font-weight: 400;
+    font-size: 1rem;
+    padding-bottom: 20px;
+  }
+  
+  h3 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 0.5em;
+    cursor: pointer;
+  }
+  
+  p {
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+  
+  .app {
+    opacity: 0.3;
+  }
+  
+  .left-box {
+    flex: 1;
+    background-color: #fdfdfd;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+  
+  .right-box {
+    flex: 1;
+    margin-left: 50%;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+  
+  .section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    scroll-snap-align: start;
+  }
+  
+  .content {
+    max-width: 800px;
+  }
+  
+  .section-1 {
+    background-color: white;
+    padding-left: 40px;
+    padding-right: 180px;
+    position: relative; /* Added for scroll indicator positioning */
+  }
+  
+  .section-2 {
+    background-color: white;
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+  
+  .section-2 .content {
+    margin-left: auto;
+    text-align: right;
+  }
+  
+  .section-3 {
+    background-color: white;
+    padding-left: 40px;
+    padding-right: 180px;
+  }
+  
+  /* Modern text animation styles */
+  .reveal-text {
+    overflow: hidden;
+    display: block;
+    margin-bottom: 0.2em;
+  }
+  
+  .text-line {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(100%);
+    padding-right: 0.1em;
+  }
+  
+  /* Removed h2 hover effect specific styling */
+  .h2-hover-effect {
+    overflow: hidden;
+    display: inline-block;
+  }
+  
+  .services-list .reveal-text {
+    margin-bottom: 0.2em;
+  }
+  
+  /* Modern button styling */
+  .modern-button {
+    display: inline-block;
+    background-color: #000;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    transition: all 0.3s ease;
+    border: 1px solid #000;
+  }
+  
+  .modern-button:hover {
+    background-color: #fff;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Adjust email container for button */
+  .email-container {
+    display: block;
+    margin-top: 30px;
+  }
+  
+  /* Footer styling - Desktop vs Mobile */
+  .mobile-footer {
+    display: none; /* Hidden by default on desktop */
+  }
+  
+  .desktop-footer {
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Scroll down indicator styling */
+  .scroll-down-indicator {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    font-family: 'Geist', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  
+  .scroll-char {
+    display: inline-block;
+    opacity: 0.3;
+  }
+  
+  /* Mobile Optimization - Updated based on flightpro.vue approach */
+  @media screen and (max-width: 768px) {
+    .main {
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
+    }
+   
+    .left-box {
+      position: fixed;
+      width: 100%;
+      height: 50dvh;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+   
+    .right-box {
+      position: absolute;
+      top: 50dvh;
+      left: 0;
+      margin-left: 0;
+      width: 100%;
+      height: 50dvh;
+      overflow-y: auto;
+      padding-bottom: 0; /* Remove padding to fit the footer */
+    }
+   
+    .section {
+      min-height: 50dvh;
+      height: auto;
+      padding: 30px 20px;
+      box-sizing: border-box;
+      scroll-snap-align: start;
+    }
+   
+    .section-1, .section-2, .section-3 {
+      padding: 30px 20px;
+    }
+   
+    .section-2 .content {
+      text-align: right;
+      margin-left: auto;
+    }
+   
+    h1, h2 {
+      font-size: 0.9rem;
+      padding-bottom: 15px;
+    }
+   
+    h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.4em;
+    }
+   
+    p {
+      font-size: 1.5rem;
+      line-height: 1.4;
+    }
+   
+    /* Make text-line in paragraphs responsive */
+    p .text-line {
+      display: inline;
+      width: 100%;
+    }
+   
+    .scroll-down-indicator {
+      bottom: 15px;
+      right: 15px;
+    }
+   
+    /* Apply max-width to sections to prevent text overflow */
+    .section .content {
+      max-width: 100%;
+      width: 100%;
+    }
+   
+    /* Footer fixes for mobile */
+    .desktop-footer {
+      display: none; /* Hide desktop footer on mobile */
+    }
+   
+    .mobile-footer {
+      display: block; /* Show mobile footer */
+      width: 100%;
+      min-height: 100px; /* Give enough space for footer content */
+      scroll-snap-align: start;
+      position: relative;
+      z-index: 5;
+    }
+   
+    .modern-button {
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+  }
+  
+  
+  /* Small Mobile Devices */
+  @media screen and (max-width: 480px) {
+    h3 {
+      font-size: 1rem;
+    }
+   
+    p {
+      font-size: 0.8rem;
+    }
+   
+    h1, h2 {
+      font-size: 0.8rem;
+    }
+   
+    .section {
+      padding: 20px 15px;
+    }
+   
+    .section-1, .section-2, .section-3 {
+      padding: 20px 15px;
+    }
+   
+    /* Ensure text doesn't overflow on very small screens */
+    .section .content {
+      max-width: 100%;
+    }
+   
+    /* Make paragraph text more readable on small screens */
+    p .text-line {
+      display: inline;
+      padding-right: 0.2em;
+    }
+   
+    .modern-button {
+      display: block;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      width: 100%;
+      text-align: center;
+      margin-top: 20px;
+      border-radius: 10px;
+      max-width: fit-content;
+    }
+  }
+  </style>
