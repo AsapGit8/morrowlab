@@ -67,7 +67,7 @@ export default defineNuxtConfig({
           description: 'As the Philippines premier web development studio based in Manila and Makati, our top web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands looking for world-class digital expertise locally and internationally.',
         },
         '/services': {
-          title: 'Services | Web development in the Philippines',
+          title: 'Services | Web Development in the Philippines',
           description: 'High-end web design, immersive 3D animations, professional React and Nuxt, websites, and front-end web and app solutions tailored for premium brands looking for innovative digital transformation.',
         },
         '/contact': {
