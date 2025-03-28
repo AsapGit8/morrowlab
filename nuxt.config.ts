@@ -63,7 +63,7 @@ export default defineNuxtConfig({
       },
       routeSettings: {
         '/': {
-          title: 'MORROWLAB | Web Development Studio in the Philippines',
+          title: 'MORROWLAB | Web Development Studio Philippines',
           description: 'As the Philippines premier web development studio based in Manila and Makati, our top web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands looking for world-class digital expertise locally and internationally.',
         },
         '/services': {
