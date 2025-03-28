@@ -128,7 +128,7 @@ onMounted(() => {
 
 // SEO
 useHead({
-  title: 'MORROWLAB | Web Development Studio in the Philippines',
+  title: 'MORROWLAB | Web Development Studio Philippines',
   meta: [
     {
       name: 'description',
