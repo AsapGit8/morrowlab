@@ -220,7 +220,7 @@
   
   // SEO
   useHead({
-    title: 'Services | Web development in the Philippines',
+    title: 'Services | Web Development in the Philippines',
     meta: [
       { name: 'description', 
         content: 'High-end web design, immersive 3D animations, professional React and Nuxt, websites, and front-end web and app solutions tailored for premium brands looking for innovative digital transformation.' }
