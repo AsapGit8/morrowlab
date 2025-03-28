@@ -63,8 +63,8 @@ export default defineNuxtConfig({
       },
       routeSettings: {
         '/': {
-          title: 'MORROWLAB | Web Development Studio Philippines',
-          description: 'As the Philippines premier web development studio based in Manila and Makati, our top web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands looking for world-class digital expertise locally and internationally.',
+          title: 'MorrowLab | Web Development and Design Studio in the Philippines',
+          description: 'The leading web development and design studio in the Philippines, based in Manila and Makati. Our expert web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands seeking world-class digital expertise locally and internationally.',
         },
         '/services': {
           title: 'Services | Web Development in the Philippines',
@@ -104,8 +104,8 @@ export default defineNuxtConfig({
     // 6. Meta Module
     meta: {
       // @ts-ignore
-      name: 'MORROWLAB | Web Development Studio Philippines',
-      description: 'As the Philippines premier web development studio based in Manila and Makati, our top web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands looking for world-class digital expertise locally and internationally.',
+      name: 'MorrowLab | Web Development and Design Studio in the Philippines',
+      description: 'The leading web development and design studio in the Philippines, based in Manila and Makati. Our expert web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands seeking world-class digital expertise locally and internationally.',
       keywords: 'web development Philippines, web and app services, web developers Manila, website design',
       author: 'MorrowLab Studio',
       ogImage: {
@@ -113,7 +113,7 @@ export default defineNuxtConfig({
         width: 1200,
         height: 630,
         type: 'image/jpeg',
-        alt: 'MORROWLAB | Web Development Studio in the Philippines',
+        alt: 'MorrowLab | Web Development and Design Studio in the Philippines',
       }
     }
   }
