@@ -128,12 +128,12 @@ onMounted(() => {
 
 // SEO
 useHead({
-  title: 'MORROWLAB | Web Development Studio Philippines',
+  title: 'Web Development and Design Studio Philippines',
   meta: [
     {
       name: 'description',
       content:
-        'As the Philippines premier web development studio based in Manila and Makati, our top web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands looking for world-class digital expertise locally and internationally.',
+        'The leading web development and design studio in the Philippines, based in Manila and Makati, our expert web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands seeking world-class digital expertise locally and internationally.',
     },
   ],
 });
