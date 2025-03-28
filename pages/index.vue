@@ -128,7 +128,7 @@ onMounted(() => {
 
 // SEO
 useHead({
-  title: 'Web Development and Design Studio Philippines',
+  title: 'MorrowLab | Web Development and Design Studio in the Philippines',
   meta: [
     {
       name: 'description',
