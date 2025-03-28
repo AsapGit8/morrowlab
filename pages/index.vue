@@ -133,7 +133,7 @@ useHead({
     {
       name: 'description',
       content:
-        'The leading web development and design studio in the Philippines, based in Manila and Makati, our expert web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands seeking world-class digital expertise locally and internationally.',
+        'The leading web development and design studio in the Philippines, based in Manila and Makati. Our expert web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands seeking world-class digital expertise locally and internationally.',
     },
   ],
 });
