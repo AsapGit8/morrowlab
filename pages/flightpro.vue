@@ -10,35 +10,30 @@
     <div class="right-box" data-lenis-prevent>
       <div class="section">
         <video ref="firstVideo" class="video" autoplay muted loop playsinline preload="auto">
-          <source src="/fpwebm/fp1.webm" type="video/webm" />
           <source src="/fpmp4/fp1.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
       <div class="section">
         <video class="video" autoplay muted loop playsinline preload="auto">
-          <source src="/fpwebm/fp2.webm" type="video/webm" />
           <source src="/fpmp4/fp2.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
       <div class="section">
         <video class="video" autoplay muted loop playsinline preload="auto">
-          <source src="/fpwebm/fp3.webm" type="video/webm" />
           <source src="/fpmp4/fp3.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
       <div class="section">
         <video class="video" autoplay muted loop playsinline preload="auto">
-          <source src="/fpwebm/fp4.webm" type="video/webm" />
           <source src="/fpmp4/fp4.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
       <div class="section">
         <video class="video" autoplay muted loop playsinline preload="auto">
-          <source src="/fpwebm/fp5.webm" type="video/webm" />
           <source src="/fpmp4/fp5.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
