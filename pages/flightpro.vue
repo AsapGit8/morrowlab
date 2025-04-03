@@ -61,7 +61,7 @@ onMounted(() => {
     $gsap.fromTo(
       firstVideo.value,
       { y: '100%', opacity: 0 },
-      { y: '0%', opacity: 1, duration: 2, ease: 'power2.out' }
+      { y: '0%', opacity: 1, duration: 2, ease: 'power2.out', delay: 0.5 }
     );
   }
 
