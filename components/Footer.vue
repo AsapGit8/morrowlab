@@ -9,7 +9,7 @@
 
       <div class="footer-right">
         <div class="footer-content">
-          <p>Let's connect! We're excited to hear about your project, whether it's a fresh concept, a website refresh, or a collaborative venture. Share your vision, and let's start a conversation. We're passionate about helping you succeed.</p>
+          <p>Let's connect! We're excited to hear about your project, whether it's a fresh concept, a website rebranding, or a collaborative venture. Share your vision, and let's start a conversation. We're passionate about helping you succeed.</p>
           <p>
             <a href="mailto:morrowlabstudio@gmail.com" class="animated-link">morrowlabstudio@gmail.com</a>
           </p>
