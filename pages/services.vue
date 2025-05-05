@@ -16,7 +16,7 @@
           <div class="section section-1">
             <div class="content">
               <h1 class="reveal-text">
-                <span class="text-line">web development studio</span>
+                <span class="text-line">creative web development studio</span>
               </h1>
               <p class="reveal-text">
                 <span class="text-line">Your website should do more than just exist. It should turn</span>
@@ -31,7 +31,23 @@
               </div>
             </div>
           </div>
+
           <div class="section section-2">
+            <div class="content">
+              <h1 class="reveal-text">
+                <span class="text-line">cloud-based web application</span>
+              </h1>
+              <p class="reveal-text">
+                <span class="text-line">Develop powerful and scalable web applications with our</span>
+                <span class="text-line">cloud-first approach. We create modern, secure, and reliable</span>
+                <span class="text-line">digital solutions that integrate effortlessly into your business.</span>
+                <span class="text-line">Partner with us to transform your ideas into exceptional user </span>
+                <span class="text-line">experiences, from concept to launch.</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="section section-3">
             <div class="content">
               <h1 class="reveal-text">
                 <span class="text-line">front-end development services</span>
@@ -43,11 +59,30 @@
                 <h3 class="reveal-text hover-animate"><span class="text-line">User-Centric Mobile Design</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">2D/3D Animations & Motion Graphics</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">Modern Website Design & Development</span></h3>
+                <h3 class="reveal-text app hover-animate"><span class="text-line">App UI Development - Available Soon</span></h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="section section-4">
+            <div class="content">
+              <h1 class="reveal-text">
+                <span class="text-line">back-end development services</span>
+              </h1>
+              <div class="services-list">
+                <h3 class="reveal-text hover-animate"><span class="text-line">API Development</span></h3>
+                <h3 class="reveal-text hover-animate"><span class="text-line">User Authentication Systems</span></h3>
+                <h3 class="reveal-text hover-animate"><span class="text-line">Real-time Database Solutions</span></h3>
+                <h3 class="reveal-text hover-animate"><span class="text-line">Cloud Storage Implementation</span></h3>
+                <h3 class="reveal-text hover-animate"><span class="text-line">Serverless Function Deployment</span></h3>
+                <h3 class="reveal-text hover-animate"><span class="text-line">Database Design & Management</span></h3>
+                <h3 class="reveal-text hover-animate"><span class="text-line">Webhooks & Third-party Integrations</span></h3>
                 <h3 class="reveal-text app hover-animate"><span class="text-line">App Development - Available Soon</span></h3>
               </div>
             </div>
           </div>
-          <div class="section section-3">
+          
+          <div class="section section-5">
             <div class="content">
               <h1 class="reveal-text">
                 <span class="text-line">pricing | project rates</span>
@@ -232,7 +267,7 @@ useHead({
   title: 'Services | Web Development Philippines',
   meta: [
     { name: 'description',
-      content: 'High-end web design, immersive 3D animations, professional React and Nuxt, websites, and front-end web and app solutions tailored for premium brands looking for innovative digital transformation.' }
+      content: 'MorrowLab offers premium web design and development, alongside custom cloud-based web application development for premium brands in the Philippines and beyond. We specialize in immersive 3D websites and scalable solutions for innovative digital transformation.' }
   ]
 })
 </script>
@@ -327,16 +362,33 @@ p {
 
 .section-2 {
   background-color: white;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.section-3 {
+  background-color: white;
   padding-right: 40px;
   padding-left: 40px;
 }
 
-.section-2 .content {
+.section-3 .content {
   margin-left: auto;
   text-align: right;
 }
 
-.section-3 {
+.section-4 {
+  background-color: white;
+  padding-right: 40px;
+  padding-left: 40px;
+}
+
+.section-4 .content {
+  margin-left: auto;
+  text-align: right;
+}
+
+.section-5 {
   background-color: white;
   padding-left: 40px;
   padding-right: 40px;
@@ -449,7 +501,8 @@ p {
     max-width: 400px;
   }
   .section-1,
-  .section-3 {
+  .section-2,
+  .section-5 {
     padding-left: 20px;
     padding-right: 0px;
   }
@@ -491,11 +544,11 @@ p {
     scroll-snap-align: start;
   }
  
-  .section-1, .section-2, .section-3 {
+  .section-1, .section-2, .section-3, .section-4, .section-5 {
     padding: 30px 20px;
   }
  
-  .section-2 .content {
+  .section-3 .content, .section-4 .content {
     text-align: right;
     margin-left: auto;
   }
@@ -569,7 +622,7 @@ p {
     padding: 20px 15px;
   }
  
-  .section-1, .section-2, .section-3 {
+  .section-1, .section-2, .section-3, .section-4, .section-5 {
     padding: 20px 15px;
   }
  
