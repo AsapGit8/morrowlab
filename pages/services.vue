@@ -94,7 +94,7 @@
                 <span class="text-line">our base packages start at 300,000 PHP.</span>
               </p>
               <p class="reveal-text">
-                <span class="text-line">Cloud software development starts at 1.2 Million PHP</span>
+                <span class="text-line">Software Development starts at 1.2 Million PHP</span>
               </p>
               <p class="reveal-text">
                 <span class="text-line email-container">
