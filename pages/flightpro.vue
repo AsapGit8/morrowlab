@@ -1,13 +1,7 @@
 <template>
   <div class="main">
-    <div class="left-box">
-      <div class="left-text">FLIGHTPRO</div>
-      <div ref="leftDescription" class="left-description">
-        FLIGHT PRO is set to revolutionize luxury travel in the Philippines with exclusive helicopter charters for business and leisure. Committed to safety, elegance, and efficiency, it plans to launch its services in the Philippines next year, offering seamless transfers and breathtaking aerial tours.
-      </div>
-    </div>
     <!-- Add data-lenis-prevent to tell Lenis to not handle this element's scrolling -->
-    <div class="right-box" data-lenis-prevent>
+    <div class="left-box" data-lenis-prevent>
       <div class="section">
         <video ref="firstVideo" class="video" autoplay muted loop playsinline preload="auto">
           <source src="/fpmp4/fp1.mp4" type="video/mp4" />
@@ -44,6 +38,12 @@
         <!-- Characters will be inserted via JS -->
       </div>
     </div>
+    <div class="right-box">
+      <div class="right-text">FLIGHTPRO</div>
+      <div ref="rightDescription" class="right-description">
+        FLIGHT PRO is set to revolutionize luxury travel in the Philippines with exclusive helicopter charters for business and leisure. Committed to safety, elegance, and efficiency, it plans to launch its services in the Philippines next year, offering seamless transfers and breathtaking aerial tours.
+      </div>
+    </div>
   </div>
 </template>
 
@@ -53,7 +53,7 @@ import { useNuxtApp } from '#app';
 
 const { $gsap } = useNuxtApp();
 const firstVideo = ref(null);
-const leftDescription = ref(null);
+const rightDescription = ref(null);
 
 onMounted(() => {
   // Ensure the video element is loaded before animating
@@ -65,10 +65,10 @@ onMounted(() => {
     );
   }
 
-  // Animate the left description text
-  if (leftDescription.value) {
+  // Animate the right description text
+  if (rightDescription.value) {
     $gsap.fromTo(
-      leftDescription.value,
+      rightDescription.value,
       { opacity: 0, y: 20 },
       { opacity: 1, y: 0, duration: 1.5, ease: 'power2.out', delay: 0.5 }
     );
@@ -107,10 +107,10 @@ onMounted(() => {
     );
 
     // Make the indicator fade out when scrolling down
-    const rightBox = document.querySelector('.right-box');
-    if (rightBox) {
-      rightBox.addEventListener('scroll', () => {
-        if (rightBox.scrollTop > 50) {
+    const leftBox = document.querySelector('.left-box');
+    if (leftBox) {
+      leftBox.addEventListener('scroll', () => {
+        if (leftBox.scrollTop > 50) {
           $gsap.to(scrollIndicator, {
             opacity: 0,
             duration: 0.5,
@@ -150,10 +150,19 @@ useHead({
 
 .left-box {
   flex: 1;
+  margin-right: 50%;
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  position: relative;
+}
+
+.right-box {
+  flex: 1;
   background-color: white;
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   bottom: 0;
   width: 50%;
   display: flex;
@@ -161,15 +170,6 @@ useHead({
   justify-content: center;
   align-items: center;
   text-align: center;
-}
-
-.right-box {
-  flex: 1;
-  margin-left: 50%;
-  height: 100dvh;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  position: relative; /* Added for scroll indicator positioning */
 }
 
 .section {
@@ -194,17 +194,17 @@ useHead({
   text-align: center;
 }
 
-.left-text {
+.right-text {
   position: absolute;
   bottom: 15px;
-  left: 20px;
+  right: 20px;
   font-size: 3rem;
   font-weight: 600;
   font-family: 'Geist', sans-serif;
   color: black;
 }
 
-.left-description {
+.right-description {
   max-width: 600px;
   font-size: 1rem;
   font-family: 'Geist', sans-serif;
@@ -217,7 +217,7 @@ useHead({
 .scroll-down-indicator {
   position: fixed;
   bottom: 40px;
-  right: 40px;
+  left: 40px;
   font-family: 'Geist', sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
@@ -241,39 +241,39 @@ useHead({
     overflow: hidden;
   }
 
-  .left-box {
+  .right-box {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 50svh; /* Exactly half of the viewport height */
+    height: 50svh;
     z-index: 10;
     justify-content: center;
     padding: 0 20px;
   }
 
-  .right-box {
+  .left-box {
     position: absolute;
-    top: 50svh; /* Start from exactly half of the viewport height */
+    top: 50svh;
     left: 0;
-    margin-left: 0;
+    margin-right: 0;
     width: 100%;
-    height: 50svh; /* Exactly half of the viewport height */
+    height: 50svh;
   }
 
   .section {
-    height: 50svh; /* Each section is half of viewport height */
+    height: 50svh;
   }
 
-  .left-text {
+  .right-text {
     position: absolute;
-    bottom: 15px; /* Keep at bottom of left box */
-    left: 20px;
-    font-size: 2.5rem; /* Smaller text size */
+    bottom: 15px;
+    right: 20px;
+    font-size: 2.5rem;
   }
 
-  .left-description {
-    font-size: 0.85rem; /* Smaller text for description */
+  .right-description {
+    font-size: 0.85rem;
     padding: 0 30px 0 0;
     max-width: 100%;
     overflow-y: auto;
@@ -288,18 +288,18 @@ useHead({
 
   .scroll-down-indicator {
     bottom: 15px;
-    right: 15px;
+    left: 15px;
   }
 }
 
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
-  .left-text {
-    font-size: 2rem; /* Even smaller on small devices */
+  .right-text {
+    font-size: 2rem;
   }
 
-  .left-description {
-    font-size: 0.8rem; /* Smaller text on small devices */
+  .right-description {
+    font-size: 0.8rem;
   }
 }
 </style>
