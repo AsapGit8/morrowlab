@@ -9,48 +9,104 @@
 
     <!-- Main Content (Initially Hidden) -->
     <div v-show="!showLoadingScreen" ref="mainContent" class="main-container">
-      <!-- DALIBOOK Section -->
-      <div class="main section-dalibook" ref="dalibookSection">
-        <div class="left-box">
-          <div class="left-text">DALIBOOK</div>
+      <!-- Desktop Layout -->
+      <div class="desktop-layout">
+        <!-- DALIBOOK Section -->
+        <div class="main section-dalibook">
+          <div class="left-box">
+            <div class="left-text">DALIBOOK</div>
+          </div>
+          <div class="right-box" @click="() => handleSplineClick('/dalibook')">
+            <client-only>
+              <spline-viewer
+                v-if="isSplineLoaded"
+                ref="dalibookSplineViewer"
+                url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
+              ></spline-viewer>
+            </client-only>
+            <div class="hover-text">View Project</div>
+          </div>
         </div>
-        <div class="right-box" @click="() => handleSplineClick('/dalibook')">
-          <client-only>
-            <spline-viewer
-              v-if="isSplineLoaded"
-              ref="dalibookSplineViewer"
-              url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
-            ></spline-viewer>
-          </client-only>
-          <div class="hover-text">View Project</div>
+
+        <!-- FLIGHTPRO Section -->
+        <div class="main section-flightpro">
+          <div class="left-box spline-box" @click="() => handleSplineClick('/flightpro')">
+            <client-only>
+              <spline-viewer
+                v-if="isSplineLoaded"
+                ref="flightproSplineViewer"
+                url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
+              ></spline-viewer>
+            </client-only>
+            <div class="hover-text">View Project</div>
+          </div>
+          <div class="right-box text-box">
+            <div class="right-text">FLIGHTPRO</div>
+          </div>
         </div>
       </div>
 
-      <!-- FLIGHTPRO Section -->
-      <div class="main section-flightpro" ref="flightproSection">
-        <div class="left-box spline-box" @click="() => handleSplineClick('/flightpro')">
-          <client-only>
-            <spline-viewer
-              v-if="isSplineLoaded"
-              ref="flightproSplineViewer"
-              url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
-            ></spline-viewer>
-          </client-only>
-          <div class="hover-text">View Project</div>
+      <!-- Mobile Layout -->
+      <div class="mobile-layout" ref="mobileLayout">
+        <!-- Mobile scroll container -->
+        <div class="mobile-scroll-container" ref="mobileScrollContainer" data-lenis-prevent>
+          <div class="scroll-content">
+            <div class="scroll-section"></div>
+            <div class="scroll-section"></div>
+          </div>
         </div>
-        <div class="right-box text-box">
-          <div class="right-text">FLIGHTPRO</div>
+
+        <!-- Current mobile section display -->
+        <div class="mobile-section-display" ref="mobileSectionDisplay">
+          <!-- DALIBOOK Mobile Section -->
+          <div 
+            v-show="currentMobileSection === 0" 
+            class="mobile-section dalibook-mobile"
+            @click="() => handleSplineClick('/dalibook')"
+          >
+            <div class="mobile-top">
+              <div class="mobile-text-left">{{ currentSectionData.leftText }}</div>
+            </div>
+            <div class="mobile-bottom">
+              <client-only>
+                <spline-viewer
+                  v-if="isSplineLoaded && showDalibookSpline"
+                  ref="mobileDalibookSpline"
+                  url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
+                ></spline-viewer>
+              </client-only>
+              <div class="mobile-hover-text">View Project</div>
+            </div>
+          </div>
+
+          <!-- FLIGHTPRO Mobile Section -->
+          <div 
+            v-show="currentMobileSection === 1" 
+            class="mobile-section flightpro-mobile"
+            @click="() => handleSplineClick('/flightpro')"
+          >
+            <div class="mobile-top">
+              <client-only>
+                <spline-viewer
+                  v-if="isSplineLoaded && showFlightproSpline"
+                  ref="mobileFlightproSpline"
+                  url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
+                ></spline-viewer>
+              </client-only>
+              <div class="mobile-hover-text">View Project</div>
+            </div>
+            <div class="mobile-bottom">
+              <div class="mobile-text-right">{{ currentSectionData.rightText }}</div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <!-- Mobile scroll container -->
-      <div class="mobile-scroll-container" ref="mobileScrollContainer" data-lenis-prevent></div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import LoadingScreen from '@/components/LoadingScreen.vue';
 import { useNuxtApp } from '#app';
 import { useRouter } from 'vue-router';
@@ -64,10 +120,30 @@ const flightproSplineViewer = ref(null);
 const isSplineLoaded = ref(false);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
-const dalibookSection = ref(null);
-const flightproSection = ref(null);
 const mobileScrollContainer = ref(null);
-const currentSection = ref(0);
+const mobileSectionDisplay = ref(null);
+const mobileDalibookSpline = ref(null);
+const mobileFlightproSpline = ref(null);
+const currentMobileSection = ref(0);
+const showDalibookSpline = ref(true);
+const showFlightproSpline = ref(false);
+const isTransitioning = ref(false);
+
+// Section data
+const sections = [
+  {
+    leftText: 'DALIBOOK',
+    rightText: '',
+    route: '/dalibook'
+  },
+  {
+    leftText: '',
+    rightText: 'FLIGHTPRO',
+    route: '/flightpro'
+  }
+];
+
+const currentSectionData = computed(() => sections[currentMobileSection.value]);
 
 // Check if device is mobile
 const checkMobile = () => {
@@ -75,7 +151,6 @@ const checkMobile = () => {
 };
 
 const handleLoadingFinished = () => {
-  // Page transition effect (smooth fade-in and slide-up)
   $gsap.fromTo(
     mainContent.value,
     { opacity: 0, y: 50 },
@@ -85,71 +160,121 @@ const handleLoadingFinished = () => {
 };
 
 const handleSplineClick = (route) => {
-  // Add a slight delay for mobile to ensure the touch is intentional
-  const delay = isMobile.value ? 100 : 0;
+  if (isTransitioning.value) return;
 
+  const delay = isMobile.value ? 100 : 0;
+  
   setTimeout(() => {
-    const targetViewer = route === '/dalibook' ? dalibookSplineViewer.value : flightproSplineViewer.value;
+    let targetViewer;
     
-    $gsap.to(targetViewer.$el || targetViewer, {
-      opacity: 0,
-      duration: isMobile.value ? 0.7 : 1, // Slightly faster on mobile
-      ease: 'power2.out',
-      onComplete: () => {
-        // Navigate to the specified route after the fade-out animation
-        router.push(route);
-      },
-    });
+    if (isMobile.value) {
+      targetViewer = currentMobileSection.value === 0 ? mobileDalibookSpline.value : mobileFlightproSpline.value;
+    } else {
+      targetViewer = route === '/dalibook' ? dalibookSplineViewer.value : flightproSplineViewer.value;
+    }
+    
+    if (targetViewer) {
+      $gsap.to(targetViewer.$el || targetViewer, {
+        opacity: 0,
+        duration: isMobile.value ? 0.7 : 1,
+        ease: 'power2.out',
+        onComplete: () => {
+          router.push(route);
+        },
+      });
+    } else {
+      router.push(route);
+    }
   }, delay);
 };
 
-const handleMobileScroll = () => {
-  if (!isMobile.value || !mobileScrollContainer.value) return;
-
-  const container = mobileScrollContainer.value;
-  const scrollProgress = container.scrollTop / container.scrollHeight;
-  
-  // Determine which section should be active based on scroll
-  const newSection = scrollProgress > 0.5 ? 1 : 0;
-  
-  if (newSection !== currentSection.value) {
-    currentSection.value = newSection;
-    
-    // Animate section transitions
-    if (currentSection.value === 0) {
-      // Show DALIBOOK, hide FLIGHTPRO
-      $gsap.to(dalibookSection.value, {
-        y: '0%',
-        opacity: 1,
-        duration: 0.8,
-        ease: 'power2.inOut'
-      });
-      $gsap.to(flightproSection.value, {
-        y: '100%',
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power2.inOut'
-      });
-    } else {
-      // Show FLIGHTPRO, hide DALIBOOK
-      $gsap.to(dalibookSection.value, {
-        y: '-100%',
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power2.inOut'
-      });
-      $gsap.to(flightproSection.value, {
-        y: '0%',
-        opacity: 1,
-        duration: 0.8,
-        ease: 'power2.inOut'
-      });
-    }
+const destroyCurrentSpline = () => {
+  if (currentMobileSection.value === 0) {
+    showDalibookSpline.value = false;
+  } else {
+    showFlightproSpline.value = false;
   }
 };
 
+const createNewSpline = (sectionIndex) => {
+  if (sectionIndex === 0) {
+    showDalibookSpline.value = true;
+  } else {
+    showFlightproSpline.value = true;
+  }
+};
+
+const animateTextTransition = (newSection) => {
+  const display = mobileSectionDisplay.value;
+  
+  return new Promise((resolve) => {
+    // Fade out current section
+    $gsap.to(display, {
+      opacity: 0,
+      duration: 0.4,
+      ease: 'power2.out',
+      onComplete: () => {
+        // Change section
+        currentMobileSection.value = newSection;
+        
+        // Fade in new section
+        $gsap.to(display, {
+          opacity: 1,
+          duration: 0.4,
+          ease: 'power2.out',
+          onComplete: resolve
+        });
+      }
+    });
+  });
+};
+
+const handleMobileScroll = async () => {
+  if (!isMobile.value || !mobileScrollContainer.value || isTransitioning.value) return;
+
+  const container = mobileScrollContainer.value;
+  const scrollTop = container.scrollTop;
+  const scrollHeight = container.scrollHeight - container.clientHeight;
+  const scrollProgress = scrollTop / scrollHeight;
+  
+  const newSection = scrollProgress > 0.5 ? 1 : 0;
+  
+  if (newSection !== currentMobileSection.value) {
+    isTransitioning.value = true;
+    
+    // Destroy current spline
+    destroyCurrentSpline();
+    
+    // Animate text transition
+    await animateTextTransition(newSection);
+    
+    // Wait a brief moment for DOM updates
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Create new spline
+    createNewSpline(newSection);
+    
+    // Wait for spline to load
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    isTransitioning.value = false;
+  }
+};
+
+const setupMobileScrolling = () => {
+  if (!isMobile.value || !mobileScrollContainer.value) return;
+  
+  // Reset to first section
+  currentMobileSection.value = 0;
+  showDalibookSpline.value = true;
+  showFlightproSpline.value = false;
+  
+  // Add scroll listener
+  mobileScrollContainer.value.addEventListener('scroll', handleMobileScroll, { passive: true });
+};
+
 onMounted(() => {
-  // Check for mobile device
   if (process.client) {
     checkMobile();
     window.addEventListener('resize', () => {
@@ -160,9 +285,7 @@ onMounted(() => {
     });
   }
 
-  // Fixed GSAP animation for loading screen
   setTimeout(() => {
-    // Only run the animation if the component is still showing and the ref exists
     if (showLoadingScreen.value && loadingScreenRef.value) {
       const element = loadingScreenRef.value.$el || loadingScreenRef.value;
 
@@ -172,17 +295,15 @@ onMounted(() => {
           duration: 3,
           ease: 'power2.inOut',
           onComplete: () => {
-            showLoadingScreen.value = false; // Only hide after animation
+            showLoadingScreen.value = false;
             handleLoadingFinished();
             
-            // Setup mobile scrolling after loading is complete
             if (isMobile.value) {
               setupMobileScrolling();
             }
           },
         });
       } else {
-        // Fallback in case element is not available
         showLoadingScreen.value = false;
         handleLoadingFinished();
         
@@ -191,13 +312,12 @@ onMounted(() => {
         }
       }
     }
-  }, 1500); // 1.5-second delay for main content
+  }, 1500);
 
-  // Load Spline viewer only on the client-side
   if (process.client) {
     import('@splinetool/viewer')
       .then(() => {
-        isSplineLoaded.value = true; // Enable Spline Viewer rendering
+        isSplineLoaded.value = true;
         console.log('Spline Viewer loaded successfully');
       })
       .catch((err) => {
@@ -205,7 +325,6 @@ onMounted(() => {
       });
   }
 
-  // Optional: Clean up event listener
   return () => {
     if (process.client) {
       window.removeEventListener('resize', checkMobile);
@@ -215,17 +334,6 @@ onMounted(() => {
     }
   };
 });
-
-const setupMobileScrolling = () => {
-  if (!isMobile.value || !mobileScrollContainer.value) return;
-  
-  // Set initial positions for mobile
-  $gsap.set(dalibookSection.value, { y: '0%', opacity: 1 });
-  $gsap.set(flightproSection.value, { y: '100%', opacity: 0 });
-  
-  // Add scroll listener
-  mobileScrollContainer.value.addEventListener('scroll', handleMobileScroll);
-};
 
 // SEO
 useHead({
@@ -244,6 +352,14 @@ useHead({
 .main-container {
   display: flex;
   flex-direction: column;
+}
+
+.desktop-layout {
+  display: block;
+}
+
+.mobile-layout {
+  display: none;
 }
 
 .main {
@@ -270,7 +386,6 @@ useHead({
   position: relative;
 }
 
-/* DALIBOOK Section Styles */
 .section-dalibook .left-box {
   background-color: white;
 }
@@ -284,7 +399,6 @@ useHead({
   position: relative;
 }
 
-/* FLIGHTPRO Section Styles */
 .section-flightpro .spline-box {
   background-color: #fafafa;
   display: flex;
@@ -340,76 +454,21 @@ useHead({
   opacity: 1;
 }
 
-.mobile-scroll-container {
-  display: none;
-}
-
-/* Mobile Optimization */
+/* Mobile Styles */
 @media screen and (max-width: 768px) {
-  .main-container {
+  .desktop-layout {
+    display: none;
+  }
+
+  .mobile-layout {
+    display: block;
     height: 100dvh;
     overflow: hidden;
     position: relative;
   }
 
-  .section-dalibook,
-  .section-flightpro {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100dvh;
-    z-index: 1;
-  }
-
-  .section-flightpro {
-    z-index: 2;
-  }
-
-  .main {
-    flex-direction: column;
-    height: 100dvh;
-  }
- 
-  .left-box, .right-box {
-    flex: none;
-    height: 50dvh;
-  }
- 
-  .left-text {
-    bottom: 15px;
-    left: 20px;
-    font-size: 2.5rem;
-    width: auto;
-    text-align: left;
-    transform: none;
-  }
-
-  .right-text {
-    bottom: 15px;
-    right: 20px;
-    font-size: 2.5rem;
-    width: auto;
-    text-align: right;
-    transform: none;
-  }
- 
-  .hover-text {
-    opacity: 0.8;
-    font-size: 18px;
-    padding: 8px 16px;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 20px;
-  }
- 
-  .right-box,
-  .spline-box {
-    min-height: 200px;
-  }
-
   .mobile-scroll-container {
-    display: block;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -417,25 +476,105 @@ useHead({
     overflow-y: auto;
     z-index: 10;
     background: transparent;
-    pointer-events: auto;
   }
 
-  .mobile-scroll-container::before {
-    content: '';
-    display: block;
+  .scroll-content {
     height: 200dvh;
-    width: 1px;
+    width: 100%;
+  }
+
+  .scroll-section {
+    height: 100dvh;
+    width: 100%;
+  }
+
+  .mobile-section-display {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    z-index: 5;
+  }
+
+  .mobile-section {
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .mobile-top,
+  .mobile-bottom {
+    flex: 1;
+    height: 50dvh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .dalibook-mobile .mobile-top {
+    background-color: white;
+  }
+
+  .dalibook-mobile .mobile-bottom {
+    background-color: #fafafa;
+  }
+
+  .flightpro-mobile .mobile-top {
+    background-color: #fafafa;
+  }
+
+  .flightpro-mobile .mobile-bottom {
+    background-color: white;
+  }
+
+  .mobile-text-left {
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+    font-size: 2.5rem;
+    font-weight: 600;
+    font-family: 'Geist', sans-serif;
+    color: black;
+  }
+
+  .mobile-text-right {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    font-size: 2.5rem;
+    font-weight: 600;
+    font-family: 'Geist', sans-serif;
+    color: black;
+  }
+
+  .mobile-hover-text {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    font-weight: 500;
+    font-family: 'Geist', sans-serif;
+    color: black;
+    opacity: 0.8;
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
   }
 }
 
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
-  .left-text,
-  .right-text {
+  .mobile-text-left,
+  .mobile-text-right {
     font-size: 2rem;
   }
  
-  .hover-text {
+  .mobile-hover-text {
     font-size: 16px;
   }
 }
