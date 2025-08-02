@@ -10,7 +10,7 @@
     <!-- Main Content (Initially Hidden) -->
     <div v-show="!showLoadingScreen" ref="mainContent" class="main-container">
       <!-- DALIBOOK Section -->
-      <div class="main section-dalibook">
+      <div class="main section-dalibook" ref="dalibookSection">
         <div class="left-box">
           <div class="left-text">DALIBOOK</div>
         </div>
@@ -27,7 +27,7 @@
       </div>
 
       <!-- FLIGHTPRO Section -->
-      <div class="main section-flightpro">
+      <div class="main section-flightpro" ref="flightproSection">
         <div class="left-box spline-box" @click="() => handleSplineClick('/flightpro')">
           <client-only>
             <spline-viewer
@@ -42,6 +42,9 @@
           <div class="right-text">FLIGHTPRO</div>
         </div>
       </div>
+
+      <!-- Mobile scroll container -->
+      <div class="mobile-scroll-container" ref="mobileScrollContainer" data-lenis-prevent></div>
     </div>
   </div>
 </template>
@@ -61,6 +64,10 @@ const flightproSplineViewer = ref(null);
 const isSplineLoaded = ref(false);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
+const dalibookSection = ref(null);
+const flightproSection = ref(null);
+const mobileScrollContainer = ref(null);
+const currentSection = ref(0);
 
 // Check if device is mobile
 const checkMobile = () => {
@@ -96,11 +103,61 @@ const handleSplineClick = (route) => {
   }, delay);
 };
 
+const handleMobileScroll = () => {
+  if (!isMobile.value || !mobileScrollContainer.value) return;
+
+  const container = mobileScrollContainer.value;
+  const scrollProgress = container.scrollTop / container.scrollHeight;
+  
+  // Determine which section should be active based on scroll
+  const newSection = scrollProgress > 0.5 ? 1 : 0;
+  
+  if (newSection !== currentSection.value) {
+    currentSection.value = newSection;
+    
+    // Animate section transitions
+    if (currentSection.value === 0) {
+      // Show DALIBOOK, hide FLIGHTPRO
+      $gsap.to(dalibookSection.value, {
+        y: '0%',
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      });
+      $gsap.to(flightproSection.value, {
+        y: '100%',
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      });
+    } else {
+      // Show FLIGHTPRO, hide DALIBOOK
+      $gsap.to(dalibookSection.value, {
+        y: '-100%',
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      });
+      $gsap.to(flightproSection.value, {
+        y: '0%',
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      });
+    }
+  }
+};
+
 onMounted(() => {
   // Check for mobile device
   if (process.client) {
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener('resize', () => {
+      checkMobile();
+      if (isMobile.value) {
+        setupMobileScrolling();
+      }
+    });
   }
 
   // Fixed GSAP animation for loading screen
@@ -117,12 +174,21 @@ onMounted(() => {
           onComplete: () => {
             showLoadingScreen.value = false; // Only hide after animation
             handleLoadingFinished();
+            
+            // Setup mobile scrolling after loading is complete
+            if (isMobile.value) {
+              setupMobileScrolling();
+            }
           },
         });
       } else {
         // Fallback in case element is not available
         showLoadingScreen.value = false;
         handleLoadingFinished();
+        
+        if (isMobile.value) {
+          setupMobileScrolling();
+        }
       }
     }
   }, 1500); // 1.5-second delay for main content
@@ -143,9 +209,23 @@ onMounted(() => {
   return () => {
     if (process.client) {
       window.removeEventListener('resize', checkMobile);
+      if (mobileScrollContainer.value) {
+        mobileScrollContainer.value.removeEventListener('scroll', handleMobileScroll);
+      }
     }
   };
 });
+
+const setupMobileScrolling = () => {
+  if (!isMobile.value || !mobileScrollContainer.value) return;
+  
+  // Set initial positions for mobile
+  $gsap.set(dalibookSection.value, { y: '0%', opacity: 1 });
+  $gsap.set(flightproSection.value, { y: '100%', opacity: 0 });
+  
+  // Add scroll listener
+  mobileScrollContainer.value.addEventListener('scroll', handleMobileScroll);
+};
 
 // SEO
 useHead({
@@ -260,6 +340,10 @@ useHead({
   opacity: 1;
 }
 
+.mobile-scroll-container {
+  display: none;
+}
+
 /* Mobile Optimization */
 @media screen and (max-width: 768px) {
   .main-container {
@@ -280,7 +364,6 @@ useHead({
 
   .section-flightpro {
     z-index: 2;
-    transform: translateY(100dvh);
   }
 
   .main {
@@ -292,33 +375,6 @@ useHead({
     flex: none;
     height: 50dvh;
   }
-
-  /* FLIGHTPRO mobile specific - text on top, spline on bottom */
-  .section-flightpro {
-    flex-direction: column-reverse;
-  }
-
-  .section-flightpro .text-box {
-    order: 1; /* Text box goes to top */
-    background-color: white;
-  }
-
-  .section-flightpro .spline-box {
-    order: 2; /* Spline box goes to bottom */
-    background-color: #fafafa;
-  }
-
-  /* Update text positioning for FLIGHTPRO mobile */
-  .section-flightpro .right-text {
-    position: absolute;
-    bottom: 15px;
-    left: 20px; /* Move to left like DALIBOOK */
-    right: auto;
-    font-size: 2.5rem;
-    width: auto;
-    text-align: left;
-    transform: none;
-  }
  
   .left-text {
     bottom: 15px;
@@ -326,6 +382,15 @@ useHead({
     font-size: 2.5rem;
     width: auto;
     text-align: left;
+    transform: none;
+  }
+
+  .right-text {
+    bottom: 15px;
+    right: 20px;
+    font-size: 2.5rem;
+    width: auto;
+    text-align: right;
     transform: none;
   }
  
@@ -342,30 +407,31 @@ useHead({
     min-height: 200px;
   }
 
-  /* Mobile scroll behavior - sections change on scroll */
-  .main-container {
-    height: 200dvh; /* Double height for two sections */
+  .mobile-scroll-container {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
     overflow-y: auto;
+    z-index: 10;
+    background: transparent;
+    pointer-events: auto;
   }
 
-  /* When scrolling, transform the sections */
-  .section-dalibook {
-    position: fixed;
-    top: 0;
-    transition: transform 0.3s ease;
-  }
-
-  .section-flightpro {
-    position: fixed;
-    top: 0;
-    transition: transform 0.3s ease;
+  .mobile-scroll-container::before {
+    content: '';
+    display: block;
+    height: 200dvh;
+    width: 1px;
   }
 }
 
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
   .left-text,
-  .section-flightpro .right-text {
+  .right-text {
     font-size: 2rem;
   }
  
