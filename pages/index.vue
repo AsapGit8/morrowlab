@@ -54,10 +54,18 @@
           </div>
           <div class="mobile-lower-div" @click="() => handleSplineClick(currentProject.route)">
             <client-only>
+              <!-- DALIBOOK Spline Viewer -->
               <spline-viewer
-                v-if="isSplineLoaded"
-                ref="currentSplineViewer"
-                :url="currentProject.splineUrl"
+                v-if="isSplineLoaded && currentProjectIndex === 0"
+                ref="mobiledalibookSplineViewer"
+                url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
+              ></spline-viewer>
+              
+              <!-- FLIGHTPRO Spline Viewer -->
+              <spline-viewer
+                v-if="isSplineLoaded && currentProjectIndex === 1"
+                ref="mobileflightproSplineViewer"
+                url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
               ></spline-viewer>
             </client-only>
             <div class="hover-text">View Project</div>
@@ -69,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, reactive } from 'vue';
+import { ref, onMounted, computed, nextTick } from 'vue';
 import LoadingScreen from '@/components/LoadingScreen.vue';
 import { useNuxtApp } from '#app';
 import { useRouter } from 'vue-router';
@@ -80,7 +88,8 @@ const showLoadingScreen = ref(true);
 const mainContent = ref(null);
 const dalibookSplineViewer = ref(null);
 const flightproSplineViewer = ref(null);
-const currentSplineViewer = ref(null);
+const mobiledalibookSplineViewer = ref(null);
+const mobileflightproSplineViewer = ref(null);
 const isSplineLoaded = ref(false);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
@@ -105,6 +114,15 @@ const projects = [
 
 const currentProject = computed(() => projects[currentProjectIndex.value]);
 
+// Get current mobile spline viewer
+const getCurrentMobileSplineViewer = () => {
+  if (currentProjectIndex.value === 0) {
+    return mobiledalibookSplineViewer.value;
+  } else {
+    return mobileflightproSplineViewer.value;
+  }
+};
+
 // Check if device is mobile
 const checkMobile = () => {
   isMobile.value = window.innerWidth <= 768;
@@ -128,50 +146,70 @@ const handleSplineClick = (route) => {
     let targetViewer;
     
     if (isMobile.value) {
-      targetViewer = currentSplineViewer.value;
+      targetViewer = getCurrentMobileSplineViewer();
     } else {
       targetViewer = route === '/dalibook' ? dalibookSplineViewer.value : flightproSplineViewer.value;
     }
     
-    $gsap.to(targetViewer.$el || targetViewer, {
-      opacity: 0,
-      duration: isMobile.value ? 0.7 : 1,
-      ease: 'power2.out',
-      onComplete: () => {
-        router.push(route);
-      },
-    });
+    const element = targetViewer?.$el || targetViewer;
+    if (element) {
+      $gsap.to(element, {
+        opacity: 0,
+        duration: isMobile.value ? 0.7 : 1,
+        ease: 'power2.out',
+        onComplete: () => {
+          router.push(route);
+        },
+      });
+    }
   }, delay);
 };
 
 const transitionToNextProject = () => {
   if (!isMobile.value) return;
 
-  const nextIndex = (currentProjectIndex.value + 1) % projects.length;
-  const nextProject = projects[nextIndex];
+  const currentSplineViewer = getCurrentMobileSplineViewer();
+  const currentSplineElement = currentSplineViewer?.$el || currentSplineViewer;
 
-  // Fade out current content
-  $gsap.to([mobileText.value, currentSplineViewer.value?.$el || currentSplineViewer.value], {
+  // Fade out current content (text and spline)
+  const elementsToFadeOut = [mobileText.value];
+  if (currentSplineElement) {
+    elementsToFadeOut.push(currentSplineElement);
+  }
+
+  $gsap.to(elementsToFadeOut, {
     opacity: 0,
     y: -20,
     duration: 0.4,
     ease: 'power2.out',
     onComplete: () => {
-      // Update project index and content
-      currentProjectIndex.value = nextIndex;
+      // Update project index
+      currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
       
-      // Reset position and fade in new content
-      $gsap.set([mobileText.value, currentSplineViewer.value?.$el || currentSplineViewer.value], {
-        y: 20,
-        opacity: 0
-      });
-      
-      $gsap.to([mobileText.value, currentSplineViewer.value?.$el || currentSplineViewer.value], {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        ease: 'power2.out',
-        stagger: 0.1
+      // Wait for Vue to update the DOM with new spline viewer
+      nextTick(() => {
+        const newSplineViewer = getCurrentMobileSplineViewer();
+        const newSplineElement = newSplineViewer?.$el || newSplineViewer;
+        
+        // Reset position for new content
+        const elementsToFadeIn = [mobileText.value];
+        if (newSplineElement) {
+          elementsToFadeIn.push(newSplineElement);
+        }
+
+        $gsap.set(elementsToFadeIn, {
+          y: 20,
+          opacity: 0
+        });
+        
+        // Fade in new content
+        $gsap.to(elementsToFadeIn, {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          stagger: 0.1
+        });
       });
     }
   });
