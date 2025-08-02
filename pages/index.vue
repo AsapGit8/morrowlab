@@ -28,10 +28,7 @@
 
       <!-- FLIGHTPRO Section -->
       <div class="main section-flightpro">
-        <div class="left-box">
-          <div class="left-text">FLIGHTPRO</div>
-        </div>
-        <div class="right-box" @click="() => handleSplineClick('/flightpro')">
+        <div class="left-box spline-box" @click="() => handleSplineClick('/flightpro')">
           <client-only>
             <spline-viewer
               v-if="isSplineLoaded"
@@ -40,6 +37,9 @@
             ></spline-viewer>
           </client-only>
           <div class="hover-text">View Project</div>
+        </div>
+        <div class="right-box text-box">
+          <div class="right-text">FLIGHTPRO</div>
         </div>
       </div>
     </div>
@@ -190,10 +190,52 @@ useHead({
   position: relative;
 }
 
+/* DALIBOOK Section Styles */
+.section-dalibook .left-box {
+  background-color: white;
+}
+
+.section-dalibook .right-box {
+  background-color: #fafafa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+/* FLIGHTPRO Section Styles */
+.section-flightpro .spline-box {
+  background-color: #fafafa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.section-flightpro .text-box {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
 .left-text {
   position: absolute;
   bottom: 15px;
   left: 20px;
+  font-size: 3rem;
+  font-weight: 600;
+  font-family: 'Geist', sans-serif;
+  color: black;
+}
+
+.right-text {
+  position: absolute;
+  bottom: 15px;
+  right: 20px;
   font-size: 3rem;
   font-weight: 600;
   font-family: 'Geist', sans-serif;
@@ -213,7 +255,8 @@ useHead({
   transition: opacity 0.3s ease;
 }
 
-.right-box:hover .hover-text {
+.right-box:hover .hover-text,
+.spline-box:hover .hover-text {
   opacity: 1;
 }
 
@@ -258,6 +301,15 @@ useHead({
     text-align: left;
     transform: none;
   }
+
+  .right-text {
+    bottom: 15px;
+    right: 20px;
+    font-size: 2.5rem;
+    width: auto;
+    text-align: right;
+    transform: none;
+  }
  
   .hover-text {
     opacity: 0.8;
@@ -267,7 +319,8 @@ useHead({
     border-radius: 20px;
   }
  
-  .right-box {
+  .right-box,
+  .spline-box {
     min-height: 200px;
   }
 
@@ -293,7 +346,8 @@ useHead({
 
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
-  .left-text {
+  .left-text,
+  .right-text {
     font-size: 2rem;
   }
  
