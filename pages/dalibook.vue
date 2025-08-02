@@ -4,7 +4,7 @@
    <div class="left-box">
      <div class="left-text">DALIBOOK</div>
      <div ref="leftDescription" class="left-description">
-       DaliBook is the first-of-its-kind integrated platform designed to revolutionize property management for hotels and resorts across the Philippines. It seamlessly combines real-time booking management with instant, secure payment processing, supporting all major credit cards and local e-wallets like GCash and Maya. The platform offers hotel owners a comprehensive dashboard for insights into operations, from occupancy and revenue to guest communication. By enabling direct bookings, DaliBook helps hotels improve profit margins and enhance guest relationships. This innovative solution aims to bring enterprise-level security and efficiency to the Philippine hospitality industry, with plans for future expansion across Southeast Asia.
+       DaliBook is the Philippines’ first Fintech-powered platform built to streamline hotel operations with real-time booking and integrated payment processing. It supports local wallets like GCash and Maya, alongside global cards, with full BSP-compliant security. Hotel owners gain a unified dashboard to manage bookings, payments, and guest interactions. By enabling direct bookings, DaliBook reduces third-party commissions and strengthens guest relationships.
      </div>
    </div>
    <div class="right-box" data-lenis-prevent>
