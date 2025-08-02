@@ -7,26 +7,44 @@
       ref="loadingScreenRef"
     />
 
-
     <!-- Main Content (Initially Hidden) -->
-    <div v-show="!showLoadingScreen" ref="mainContent" class="main">
-      <div class="left-box">
-        <div class="left-text">FLIGHTPRO</div>
+    <div v-show="!showLoadingScreen" ref="mainContent" class="main-container">
+      <!-- DALIBOOK Section -->
+      <div class="main section-dalibook">
+        <div class="left-box">
+          <div class="left-text">DALIBOOK</div>
+        </div>
+        <div class="right-box" @click="() => handleSplineClick('/dalibook')">
+          <client-only>
+            <spline-viewer
+              v-if="isSplineLoaded"
+              ref="dalibookSplineViewer"
+              url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
+            ></spline-viewer>
+          </client-only>
+          <div class="hover-text">View Project</div>
+        </div>
       </div>
-      <div class="right-box" @click="handleSplineClick">
-        <client-only>
-          <spline-viewer
-            v-if="isSplineLoaded"
-            ref="splineViewer"
-            url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
-          ></spline-viewer>
-        </client-only>
-        <div class="hover-text">View Project</div>
+
+      <!-- FLIGHTPRO Section -->
+      <div class="main section-flightpro">
+        <div class="left-box">
+          <div class="left-text">FLIGHTPRO</div>
+        </div>
+        <div class="right-box" @click="() => handleSplineClick('/flightpro')">
+          <client-only>
+            <spline-viewer
+              v-if="isSplineLoaded"
+              ref="flightproSplineViewer"
+              url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
+            ></spline-viewer>
+          </client-only>
+          <div class="hover-text">View Project</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
@@ -38,7 +56,8 @@ const { $gsap } = useNuxtApp();
 const router = useRouter();
 const showLoadingScreen = ref(true);
 const mainContent = ref(null);
-const splineViewer = ref(null);
+const dalibookSplineViewer = ref(null);
+const flightproSplineViewer = ref(null);
 const isSplineLoaded = ref(false);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
@@ -58,18 +77,20 @@ const handleLoadingFinished = () => {
   showLoadingScreen.value = false;
 };
 
-const handleSplineClick = () => {
+const handleSplineClick = (route) => {
   // Add a slight delay for mobile to ensure the touch is intentional
   const delay = isMobile.value ? 100 : 0;
 
   setTimeout(() => {
-    $gsap.to(splineViewer.value.$el || splineViewer.value, {
+    const targetViewer = route === '/dalibook' ? dalibookSplineViewer.value : flightproSplineViewer.value;
+    
+    $gsap.to(targetViewer.$el || targetViewer, {
       opacity: 0,
       duration: isMobile.value ? 0.7 : 1, // Slightly faster on mobile
       ease: 'power2.out',
       onComplete: () => {
-        // Navigate to flightpro.vue after the fade-out animation
-        router.push('/flightpro');
+        // Navigate to the specified route after the fade-out animation
+        router.push(route);
       },
     });
   }, delay);
@@ -139,13 +160,16 @@ useHead({
 });
 </script>
 
-
 <style scoped>
+.main-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .main {
   display: flex;
   height: 100dvh;
 }
-
 
 .left-box,
 .right-box {
@@ -153,11 +177,9 @@ useHead({
   position: relative;
 }
 
-
 .left-box {
   background-color: white;
 }
-
 
 .right-box {
   background-color: #fafafa;
@@ -168,7 +190,6 @@ useHead({
   position: relative;
 }
 
-
 .left-text {
   position: absolute;
   bottom: 15px;
@@ -178,7 +199,6 @@ useHead({
   font-family: 'Geist', sans-serif;
   color: black;
 }
-
 
 .hover-text {
   position: absolute;
@@ -193,34 +213,53 @@ useHead({
   transition: opacity 0.3s ease;
 }
 
-
 .right-box:hover .hover-text {
   opacity: 1;
 }
 
-
 /* Mobile Optimization */
 @media screen and (max-width: 768px) {
+  .main-container {
+    height: 100dvh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .section-dalibook,
+  .section-flightpro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    z-index: 1;
+  }
+
+  .section-flightpro {
+    z-index: 2;
+    transform: translateY(100dvh);
+  }
+
   .main {
-    flex-direction: column; /* Stack boxes vertically */
+    flex-direction: column;
+    height: 100dvh;
   }
  
   .left-box, .right-box {
     flex: none;
-    height: 50svh; /* Each box takes half of the viewport height */
+    height: 50dvh;
   }
  
   .left-text {
-    bottom: 15px; /* Match flightpro.vue mobile position */
-    left: 20px; /* Match flightpro.vue mobile position */
+    bottom: 15px;
+    left: 20px;
     font-size: 2.5rem;
-    width: auto; /* Restore original width */
-    text-align: left; /* Restore original alignment */
-    transform: none; /* Remove transform */
+    width: auto;
+    text-align: left;
+    transform: none;
   }
  
   .hover-text {
-    /* Make hover text always visible on mobile */
     opacity: 0.8;
     font-size: 18px;
     padding: 8px 16px;
@@ -228,12 +267,29 @@ useHead({
     border-radius: 20px;
   }
  
-  /* Improve touch target sizes */
   .right-box {
-    min-height: 200px; /* Ensure minimum touch area */
+    min-height: 200px;
+  }
+
+  /* Mobile scroll behavior - sections change on scroll */
+  .main-container {
+    height: 200dvh; /* Double height for two sections */
+    overflow-y: auto;
+  }
+
+  /* When scrolling, transform the sections */
+  .section-dalibook {
+    position: fixed;
+    top: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .section-flightpro {
+    position: fixed;
+    top: 0;
+    transition: transform 0.3s ease;
   }
 }
-
 
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
