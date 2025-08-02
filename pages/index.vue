@@ -292,6 +292,33 @@ useHead({
     flex: none;
     height: 50dvh;
   }
+
+  /* FLIGHTPRO mobile specific - text on top, spline on bottom */
+  .section-flightpro {
+    flex-direction: column-reverse;
+  }
+
+  .section-flightpro .text-box {
+    order: 1; /* Text box goes to top */
+    background-color: white;
+  }
+
+  .section-flightpro .spline-box {
+    order: 2; /* Spline box goes to bottom */
+    background-color: #fafafa;
+  }
+
+  /* Update text positioning for FLIGHTPRO mobile */
+  .section-flightpro .right-text {
+    position: absolute;
+    bottom: 15px;
+    left: 20px; /* Move to left like DALIBOOK */
+    right: auto;
+    font-size: 2.5rem;
+    width: auto;
+    text-align: left;
+    transform: none;
+  }
  
   .left-text {
     bottom: 15px;
@@ -299,15 +326,6 @@ useHead({
     font-size: 2.5rem;
     width: auto;
     text-align: left;
-    transform: none;
-  }
-
-  .right-text {
-    bottom: 15px;
-    right: 20px;
-    font-size: 2.5rem;
-    width: auto;
-    text-align: right;
     transform: none;
   }
  
@@ -347,7 +365,7 @@ useHead({
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
   .left-text,
-  .right-text {
+  .section-flightpro .right-text {
     font-size: 2rem;
   }
  
