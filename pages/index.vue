@@ -47,57 +47,20 @@
       </div>
 
       <!-- Mobile Layout -->
-      <div class="mobile-layout" ref="mobileLayout">
-        <!-- Mobile scroll container -->
-        <div class="mobile-scroll-container" ref="mobileScrollContainer" data-lenis-prevent>
-          <div class="scroll-content">
-            <div class="scroll-section"></div>
-            <div class="scroll-section"></div>
+      <div class="mobile-layout" ref="mobileContainer">
+        <div class="mobile-section" ref="currentSection">
+          <div class="mobile-upper-div">
+            <div class="mobile-text" ref="mobileText">{{ currentProject.text }}</div>
           </div>
-        </div>
-
-        <!-- Current mobile section display -->
-        <div class="mobile-section-display" ref="mobileSectionDisplay">
-          <!-- DALIBOOK Mobile Section -->
-          <div 
-            v-show="currentMobileSection === 0" 
-            class="mobile-section dalibook-mobile"
-            @click="() => handleSplineClick('/dalibook')"
-          >
-            <div class="mobile-top">
-              <div class="mobile-text-left">{{ currentSectionData.leftText }}</div>
-            </div>
-            <div class="mobile-bottom">
-              <client-only>
-                <spline-viewer
-                  v-if="isSplineLoaded && showDalibookSpline"
-                  ref="mobileDalibookSpline"
-                  url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
-                ></spline-viewer>
-              </client-only>
-              <div class="mobile-hover-text">View Project</div>
-            </div>
-          </div>
-
-          <!-- FLIGHTPRO Mobile Section -->
-          <div 
-            v-show="currentMobileSection === 1" 
-            class="mobile-section flightpro-mobile"
-            @click="() => handleSplineClick('/flightpro')"
-          >
-            <div class="mobile-top">
-              <client-only>
-                <spline-viewer
-                  v-if="isSplineLoaded && showFlightproSpline"
-                  ref="mobileFlightproSpline"
-                  url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
-                ></spline-viewer>
-              </client-only>
-              <div class="mobile-hover-text">View Project</div>
-            </div>
-            <div class="mobile-bottom">
-              <div class="mobile-text-right">{{ currentSectionData.rightText }}</div>
-            </div>
+          <div class="mobile-lower-div" @click="() => handleSplineClick(currentProject.route)">
+            <client-only>
+              <spline-viewer
+                v-if="isSplineLoaded"
+                ref="currentSplineViewer"
+                :url="currentProject.splineUrl"
+              ></spline-viewer>
+            </client-only>
+            <div class="hover-text">View Project</div>
           </div>
         </div>
       </div>
@@ -106,7 +69,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, nextTick } from 'vue';
+import { ref, onMounted, computed, reactive } from 'vue';
 import LoadingScreen from '@/components/LoadingScreen.vue';
 import { useNuxtApp } from '#app';
 import { useRouter } from 'vue-router';
@@ -117,33 +80,30 @@ const showLoadingScreen = ref(true);
 const mainContent = ref(null);
 const dalibookSplineViewer = ref(null);
 const flightproSplineViewer = ref(null);
+const currentSplineViewer = ref(null);
 const isSplineLoaded = ref(false);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
-const mobileScrollContainer = ref(null);
-const mobileSectionDisplay = ref(null);
-const mobileDalibookSpline = ref(null);
-const mobileFlightproSpline = ref(null);
-const currentMobileSection = ref(0);
-const showDalibookSpline = ref(true);
-const showFlightproSpline = ref(false);
-const isTransitioning = ref(false);
+const mobileContainer = ref(null);
+const currentSection = ref(null);
+const mobileText = ref(null);
+const currentProjectIndex = ref(0);
 
-// Section data
-const sections = [
+// Project data
+const projects = [
   {
-    leftText: 'DALIBOOK',
-    rightText: '',
-    route: '/dalibook'
+    text: 'DALIBOOK',
+    route: '/dalibook',
+    splineUrl: 'https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode'
   },
   {
-    leftText: '',
-    rightText: 'FLIGHTPRO',
-    route: '/flightpro'
+    text: 'FLIGHTPRO',
+    route: '/flightpro',
+    splineUrl: 'https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode'
   }
 ];
 
-const currentSectionData = computed(() => sections[currentMobileSection.value]);
+const currentProject = computed(() => projects[currentProjectIndex.value]);
 
 // Check if device is mobile
 const checkMobile = () => {
@@ -151,6 +111,7 @@ const checkMobile = () => {
 };
 
 const handleLoadingFinished = () => {
+  // Page transition effect (smooth fade-in and slide-up)
   $gsap.fromTo(
     mainContent.value,
     { opacity: 0, y: 50 },
@@ -160,131 +121,121 @@ const handleLoadingFinished = () => {
 };
 
 const handleSplineClick = (route) => {
-  if (isTransitioning.value) return;
-
+  // Add a slight delay for mobile to ensure the touch is intentional
   const delay = isMobile.value ? 100 : 0;
-  
+
   setTimeout(() => {
     let targetViewer;
     
     if (isMobile.value) {
-      targetViewer = currentMobileSection.value === 0 ? mobileDalibookSpline.value : mobileFlightproSpline.value;
+      targetViewer = currentSplineViewer.value;
     } else {
       targetViewer = route === '/dalibook' ? dalibookSplineViewer.value : flightproSplineViewer.value;
     }
     
-    if (targetViewer) {
-      $gsap.to(targetViewer.$el || targetViewer, {
-        opacity: 0,
-        duration: isMobile.value ? 0.7 : 1,
-        ease: 'power2.out',
-        onComplete: () => {
-          router.push(route);
-        },
-      });
-    } else {
-      router.push(route);
-    }
+    $gsap.to(targetViewer.$el || targetViewer, {
+      opacity: 0,
+      duration: isMobile.value ? 0.7 : 1,
+      ease: 'power2.out',
+      onComplete: () => {
+        router.push(route);
+      },
+    });
   }, delay);
 };
 
-const destroyCurrentSpline = () => {
-  if (currentMobileSection.value === 0) {
-    showDalibookSpline.value = false;
-  } else {
-    showFlightproSpline.value = false;
-  }
-};
+const transitionToNextProject = () => {
+  if (!isMobile.value) return;
 
-const createNewSpline = (sectionIndex) => {
-  if (sectionIndex === 0) {
-    showDalibookSpline.value = true;
-  } else {
-    showFlightproSpline.value = true;
-  }
-};
+  const nextIndex = (currentProjectIndex.value + 1) % projects.length;
+  const nextProject = projects[nextIndex];
 
-const animateTextTransition = (newSection) => {
-  const display = mobileSectionDisplay.value;
-  
-  return new Promise((resolve) => {
-    // Fade out current section
-    $gsap.to(display, {
-      opacity: 0,
-      duration: 0.4,
-      ease: 'power2.out',
-      onComplete: () => {
-        // Change section
-        currentMobileSection.value = newSection;
-        
-        // Fade in new section
-        $gsap.to(display, {
-          opacity: 1,
-          duration: 0.4,
-          ease: 'power2.out',
-          onComplete: resolve
-        });
-      }
-    });
+  // Fade out current content
+  $gsap.to([mobileText.value, currentSplineViewer.value?.$el || currentSplineViewer.value], {
+    opacity: 0,
+    y: -20,
+    duration: 0.4,
+    ease: 'power2.out',
+    onComplete: () => {
+      // Update project index and content
+      currentProjectIndex.value = nextIndex;
+      
+      // Reset position and fade in new content
+      $gsap.set([mobileText.value, currentSplineViewer.value?.$el || currentSplineViewer.value], {
+        y: 20,
+        opacity: 0
+      });
+      
+      $gsap.to([mobileText.value, currentSplineViewer.value?.$el || currentSplineViewer.value], {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+        stagger: 0.1
+      });
+    }
   });
 };
 
-const handleMobileScroll = async () => {
-  if (!isMobile.value || !mobileScrollContainer.value || isTransitioning.value) return;
+const setupMobileScrollHandler = () => {
+  if (!isMobile.value || !mobileContainer.value) return;
 
-  const container = mobileScrollContainer.value;
-  const scrollTop = container.scrollTop;
-  const scrollHeight = container.scrollHeight - container.clientHeight;
-  const scrollProgress = scrollTop / scrollHeight;
-  
-  const newSection = scrollProgress > 0.5 ? 1 : 0;
-  
-  if (newSection !== currentMobileSection.value) {
-    isTransitioning.value = true;
-    
-    // Destroy current spline
-    destroyCurrentSpline();
-    
-    // Animate text transition
-    await animateTextTransition(newSection);
-    
-    // Wait a brief moment for DOM updates
-    await nextTick();
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
-    // Create new spline
-    createNewSpline(newSection);
-    
-    // Wait for spline to load
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    isTransitioning.value = false;
-  }
-};
+  let isTransitioning = false;
+  let startY = 0;
+  let scrollThreshold = 50;
 
-const setupMobileScrolling = () => {
-  if (!isMobile.value || !mobileScrollContainer.value) return;
-  
-  // Reset to first section
-  currentMobileSection.value = 0;
-  showDalibookSpline.value = true;
-  showFlightproSpline.value = false;
-  
-  // Add scroll listener
-  mobileScrollContainer.value.addEventListener('scroll', handleMobileScroll, { passive: true });
+  const handleTouchStart = (e) => {
+    startY = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e) => {
+    if (isTransitioning) {
+      e.preventDefault();
+      return;
+    }
+
+    const currentY = e.touches[0].clientY;
+    const deltaY = startY - currentY;
+
+    if (Math.abs(deltaY) > scrollThreshold) {
+      isTransitioning = true;
+      transitionToNextProject();
+      
+      setTimeout(() => {
+        isTransitioning = false;
+      }, 800);
+    }
+  };
+
+  const handleWheel = (e) => {
+    if (isTransitioning) {
+      e.preventDefault();
+      return;
+    }
+
+    if (Math.abs(e.deltaY) > 10) {
+      isTransitioning = true;
+      transitionToNextProject();
+      
+      setTimeout(() => {
+        isTransitioning = false;
+      }, 800);
+    }
+  };
+
+  mobileContainer.value.addEventListener('touchstart', handleTouchStart, { passive: true });
+  mobileContainer.value.addEventListener('touchmove', handleTouchMove, { passive: false });
+  mobileContainer.value.addEventListener('wheel', handleWheel, { passive: false });
 };
 
 onMounted(() => {
+  // Check for mobile device
   if (process.client) {
     checkMobile();
-    window.addEventListener('resize', () => {
-      checkMobile();
-      if (isMobile.value) {
-        setupMobileScrolling();
-      }
-    });
+    window.addEventListener('resize', checkMobile);
   }
 
+  // Fixed GSAP animation for loading screen
   setTimeout(() => {
     if (showLoadingScreen.value && loadingScreenRef.value) {
       const element = loadingScreenRef.value.$el || loadingScreenRef.value;
@@ -297,40 +248,36 @@ onMounted(() => {
           onComplete: () => {
             showLoadingScreen.value = false;
             handleLoadingFinished();
-            
-            if (isMobile.value) {
-              setupMobileScrolling();
-            }
           },
         });
       } else {
         showLoadingScreen.value = false;
         handleLoadingFinished();
-        
-        if (isMobile.value) {
-          setupMobileScrolling();
-        }
       }
     }
   }, 1500);
 
+  // Load Spline viewer only on the client-side
   if (process.client) {
     import('@splinetool/viewer')
       .then(() => {
         isSplineLoaded.value = true;
         console.log('Spline Viewer loaded successfully');
+        
+        // Setup mobile scroll handler after spline is loaded
+        setTimeout(() => {
+          setupMobileScrollHandler();
+        }, 1000);
       })
       .catch((err) => {
         console.error('Error loading Spline Viewer:', err);
       });
   }
 
+  // Clean up event listener
   return () => {
     if (process.client) {
       window.removeEventListener('resize', checkMobile);
-      if (mobileScrollContainer.value) {
-        mobileScrollContainer.value.removeEventListener('scroll', handleMobileScroll);
-      }
     }
   };
 });
@@ -386,6 +333,7 @@ useHead({
   position: relative;
 }
 
+/* DALIBOOK Section Styles */
 .section-dalibook .left-box {
   background-color: white;
 }
@@ -399,6 +347,7 @@ useHead({
   position: relative;
 }
 
+/* FLIGHTPRO Section Styles */
 .section-flightpro .spline-box {
   background-color: #fafafa;
   display: flex;
@@ -454,7 +403,7 @@ useHead({
   opacity: 1;
 }
 
-/* Mobile Styles */
+/* Mobile Optimization */
 @media screen and (max-width: 768px) {
   .desktop-layout {
     display: none;
@@ -467,71 +416,34 @@ useHead({
     position: relative;
   }
 
-  .mobile-scroll-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100dvh;
-    overflow-y: auto;
-    z-index: 10;
-    background: transparent;
-  }
-
-  .scroll-content {
-    height: 200dvh;
-    width: 100%;
-  }
-
-  .scroll-section {
-    height: 100dvh;
-    width: 100%;
-  }
-
-  .mobile-section-display {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100dvh;
-    z-index: 5;
-  }
-
   .mobile-section {
-    width: 100%;
     height: 100dvh;
     display: flex;
     flex-direction: column;
-    cursor: pointer;
+    position: relative;
   }
 
-  .mobile-top,
-  .mobile-bottom {
-    flex: 1;
+  .mobile-upper-div {
     height: 50dvh;
+    background-color: white;
     position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .mobile-lower-div {
+    height: 50dvh;
+    background-color: #fafafa;
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    position: relative;
   }
 
-  .dalibook-mobile .mobile-top {
-    background-color: white;
-  }
-
-  .dalibook-mobile .mobile-bottom {
-    background-color: #fafafa;
-  }
-
-  .flightpro-mobile .mobile-top {
-    background-color: #fafafa;
-  }
-
-  .flightpro-mobile .mobile-bottom {
-    background-color: white;
-  }
-
-  .mobile-text-left {
+  .mobile-text {
     position: absolute;
     bottom: 15px;
     left: 20px;
@@ -541,26 +453,9 @@ useHead({
     color: black;
   }
 
-  .mobile-text-right {
-    position: absolute;
-    bottom: 15px;
-    right: 20px;
-    font-size: 2.5rem;
-    font-weight: 600;
-    font-family: 'Geist', sans-serif;
-    color: black;
-  }
-
-  .mobile-hover-text {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 18px;
-    font-weight: 500;
-    font-family: 'Geist', sans-serif;
-    color: black;
+  .mobile-lower-div .hover-text {
     opacity: 0.8;
+    font-size: 18px;
     padding: 8px 16px;
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 20px;
@@ -569,12 +464,11 @@ useHead({
 
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
-  .mobile-text-left,
-  .mobile-text-right {
+  .mobile-text {
     font-size: 2rem;
   }
  
-  .mobile-hover-text {
+  .mobile-lower-div .hover-text {
     font-size: 16px;
   }
 }
