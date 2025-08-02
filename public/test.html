@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dalibook Widget</title>
+</head>
+<body>
+<!-- DaliBook Booking Widget -->
+<script src="https://dalibook.io/widget.min.js"></script>
+<div id="dalibook-widget-container"></div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    DalibookWidget.init({
+      targetId: 'dalibook-widget-container',
+      resortId: '61796236-78d8-44ff-97b5-fa3371836a76',
+      apiKey: 'dalibook_a3ca14b47454d2f055a343d1da4453f6',
+      publicKey: 'pk_live_aotzS7aQmy2NARXY31GrDrDf'
+    });
+  });
+</script>
+</body>
+</html>
