@@ -56,12 +56,14 @@
                ref="mobileDalibookSpline"
                url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
                class="mobile-spline active"
+               @click="() => handleMobileSplineClick('/dalibook')"
              ></spline-viewer>
              <spline-viewer
                v-if="isSplineLoaded"
                ref="mobileFlightproSpline"
                url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
                class="mobile-spline"
+               @click="() => handleMobileSplineClick('/flightpro')"
              ></spline-viewer>
            </client-only>
          </div>
@@ -288,11 +290,13 @@ const setupMobileScrollBehavior = () => {
    );
  }
  
- // Set up scroll behavior
+ // Set up scroll behavior with better thresholds
  mobileSplineSection.addEventListener('scroll', () => {
    const scrollTop = mobileSplineSection.scrollTop;
    const scrollHeight = mobileSplineSection.scrollHeight - mobileSplineSection.clientHeight;
    const scrollPercentage = (scrollTop / scrollHeight) * 100;
+   
+   console.log('Scroll percentage:', scrollPercentage); // Debug log
    
    // Hide scroll indicator when scrolling
    if (scrollIndicator) {
@@ -311,24 +315,15 @@ const setupMobileScrollBehavior = () => {
      }
    }
    
-   // Switch sections at 30% threshold
-   if (scrollPercentage >= 30 && currentSection.value === 0) {
+   // Switch sections with better threshold - switch to FLIGHTPRO at 50%
+   if (scrollPercentage >= 50 && currentSection.value === 0) {
+     console.log('Switching to FLIGHTPRO');
      switchToSection(1); // Switch to FLIGHTPRO
-   } else if (scrollPercentage < 30 && currentSection.value === 1) {
+   } else if (scrollPercentage < 50 && currentSection.value === 1) {
+     console.log('Switching to DALIBOOK');
      switchToSection(0); // Switch back to DALIBOOK
    }
  });
- 
- // Add click handlers for mobile splines
- if (mobileDalibookSpline.value) {
-   const dalibookElement = mobileDalibookSpline.value.$el || mobileDalibookSpline.value;
-   dalibookElement.addEventListener('click', () => handleMobileSplineClick('/dalibook'));
- }
- 
- if (mobileFlightproSpline.value) {
-   const flightproElement = mobileFlightproSpline.value.$el || mobileFlightproSpline.value;
-   flightproElement.addEventListener('click', () => handleMobileSplineClick('/flightpro'));
- }
 };
 
 // SEO
@@ -494,10 +489,11 @@ useHead({
    position: relative;
    overflow-y: auto;
    scroll-snap-type: y mandatory;
+   -webkit-overflow-scrolling: touch;
  }
 
  .mobile-spline-container {
-   height: 200dvh; /* Double height for scroll behavior */
+   height: 200dvh;
    position: relative;
    display: flex;
    justify-content: center;
@@ -507,10 +503,11 @@ useHead({
 
  .mobile-spline {
    position: absolute;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 50dvh;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 90%;
+   height: 80%;
    opacity: 0;
    transition: opacity 0.5s ease;
    cursor: pointer;
