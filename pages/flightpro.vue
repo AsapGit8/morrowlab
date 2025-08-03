@@ -275,14 +275,14 @@ useHead({
 
   .left-description {
     font-size: 0.85rem;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 0;
-    padding-bottom: 0;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
     max-width: calc(100% - 40px);
     overflow-y: auto;
     max-height: 60%;
-    margin: 0;
     box-sizing: border-box;
   }
 
@@ -310,8 +310,8 @@ useHead({
 
   .left-description {
     font-size: 0.8rem;
-    padding-left: 20px;
-    padding-right: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
     max-width: calc(100% - 40px);
   }
 }

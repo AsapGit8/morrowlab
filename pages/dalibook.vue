@@ -3,7 +3,7 @@
    <div class="left-box">
      <div class="left-text">DALIBOOK</div>
      <div ref="leftDescription" class="left-description">
-       DaliBook is the Philippines' first Fintech-powered property management platform, designed to streamline hotel operations. It offers real-time booking and integrated payment processing, supporting popular local wallets like GCash and Maya, plus international cards. All transactions are handled with full BSP-compliant security.
+       DaliBook is the Philippines' first Fintech-powered property management and booking platform, designed to streamline hotel operations. DaliBook offers real-time booking and integrated payment processing, supporting popular local wallets like GCash and Maya, plus international cards. All transactions are handled with full BSP-compliant security.
      </div>
    </div>
    <div class="right-box" data-lenis-prevent>
@@ -274,14 +274,14 @@ useHead({
 
  .left-description {
    font-size: 0.85rem;
-   padding-left: 20px;
-   padding-right: 20px;
-   padding-top: 0;
-   padding-bottom: 0;
+   margin-left: 20px;
+   margin-right: 20px;
+   margin-top: 0;
+   margin-bottom: 0;
+   padding: 0;
    max-width: calc(100% - 40px);
    overflow-y: auto;
    max-height: 60%;
-   margin: 0;
    box-sizing: border-box;
  }
 
@@ -307,8 +307,8 @@ useHead({
 
  .left-description {
    font-size: 0.8rem;
-   padding-left: 20px;
-   padding-right: 20px;
+   margin-left: 20px;
+   margin-right: 20px;
    max-width: calc(100% - 40px);
  }
 }
