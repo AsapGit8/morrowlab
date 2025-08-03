@@ -211,12 +211,16 @@ useHead({
  font-weight: 600;
  font-family: 'Geist', sans-serif;
  color: black;
+ line-height: 1;
 }
 
 .visit-site-container {
  position: absolute;
  bottom: 15px;
  right: 20px;
+ display: flex;
+ align-items: baseline;
+ height: 3rem;
 }
 
 .visit-site-link {
@@ -226,6 +230,8 @@ useHead({
  text-decoration: none;
  color: black;
  transition: opacity 0.3s ease;
+ margin-top: auto;
+ margin-bottom: 0;
 }
 
 .visit-site-link:hover {
@@ -236,6 +242,7 @@ useHead({
  font-size: 0.875rem;
  font-weight: 500;
  font-family: 'Geist', sans-serif;
+ line-height: 1;
 }
 
 .visit-site-icon {
@@ -311,20 +318,27 @@ useHead({
    bottom: 15px;
    left: 20px;
    font-size: 2.5rem;
+   line-height: 1;
  }
 
  .visit-site-container {
    position: absolute;
    bottom: 15px;
    right: 20px;
+   display: flex;
+   align-items: baseline;
+   height: 2.5rem;
  }
 
  .visit-site-link {
    gap: 6px;
+   margin-top: auto;
+   margin-bottom: 0;
  }
 
  .visit-site-text {
    font-size: 0.75rem;
+   line-height: 1;
  }
 
  .visit-site-icon {
@@ -352,33 +366,38 @@ useHead({
  }
 
  .scroll-down-indicator {
-  bottom: 15px;
-  right: 15px;
-}
+   bottom: 15px;
+   right: 15px;
+ }
 }
 
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
-.left-text {
-  font-size: 2rem;
-  bottom: 15px;
-  left: 20px;
-}
+ .left-text {
+   font-size: 2rem;
+   bottom: 15px;
+   left: 20px;
+   line-height: 1;
+ }
 
-.visit-site-text {
-  font-size: 0.7rem;
-}
+ .visit-site-container {
+   height: 2rem;
+ }
 
-.visit-site-icon {
-  width: 10px;
-  height: 10px;
-}
+ .visit-site-text {
+   font-size: 0.7rem;
+ }
 
-.left-description {
-  font-size: 0.8rem;
-  margin-left: 20px;
-  margin-right: 20px;
-  max-width: calc(100% - 40px);
-}
+ .visit-site-icon {
+   width: 10px;
+   height: 10px;
+ }
+
+ .left-description {
+   font-size: 0.8rem;
+   margin-left: 20px;
+   margin-right: 20px;
+   max-width: calc(100% - 40px);
+ }
 }
 </style>
