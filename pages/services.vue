@@ -118,16 +118,42 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import PageTransition from "@/components/PageTransition.vue";
 import Footer from "@/components/Footer.vue";
 import gsap from "gsap";
 
 const showLoadingScreen = ref(true);
 const isSplineLoaded = ref(false);
+const splineViewer = ref(null);
 
 const handleLoadingFinished = () => {
   showLoadingScreen.value = false;
+};
+
+// Clean up Spline viewer - CORRECTED FUNCTION
+const cleanupSplineViewer = () => {
+  if (splineViewer.value) {
+    const element = splineViewer.value.$el || splineViewer.value;
+    if (element) {
+      try {
+        // Reset the viewer's content
+        element.style.visibility = 'hidden';
+        element.style.opacity = '0';
+        
+        // Clear any WebGL contexts
+        const canvas = element.querySelector('canvas');
+        if (canvas) {
+          const gl = canvas.getContext('webgl') || canvas.getContext('webgl2');
+          if (gl) {
+            gl.getExtension('WEBGL_lose_context')?.loseContext();
+          }
+        }
+      } catch (error) {
+        console.warn('Error cleaning up spline viewer:', error);
+      }
+    }
+  }
 };
 
 onMounted(() => {
@@ -264,6 +290,11 @@ onMounted(() => {
   document.querySelectorAll('.reveal-text').forEach(el => {
     observer.observe(el);
   });
+});
+
+// Clean up on component unmount
+onBeforeUnmount(() => {
+  cleanupSplineViewer();
 });
 
 useHead({
