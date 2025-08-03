@@ -215,7 +215,7 @@ useHead({
 
 .visit-site-container {
  position: absolute;
- bottom: 15px;
+ bottom: 20px;
  right: 20px;
 }
 
@@ -315,7 +315,7 @@ useHead({
 
  .visit-site-container {
    position: absolute;
-   bottom: 15px;
+   bottom: 20px;
    right: 20px;
  }
 
