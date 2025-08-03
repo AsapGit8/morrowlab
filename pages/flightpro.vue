@@ -249,7 +249,8 @@ useHead({
     height: 50svh;
     z-index: 10;
     justify-content: center;
-    padding: 0 20px;
+    padding: 0;
+    box-sizing: border-box;
   }
 
   .right-box {
@@ -274,12 +275,13 @@ useHead({
 
   .left-description {
     font-size: 0.85rem;
-    padding-left: 0;
-    padding-right: 0;
-    max-width: 100%;
+    padding: 0 20px;
+    max-width: calc(100% - 40px);
     overflow-y: auto;
     max-height: 60%;
-    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
   }
 
   .video {
@@ -298,10 +300,6 @@ useHead({
 
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
-  .left-box {
-    padding: 0 15px;
-  }
-
   .left-text {
     font-size: 2rem;
     left: 15px;
@@ -309,6 +307,8 @@ useHead({
 
   .left-description {
     font-size: 0.8rem;
+    padding: 0 15px;
+    max-width: calc(100% - 30px);
   }
 }
 </style>
