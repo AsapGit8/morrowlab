@@ -215,7 +215,7 @@ useHead({
 
 .visit-site-container {
  position: absolute;
- bottom: 40px;
+ bottom: 15px;
  right: 20px;
 }
 
@@ -315,7 +315,7 @@ useHead({
 
  .visit-site-container {
    position: absolute;
-   bottom: 35px;
+   bottom: 15px;
    right: 20px;
  }
 
@@ -363,10 +363,6 @@ useHead({
    font-size: 2rem;
    bottom: 15px;
    left: 20px;
- }
-
- .visit-site-container {
-   bottom: 30px;
  }
 
  .visit-site-text {

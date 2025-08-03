@@ -445,7 +445,7 @@ useHead({
 
 .visit-site-container {
   position: absolute;
-  bottom: 40px;
+  bottom: 15px;
   right: 20px;
 }
 
@@ -544,7 +544,7 @@ useHead({
 
   .mobile-visit-site-container {
     position: absolute;
-    bottom: 35px;
+    bottom: 15px;
     right: 20px;
   }
 
@@ -586,10 +586,6 @@ useHead({
 @media screen and (max-width: 480px) {
   .mobile-text {
     font-size: 2rem;
-  }
-
-  .mobile-visit-site-container {
-    bottom: 30px;
   }
  
   .mobile-lower-div .hover-text {
