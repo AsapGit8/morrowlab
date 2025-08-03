@@ -274,7 +274,7 @@ useHead({
 
   .left-description {
     font-size: 0.85rem;
-    padding: 0 30px 0 30px;
+    padding: 0 20px 0 20px;
     max-width: 100%;
     overflow-y: auto;
     max-height: 60%;
