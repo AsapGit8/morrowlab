@@ -275,12 +275,14 @@ useHead({
 
   .left-description {
     font-size: 0.85rem;
-    padding: 0 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 0;
+    padding-bottom: 0;
     max-width: calc(100% - 40px);
     overflow-y: auto;
     max-height: 60%;
-    margin-left: 0;
-    margin-right: 0;
+    margin: 0;
     box-sizing: border-box;
   }
 
@@ -302,13 +304,15 @@ useHead({
 @media screen and (max-width: 480px) {
   .left-text {
     font-size: 2rem;
-    left: 15px;
+    bottom: 15px;
+    left: 20px;
   }
 
   .left-description {
     font-size: 0.8rem;
-    padding: 0 15px;
-    max-width: calc(100% - 30px);
+    padding-left: 20px;
+    padding-right: 20px;
+    max-width: calc(100% - 40px);
   }
 }
 </style>
