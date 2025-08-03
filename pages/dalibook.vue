@@ -2,6 +2,16 @@
  <div class="main">
    <div class="left-box">
      <div class="left-text">DALIBOOK</div>
+     <div class="visit-site-container">
+       <a href="https://www.dalibook.io/" target="_blank" rel="noopener noreferrer" class="visit-site-link">
+         <span class="visit-site-text">Visit Site</span>
+         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-site-icon">
+           <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+           <path d="m21 21-9-9"/>
+           <path d="M21 15v6h-6"/>
+         </svg>
+       </a>
+     </div>
      <div ref="leftDescription" class="left-description">
        DaliBook is the Philippines' first Fintech-powered property management and booking platform, designed to streamline hotel operations. DaliBook offers real-time booking and integrated payment processing, supporting popular local wallets like GCash and Maya, plus international cards. All transactions are handled with full BSP-compliant security.
      </div>
@@ -203,6 +213,37 @@ useHead({
  color: black;
 }
 
+.visit-site-container {
+ position: absolute;
+ bottom: 15px;
+ right: 20px;
+}
+
+.visit-site-link {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ text-decoration: none;
+ color: black;
+ transition: opacity 0.3s ease;
+}
+
+.visit-site-link:hover {
+ opacity: 0.7;
+}
+
+.visit-site-text {
+ font-size: 0.875rem;
+ font-weight: 500;
+ font-family: 'Geist', sans-serif;
+}
+
+.visit-site-icon {
+ width: 16px;
+ height: 16px;
+ stroke: currentColor;
+}
+
 .left-description {
  max-width: 600px;
  font-size: 1rem;
@@ -272,6 +313,25 @@ useHead({
    font-size: 2.5rem;
  }
 
+ .visit-site-container {
+   position: absolute;
+   bottom: 15px;
+   right: 20px;
+ }
+
+ .visit-site-link {
+   gap: 6px;
+ }
+
+ .visit-site-text {
+   font-size: 0.75rem;
+ }
+
+ .visit-site-icon {
+   width: 12px;
+   height: 12px;
+ }
+
  .left-description {
    font-size: 0.85rem;
    margin-left: 20px;
@@ -292,24 +352,33 @@ useHead({
  }
 
  .scroll-down-indicator {
-   bottom: 15px;
-   right: 15px;
- }
+  bottom: 15px;
+  right: 15px;
+}
 }
 
 /* Small Mobile Devices */
 @media screen and (max-width: 480px) {
- .left-text {
-   font-size: 2rem;
-   bottom: 15px;
-   left: 20px;
- }
+.left-text {
+  font-size: 2rem;
+  bottom: 15px;
+  left: 20px;
+}
 
- .left-description {
-   font-size: 0.8rem;
-   margin-left: 20px;
-   margin-right: 20px;
-   max-width: calc(100% - 40px);
- }
+.visit-site-text {
+  font-size: 0.7rem;
+}
+
+.visit-site-icon {
+  width: 10px;
+  height: 10px;
+}
+
+.left-description {
+  font-size: 0.8rem;
+  margin-left: 20px;
+  margin-right: 20px;
+  max-width: calc(100% - 40px);
+}
 }
 </style>

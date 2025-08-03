@@ -15,6 +15,16 @@
         <div class="main section-dalibook">
           <div class="left-box">
             <div class="left-text">DALIBOOK</div>
+            <div class="visit-site-container">
+              <a href="https://www.dalibook.io/" target="_blank" rel="noopener noreferrer" class="visit-site-link">
+                <span class="visit-site-text">Visit Site</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-site-icon">
+                  <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                  <path d="m21 21-9-9"/>
+                  <path d="M21 15v6h-6"/>
+                </svg>
+              </a>
+            </div>
           </div>
           <div class="right-box" @click="() => handleSplineClick('/dalibook')">
             <client-only>
@@ -51,6 +61,16 @@
         <div class="mobile-section" ref="currentSection">
           <div class="mobile-upper-div">
             <div class="mobile-text" ref="mobileText">{{ currentProject.text }}</div>
+            <div v-if="currentProject.text === 'DALIBOOK'" class="mobile-visit-site-container">
+              <a href="https://www.dalibook.io/" target="_blank" rel="noopener noreferrer" class="mobile-visit-site-link">
+                <span class="mobile-visit-site-text">Visit Site</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mobile-visit-site-icon">
+                  <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                  <path d="m21 21-9-9"/>
+                  <path d="M21 15v6h-6"/>
+                </svg>
+              </a>
+            </div>
           </div>
           <div class="mobile-lower-div" @click="() => handleSplineClick(currentProject.route)">
             <client-only>
@@ -423,6 +443,37 @@ useHead({
   color: black;
 }
 
+.visit-site-container {
+  position: absolute;
+  bottom: 15px;
+  right: 20px;
+}
+
+.visit-site-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: black;
+  transition: opacity 0.3s ease;
+}
+
+.visit-site-link:hover {
+  opacity: 0.7;
+}
+
+.visit-site-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'Geist', sans-serif;
+}
+
+.visit-site-icon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
 .hover-text {
   position: absolute;
   bottom: 20px;
@@ -491,6 +542,37 @@ useHead({
     color: black;
   }
 
+  .mobile-visit-site-container {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+  }
+
+  .mobile-visit-site-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: black;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-visit-site-link:hover {
+    opacity: 0.7;
+  }
+
+  .mobile-visit-site-text {
+    font-size: 0.75rem;
+    font-weight: 500;
+    font-family: 'Geist', sans-serif;
+  }
+
+  .mobile-visit-site-icon {
+    width: 12px;
+    height: 12px;
+    stroke: currentColor;
+  }
+
   .mobile-lower-div .hover-text {
     opacity: 0.8;
     font-size: 18px;
@@ -508,6 +590,15 @@ useHead({
  
   .mobile-lower-div .hover-text {
     font-size: 16px;
+  }
+
+  .mobile-visit-site-text {
+    font-size: 0.7rem;
+  }
+
+  .mobile-visit-site-icon {
+    width: 10px;
+    height: 10px;
   }
 }
 </style>
