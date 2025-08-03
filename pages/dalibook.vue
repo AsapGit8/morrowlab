@@ -1,10 +1,9 @@
 <template>
  <div class="main">
-   <!-- Add data-lenis-prevent to tell Lenis to not handle this element's scrolling -->
    <div class="left-box">
      <div class="left-text">DALIBOOK</div>
      <div ref="leftDescription" class="left-description">
-       DaliBook is the Philippines’ first Fintech-powered platform built to streamline hotel operations with real-time booking and integrated payment processing. It supports local wallets like GCash and Maya, alongside global cards, with full BSP-compliant security. Hotel owners gain a unified dashboard to manage bookings, payments, and guest interactions. By enabling direct bookings, DaliBook reduces third-party commissions and strengthens guest relationships.
+       DaliBook is the Philippines' first Fintech-powered platform built to streamline hotel operations with real-time booking and integrated payment processing. It supports local wallets like GCash and Maya, alongside global cards, with full BSP-compliant security. Hotel owners gain a unified dashboard to manage bookings, payments, and guest interactions. By enabling direct bookings, DaliBook reduces third-party commissions and strengthens guest relationships.
      </div>
    </div>
    <div class="right-box" data-lenis-prevent>
@@ -274,7 +273,7 @@ useHead({
 
  .left-description {
    font-size: 0.85rem;
-   padding: 0 0 0 30px;
+   padding: 0 30px 0 30px;
    max-width: 100%;
    overflow-y: auto;
    max-height: 60%;
