@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, nextTick, onBeforeUnmount } from 'vue';
+import { ref, onMounted, computed, nextTick } from 'vue';
 import LoadingScreen from '@/components/LoadingScreen.vue';
 import { useNuxtApp } from '#app';
 import { useRouter } from 'vue-router';
@@ -134,40 +134,6 @@ const projects = [
 
 const currentProject = computed(() => projects[currentProjectIndex.value]);
 
-// Clean up Spline viewers - CORRECTED FUNCTION
-const cleanupSplineViewers = () => {
-  const viewers = [
-    dalibookSplineViewer.value,
-    flightproSplineViewer.value,
-    mobiledalibookSplineViewer.value,
-    mobileflightproSplineViewer.value
-  ];
-
-  viewers.forEach(viewer => {
-    if (viewer) {
-      const element = viewer.$el || viewer;
-      if (element) {
-        try {
-          // Reset the viewer's content
-          element.style.visibility = 'hidden';
-          element.style.opacity = '0';
-          
-          // Clear any WebGL contexts
-          const canvas = element.querySelector('canvas');
-          if (canvas) {
-            const gl = canvas.getContext('webgl') || canvas.getContext('webgl2');
-            if (gl) {
-              gl.getExtension('WEBGL_lose_context')?.loseContext();
-            }
-          }
-        } catch (error) {
-          console.warn('Error cleaning up spline viewer:', error);
-        }
-      }
-    }
-  });
-};
-
 // Get current mobile spline viewer
 const getCurrentMobileSplineViewer = () => {
   if (currentProjectIndex.value === 0) {
@@ -193,9 +159,6 @@ const handleLoadingFinished = () => {
 };
 
 const handleSplineClick = (route) => {
-  // Clean up before navigation
-  cleanupSplineViewers();
-  
   // Add a slight delay for mobile to ensure the touch is intentional
   const delay = isMobile.value ? 100 : 0;
 
@@ -212,15 +175,12 @@ const handleSplineClick = (route) => {
     if (element) {
       $gsap.to(element, {
         opacity: 0,
-        duration: 0.3,
+        duration: isMobile.value ? 0.7 : 1,
         ease: 'power2.out',
         onComplete: () => {
           router.push(route);
         },
       });
-    } else {
-      // If no element, navigate immediately
-      router.push(route);
     }
   }, delay);
 };
@@ -371,15 +331,13 @@ onMounted(() => {
         console.error('Error loading Spline Viewer:', err);
       });
   }
-});
 
-// Clean up on component unmount
-onBeforeUnmount(() => {
-  cleanupSplineViewers();
-  
-  if (process.client) {
-    window.removeEventListener('resize', checkMobile);
-  }
+  // Clean up event listener
+  return () => {
+    if (process.client) {
+      window.removeEventListener('resize', checkMobile);
+    }
+  };
 });
 
 // SEO

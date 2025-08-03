@@ -26,23 +26,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     requestAnimationFrame(raf)
   })
 
-  // Clean up on page navigation - CORRECTED
-  nuxtApp.hook('app:beforeMount', () => {
-    // Clean up Spline viewers before navigation
-    const splineViewers = document.querySelectorAll('spline-viewer')
-    splineViewers.forEach(viewer => {
-      if (viewer) {
-        // Remove the viewer from DOM instead of dispose
-        try {
-          viewer.remove()
-        } catch (error) {
-          console.warn('Error removing spline viewer:', error)
-        }
-      }
-    })
-  })
-
-  nuxtApp.hook('page:finish', () => {
+  // Clean up on page navigation
+  nuxtApp.hook('page:transition:finish', () => {
     // Reset scroll position on page change if needed
     if (lenis) lenis.scrollTo(0, { immediate: true })
   })
