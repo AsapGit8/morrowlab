@@ -431,7 +431,6 @@ useHead({
   font-weight: 600;
   font-family: 'Geist', sans-serif;
   color: black;
-  line-height: 1;
 }
 
 .right-text {
@@ -446,11 +445,8 @@ useHead({
 
 .visit-site-container {
   position: absolute;
-  bottom: 15px;
+  bottom: 40px;
   right: 20px;
-  display: flex;
-  align-items: baseline;
-  height: 3rem;
 }
 
 .visit-site-link {
@@ -460,8 +456,6 @@ useHead({
   text-decoration: none;
   color: black;
   transition: opacity 0.3s ease;
-  margin-top: auto;
-  margin-bottom: 0;
 }
 
 .visit-site-link:hover {
@@ -472,7 +466,6 @@ useHead({
   font-size: 0.875rem;
   font-weight: 500;
   font-family: 'Geist', sans-serif;
-  line-height: 1;
 }
 
 .visit-site-icon {
@@ -547,16 +540,12 @@ useHead({
     font-weight: 600;
     font-family: 'Geist', sans-serif;
     color: black;
-    line-height: 1;
   }
 
   .mobile-visit-site-container {
     position: absolute;
-    bottom: 15px;
+    bottom: 35px;
     right: 20px;
-    display: flex;
-    align-items: baseline;
-    height: 2.5rem;
   }
 
   .mobile-visit-site-link {
@@ -566,8 +555,6 @@ useHead({
     text-decoration: none;
     color: black;
     transition: opacity 0.3s ease;
-    margin-top: auto;
-    margin-bottom: 0;
   }
 
   .mobile-visit-site-link:hover {
@@ -578,7 +565,6 @@ useHead({
     font-size: 0.75rem;
     font-weight: 500;
     font-family: 'Geist', sans-serif;
-    line-height: 1;
   }
 
   .mobile-visit-site-icon {
@@ -600,13 +586,12 @@ useHead({
 @media screen and (max-width: 480px) {
   .mobile-text {
     font-size: 2rem;
-    line-height: 1;
-  }
- 
-  .mobile-visit-site-container {
-    height: 2rem;
   }
 
+  .mobile-visit-site-container {
+    bottom: 30px;
+  }
+ 
   .mobile-lower-div .hover-text {
     font-size: 16px;
   }
