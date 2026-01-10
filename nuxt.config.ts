@@ -80,7 +80,7 @@ export default defineNuxtConfig({
         },
         '/services': {
           title: 'Services | Web Development Philippines',
-          description: 'High-end web design, immersive 3D animations, professional React and Nuxt, websites, and front-end web and app solutions tailored for premium brands looking for innovative digital transformation.',
+          description: 'Full-stack software development, mobile app development for iOS and Android, and creative web design with motion graphics. From MVPs to SaaS platforms, we build market-ready software with modern tech stacks and secure infrastructure.',
         },
         '/contact': {
           title: 'Contact | Get in Touch',

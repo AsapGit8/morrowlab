@@ -16,14 +16,14 @@
           <div class="section section-1">
             <div class="content">
               <h1 class="reveal-text">
-                <span class="text-line">creative web development studio</span>
+                <span class="text-line">full-stack software development studio</span>
               </h1>
               <p class="reveal-text">
-                <span class="text-line">Your website should do more than just exist. It should turn</span>
-                <span class="text-line">visitors into customers. MorrowLab builds high-performing</span>
-                <span class="text-line">websites with fluid animations, immersive 3D elements,</span>
-                <span class="text-line">and impactful branding. Designed to captivate and built to</span>
-                <span class="text-line">last for years.</span>
+                <span class="text-line">From early-stage MVPs to income-generating platforms, we</span>
+                <span class="text-line">transform ideas into market-ready software. MorrowLab builds</span>
+                <span class="text-line">problem-solving systems using the same modern tech stacks</span>
+                <span class="text-line">used in Silicon Valley, integrated with secure infrastructure and</span>
+                <span class="text-line">maintainable architectures designed for long-term growth.</span>
               </p>
              
               <div class="scroll-down-indicator" id="scroll-indicator">
@@ -35,14 +35,14 @@
           <div class="section section-2">
             <div class="content">
               <h1 class="reveal-text">
-                <span class="text-line">cloud-based web application</span>
+                <span class="text-line">mobile app development iOS & Android</span>
               </h1>
               <p class="reveal-text">
-                <span class="text-line">Develop powerful and scalable web applications with our</span>
-                <span class="text-line">cloud-first approach. We create modern, secure, and reliable</span>
-                <span class="text-line">digital solutions that integrate effortlessly into your business.</span>
-                <span class="text-line">Partner with us to transform your ideas into exceptional user </span>
-                <span class="text-line">experiences, from concept to launch.</span>
+                <span class="text-line">Build the next industry giant. We create mobile apps capable of</span>
+                <span class="text-line">reaching unicorn-level scale like Grab, Angkas, and Airbnb. With</span>
+                <span class="text-line">registered Google Play and Apple Organization Developer</span>
+                <span class="text-line">accounts, we launch applications built for speed, reliability,</span>
+                <span class="text-line">and real-world success.</span>
               </p>
             </div>
           </div>
@@ -50,21 +50,35 @@
           <div class="section section-3">
             <div class="content">
               <h1 class="reveal-text">
+                <span class="text-line">creative web design & motion</span>
+              </h1>
+              <p class="reveal-text">
+                <span class="text-line">Whether you need a brand-focused marketing site or a full-scale</span>
+                <span class="text-line">SaaS ecosystem, we bridge the gap between stunning design</span>
+                <span class="text-line">and technical precision. We pair fluid animations with logic</span>
+                <span class="text-line">to ensure your digital presence is as fast as it is captivating.</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="section section-4">
+            <div class="content">
+              <h1 class="reveal-text">
                 <span class="text-line">front-end development services</span>
               </h1>
               <div class="services-list">
                 <h3 class="reveal-text hover-animate"><span class="text-line">Art Direction</span></h3>
+                <h3 class="reveal-text hover-animate"><span class="text-line">App UI Development</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">Intuitive UI/UX Design</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">Brand Identity & Strategy</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">User-Centric Mobile Design</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">2D/3D Animations & Motion Graphics</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">Modern Website Design & Development</span></h3>
-                <h3 class="reveal-text app hover-animate"><span class="text-line">App UI Development - Available Soon</span></h3>
               </div>
             </div>
           </div>
 
-          <div class="section section-4">
+          <div class="section section-5">
             <div class="content">
               <h1 class="reveal-text">
                 <span class="text-line">back-end development services</span>
@@ -72,31 +86,50 @@
               <div class="services-list">
                 <h3 class="reveal-text hover-animate"><span class="text-line">API Development</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">User Authentication Systems</span></h3>
-                <h3 class="reveal-text hover-animate"><span class="text-line">Real-time Database Solutions</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">Cloud Storage Implementation</span></h3>
-                <h3 class="reveal-text hover-animate"><span class="text-line">Serverless Function Deployment</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">Database Design & Management</span></h3>
+                <h3 class="reveal-text hover-animate"><span class="text-line">Real-time Broadcast Solutions</span></h3>
+                <h3 class="reveal-text hover-animate"><span class="text-line">App Edge Function Development</span></h3>
+                <h3 class="reveal-text hover-animate"><span class="text-line">Serverless Function Deployment</span></h3>
                 <h3 class="reveal-text hover-animate"><span class="text-line">Webhooks & Third-party Integrations</span></h3>
-                <h3 class="reveal-text app hover-animate"><span class="text-line">App Development - Available Soon</span></h3>
               </div>
             </div>
           </div>
           
-          <div class="section section-5">
+          <div class="section section-6">
             <div class="content">
               <h1 class="reveal-text">
                 <span class="text-line">pricing | project rates</span>
               </h1>
-              <p class="reveal-text">
-                <span class="text-line">To initiate your project,</span>
+              
+              <div class="pricing-table reveal-text">
+                <div class="pricing-row">
+                  <span class="pricing-amount">₱75k–₱300k</span>
+                  <span class="pricing-service">Web essentials</span>
+                </div>
+                <div class="pricing-row">
+                  <span class="pricing-amount">₱300k–₱5M+</span>
+                  <span class="pricing-service">Advanced web</span>
+                </div>
+                <div class="pricing-row">
+                  <span class="pricing-amount">₱1.5M–₱20M+</span>
+                  <span class="pricing-service">Mobile apps</span>
+                </div>
+                <div class="pricing-row">
+                  <span class="pricing-amount">₱10M+</span>
+                  <span class="pricing-service">SaaS & Platforms</span>
+                </div>
+                <div class="pricing-row">
+                  <span class="pricing-amount">Custom Price</span>
+                  <span class="pricing-service">Government</span>
+                </div>
+              </div>
+
+              <p class="pricing-note reveal-text">
+                <span class="text-line">Prices vary based on project scope, complexity, and timeline.</span>
               </p>
-              <p class="reveal-text">
-                <span class="text-line">our base packages start at 300,000 PHP</span>
-              </p>
-              <p class="reveal-text">
-                <span class="text-line">software development starts at 1.2 Million</span>
-              </p>
-              <p class="reveal-text">
+
+              <p class="reveal-text contact-note">
                 <span class="text-line email-container">
                   <NuxtLink to="/contact" class="modern-button">Book a 20 min meeting today</NuxtLink>
                 </span>
@@ -371,13 +404,8 @@ p {
 
 .section-3 {
   background-color: white;
-  padding-right: 40px;
   padding-left: 40px;
-}
-
-.section-3 .content {
-  margin-left: auto;
-  text-align: right;
+  padding-right: 40px;
 }
 
 .section-4 {
@@ -392,6 +420,17 @@ p {
 }
 
 .section-5 {
+  background-color: white;
+  padding-right: 40px;
+  padding-left: 40px;
+}
+
+.section-5 .content {
+  margin-left: auto;
+  text-align: right;
+}
+
+.section-6 {
   background-color: white;
   padding-left: 40px;
   padding-right: 40px;
@@ -412,6 +451,56 @@ p {
 
 .services-list .reveal-text {
   margin-bottom: 0.2em;
+}
+
+.pricing-table {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.pricing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.pricing-row:last-child {
+  border-bottom: none;
+}
+
+.pricing-amount {
+  font-family: 'Geist', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: black;
+  min-width: 150px;
+}
+
+.pricing-service {
+  font-family: 'Geist', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: black;
+  text-align: right;
+}
+
+.pricing-note {
+  font-family: 'Geist', sans-serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.pricing-note .text-line {
+  font-weight: 400;
+}
+
+.contact-note {
+  margin-top: 20px;
 }
 
 .modern-button {
@@ -481,10 +570,23 @@ p {
   h3 {
     font-size: 1.5rem;
   }
+  
   .content {
     max-width: 500px;
   }
 
+  .pricing-amount {
+    font-size: 1rem;
+    min-width: 130px;
+  }
+
+  .pricing-service {
+    font-size: 0.9rem;
+  }
+
+  .pricing-note {
+    font-size: 0.85rem;
+  }
 }
 
 /* Tablet and Smaller Desktop */
@@ -500,14 +602,30 @@ p {
   h3 {
     font-size: 1.25rem;
   }
+  
   .content {
     max-width: 400px;
   }
+  
   .section-1,
   .section-2,
-  .section-5 {
+  .section-3,
+  .section-6 {
     padding-left: 20px;
     padding-right: 0px;
+  }
+
+  .pricing-amount {
+    font-size: 0.9rem;
+    min-width: 110px;
+  }
+
+  .pricing-service {
+    font-size: 0.8rem;
+  }
+
+  .pricing-note {
+    font-size: 0.8rem;
   }
 }
 
@@ -547,13 +665,18 @@ p {
     scroll-snap-align: start;
   }
  
-  .section-1, .section-2, .section-3, .section-4, .section-5 {
+  .section-1, .section-2, .section-3, .section-4, .section-5, .section-6 {
     padding: 30px 20px;
   }
  
-  .section-3 .content, .section-4 .content {
+  .section-4 .content, .section-5 .content {
     text-align: right;
     margin-left: auto;
+  }
+
+  .section-6 .content {
+    text-align: left;
+    margin-left: 0;
   }
  
   h1, h2 {
@@ -574,6 +697,32 @@ p {
   p .text-line {
     display: inline;
     width: 100%;
+  }
+
+  .pricing-table {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .pricing-row {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 0;
+    gap: 4px;
+  }
+
+  .pricing-amount {
+    font-size: 1.1rem;
+    min-width: auto;
+  }
+
+  .pricing-service {
+    font-size: 0.85rem;
+    text-align: left;
+  }
+
+  .pricing-note {
+    font-size: 0.85rem;
   }
  
   .scroll-down-indicator {
@@ -625,7 +774,7 @@ p {
     padding: 20px 15px;
   }
  
-  .section-1, .section-2, .section-3, .section-4, .section-5 {
+  .section-1, .section-2, .section-3, .section-4, .section-5, .section-6 {
     padding: 20px 15px;
   }
  
@@ -636,6 +785,18 @@ p {
   p .text-line {
     display: inline;
     padding-right: 0.2em;
+  }
+
+  .pricing-amount {
+    font-size: 1rem;
+  }
+
+  .pricing-service {
+    font-size: 0.8rem;
+  }
+
+  .pricing-note {
+    font-size: 0.8rem;
   }
  
   .modern-button {
