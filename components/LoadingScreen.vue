@@ -1,6 +1,6 @@
 <template>
   <div v-if="showLoading" ref="loadingScreen" class="loading-screen">
-    <div ref="textContainer" class="loading-text">World-Class Web Development</div>
+    <div ref="textContainer" class="loading-text">Software Development & Design Studio</div>
   </div>
 </template>
 
