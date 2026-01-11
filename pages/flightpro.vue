@@ -266,9 +266,9 @@ useHead({
   }
 
   .right-text {
-    position: absolute;
+    right: auto;
+    left: 20px;
     bottom: 15px;
-    right: 20px;
     font-size: 2.5rem;
   }
 
@@ -303,8 +303,8 @@ useHead({
 @media screen and (max-width: 480px) {
   .right-text {
     font-size: 2rem;
+    left: 20px;
     bottom: 15px;
-    right: 20px;
   }
 
   .right-description {
