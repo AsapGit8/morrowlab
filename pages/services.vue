@@ -142,9 +142,6 @@
         </div>
       </div>
 
-      <!-- Availability Component -->
-      <Availability />
-
       <div class="desktop-footer">
         <Footer />
       </div>
