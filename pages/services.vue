@@ -27,7 +27,6 @@
               </p>
              
               <div class="scroll-down-indicator" id="scroll-indicator">
-                <!-- Characters will be inserted via JS -->
               </div>
             </div>
           </div>
@@ -143,6 +142,9 @@
         </div>
       </div>
 
+      <!-- Availability Component -->
+      <Availability />
+
       <div class="desktop-footer">
         <Footer />
       </div>
@@ -154,6 +156,7 @@
 import { ref, onMounted } from "vue";
 import PageTransition from "@/components/PageTransition.vue";
 import Footer from "@/components/Footer.vue";
+import Availability from "@/components/Availability.vue";
 import gsap from "gsap";
 
 const showLoadingScreen = ref(true);
@@ -175,7 +178,6 @@ onMounted(() => {
       });
   }
 
-  // Set up letter-by-letter scroll down indicator animation
   const scrollIndicator = document.getElementById('scroll-indicator');
   const scrollText = "Scroll Down";
  
@@ -224,7 +226,6 @@ onMounted(() => {
     }
   }
 
-  // Set up hover animations for h3 elements only
   const h3Elements = document.querySelectorAll('.hover-animate');
  
   h3Elements.forEach(el => {
@@ -265,7 +266,6 @@ onMounted(() => {
     });
   });
 
-  // Set up GSAP animations when elements come into view
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -557,7 +557,6 @@ p {
   opacity: 0.3;
 }
 
-/* Medium Desktop Screens (like MacBook 14") */
 @media screen and (max-width: 1440px) and (min-width: 1024px) {
   p {
     font-size: 1rem;
@@ -589,7 +588,6 @@ p {
   }
 }
 
-/* Tablet and Smaller Desktop */
 @media screen and (max-width: 1024px) {
   p {
     font-size: 0.875rem;
@@ -629,7 +627,6 @@ p {
   }
 }
 
-/* Mobile Optimization */
 @media screen and (max-width: 768px) {
   .main {
     flex-direction: column;
@@ -756,7 +753,6 @@ p {
   }
 }
 
-/* Small Mobile Devices */
 @media screen and (max-width: 480px) {
   h3 {
     font-size: 1rem;

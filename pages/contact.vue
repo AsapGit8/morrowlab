@@ -11,6 +11,9 @@
         </div>
       </main>
 
+      <!-- Availability Component -->
+      <Availability />
+
       <!-- Footer (Hidden until transition finishes) -->
       <Footer />
     </div>
@@ -21,6 +24,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import PageTransition from "@/components/PageTransition.vue";
 import Footer from "@/components/Footer.vue";
+import Availability from "@/components/Availability.vue";
 
 const showLoadingScreen = ref(true);
 let calScript = null;
@@ -159,12 +163,11 @@ useHead({
   width: 100%;
   height: 100%;
   overflow: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .main {
     padding-top: 60px;
@@ -176,14 +179,12 @@ useHead({
     padding: 0 16px;
   }
   
-  /* Fix iOS height issues */
   .cal {
     height: auto;
     min-height: 500px;
   }
 }
 
-/* Small mobile devices */
 @media (max-width: 480px) {
   .main {
     padding-top: 60px;
@@ -195,7 +196,6 @@ useHead({
   }
 }
 
-/* Fix for notched phones */
 @supports (padding: max(0px)) {
   .cal-container {
     padding-left: max(12px, env(safe-area-inset-left));
