@@ -115,7 +115,7 @@
                   <span class="pricing-service">Mobile apps</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱2M-₱15M+</span>
+                  <span class="pricing-amount">₱2M+</span>
                   <span class="pricing-service">SaaS & Platforms</span>
                 </div>
                 <div class="pricing-row">
