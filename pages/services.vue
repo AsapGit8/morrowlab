@@ -103,19 +103,19 @@
               
               <div class="pricing-table reveal-text">
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱75k–₱300k</span>
+                  <span class="pricing-amount">₱90k–₱300k</span>
                   <span class="pricing-service">Web essentials</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱300k–₱5M+</span>
+                  <span class="pricing-amount">₱300k–₱6M+</span>
                   <span class="pricing-service">Advanced web</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱1.5M–₱20M+</span>
+                  <span class="pricing-amount">₱800K-₱8M+</span>
                   <span class="pricing-service">Mobile apps</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱10M+</span>
+                  <span class="pricing-amount">₱2M-₱15M+</span>
                   <span class="pricing-service">SaaS & Platforms</span>
                 </div>
                 <div class="pricing-row">
