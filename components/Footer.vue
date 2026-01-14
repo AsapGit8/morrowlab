@@ -23,7 +23,7 @@
 
     <div class="bottom-section">
       <div class="footer-links">
-        <span>©Morrowlab 2025</span>
+        <span>©Morrowlab 2026</span>
         <NuxtLink to="/privacy-policy" class="footer-link">Privacy Policy</NuxtLink>
         <NuxtLink to="/terms-and-conditions" class="footer-link">Terms and Conditions</NuxtLink>
       </div>
