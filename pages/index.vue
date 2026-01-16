@@ -97,14 +97,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, nextTick } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue';
 import LoadingScreen from '@/components/LoadingScreen.vue';
 import { useNuxtApp } from '#app';
 import { useRouter } from 'vue-router';
 
 const { $gsap } = useNuxtApp();
 const router = useRouter();
-const showLoadingScreen = ref(true);
+const showLoadingScreen = ref(false);
 const mainContent = ref(null);
 const dalibookSplineViewer = ref(null);
 const flightproSplineViewer = ref(null);
@@ -159,6 +159,11 @@ const handleLoadingFinished = () => {
 };
 
 const handleSplineClick = (route) => {
+  // Mark that user is navigating away
+  if (process.client) {
+    sessionStorage.setItem('navigatingFromHome', 'true');
+  }
+
   // Add a slight delay for mobile to ensure the touch is intentional
   const delay = isMobile.value ? 100 : 0;
 
@@ -291,29 +296,52 @@ onMounted(() => {
   if (process.client) {
     checkMobile();
     window.addEventListener('resize', checkMobile);
-  }
 
-  // Fixed GSAP animation for loading screen
-  setTimeout(() => {
-    if (showLoadingScreen.value && loadingScreenRef.value) {
-      const element = loadingScreenRef.value.$el || loadingScreenRef.value;
+    // Check if user is returning from navigation within the app
+    const isReturning = sessionStorage.getItem('navigatingFromHome') === 'true';
+    
+    if (isReturning) {
+      // User is returning from another page - skip loading animation
+      sessionStorage.removeItem('navigatingFromHome');
+      showLoadingScreen.value = false;
+      
+      // Simple fade in for main content
+      nextTick(() => {
+        if (mainContent.value) {
+          $gsap.fromTo(
+            mainContent.value,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.5, ease: 'power2.out' }
+          );
+        }
+      });
+    } else {
+      // Fresh page load or refresh - show loading animation
+      showLoadingScreen.value = true;
 
-      if (element) {
-        $gsap.to(element, {
-          yPercent: -100,
-          duration: 3,
-          ease: 'power2.inOut',
-          onComplete: () => {
+      // Fixed GSAP animation for loading screen
+      setTimeout(() => {
+        if (showLoadingScreen.value && loadingScreenRef.value) {
+          const element = loadingScreenRef.value.$el || loadingScreenRef.value;
+
+          if (element) {
+            $gsap.to(element, {
+              yPercent: -100,
+              duration: 3,
+              ease: 'power2.inOut',
+              onComplete: () => {
+                showLoadingScreen.value = false;
+                handleLoadingFinished();
+              },
+            });
+          } else {
             showLoadingScreen.value = false;
             handleLoadingFinished();
-          },
-        });
-      } else {
-        showLoadingScreen.value = false;
-        handleLoadingFinished();
-      }
+          }
+        }
+      }, 1500);
     }
-  }, 1500);
+  }
 
   // Load Spline viewer only on the client-side
   if (process.client) {
@@ -331,13 +359,13 @@ onMounted(() => {
         console.error('Error loading Spline Viewer:', err);
       });
   }
+});
 
+onBeforeUnmount(() => {
   // Clean up event listener
-  return () => {
-    if (process.client) {
-      window.removeEventListener('resize', checkMobile);
-    }
-  };
+  if (process.client) {
+    window.removeEventListener('resize', checkMobile);
+  }
 });
 
 // SEO
@@ -391,7 +419,6 @@ useHead({
   position: relative;
 }
 
-/* DALIBOOK Section Styles */
 .section-dalibook .left-box {
   background-color: white;
 }
@@ -405,7 +432,6 @@ useHead({
   position: relative;
 }
 
-/* FLIGHTPRO Section Styles */
 .section-flightpro .spline-box {
   background-color: #fafafa;
   display: flex;
@@ -492,7 +518,6 @@ useHead({
   opacity: 1;
 }
 
-/* Mobile Optimization */
 @media screen and (max-width: 768px) {
   .desktop-layout {
     display: none;
@@ -582,7 +607,6 @@ useHead({
   }
 }
 
-/* Small Mobile Devices */
 @media screen and (max-width: 480px) {
   .mobile-text {
     font-size: 2rem;
