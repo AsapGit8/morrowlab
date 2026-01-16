@@ -94,8 +94,25 @@
               </div>
             </div>
           </div>
-          
+
           <div class="section section-6">
+            <div class="content">
+              <h1 class="reveal-text">
+                <span class="text-line">maintenance & support</span>
+              </h1>
+              <p class="reveal-text">
+                <span class="text-line">Every project includes 5 years of free maintenance covering bug</span>
+                <span class="text-line">fixes, limited minor tweaks, and quarterly software updates to</span>
+                <span class="text-line">keep your application secure and current. Major feature additions</span>
+                <span class="text-line">or significant modifications are billed separately. We operate on</span>
+                <span class="text-line">a one-time payment model with no monthly or yearly subscription</span>
+                <span class="text-line">fees. Additional charges apply only when increased user traffic</span>
+                <span class="text-line">requires scaling your infrastructure beyond the initial scope.</span>
+              </p>
+            </div>
+          </div>
+          
+          <div class="section section-7">
             <div class="content">
               <h1 class="reveal-text">
                 <span class="text-line">pricing | project rates</span>
@@ -103,19 +120,19 @@
               
               <div class="pricing-table reveal-text">
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱90k–₱300k</span>
+                  <span class="pricing-amount">₱90k+ | $1.5k+</span>
                   <span class="pricing-service">Web essentials</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱300k–₱6M+</span>
+                  <span class="pricing-amount">₱300k+ | &5k+</span>
                   <span class="pricing-service">Advanced web</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱800K-₱8M+</span>
+                  <span class="pricing-amount">₱800K+ | $14k+</span>
                   <span class="pricing-service">Mobile apps</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱5M+</span>
+                  <span class="pricing-amount">₱3M+ | $50k+</span>
                   <span class="pricing-service">SaaS & Platforms</span>
                 </div>
                 <div class="pricing-row">
@@ -125,7 +142,7 @@
               </div>
 
               <p class="pricing-note reveal-text">
-                <span class="text-line">Prices vary based on project scope, complexity, and timeline.</span>
+                <span class="text-line">Our project fees vary depending on scope, complexity, and timeline. Base pricing is tailored to your project’s requirements, with a maximum budget ceiling of ₱100M+ | $850k. Additional costs may apply for specialized services such as 3D motion graphics, personalized design elements, advanced interactivity, or other custom features.</span>
               </p>
 
               <p class="reveal-text contact-note">
@@ -433,6 +450,12 @@ p {
   padding-right: 40px;
 }
 
+.section-7 {
+  background-color: white;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
 .reveal-text {
   overflow: hidden;
   display: block;
@@ -605,7 +628,8 @@ p {
   .section-1,
   .section-2,
   .section-3,
-  .section-6 {
+  .section-6,
+  .section-7 {
     padding-left: 20px;
     padding-right: 0px;
   }
@@ -659,7 +683,7 @@ p {
     scroll-snap-align: start;
   }
  
-  .section-1, .section-2, .section-3, .section-4, .section-5, .section-6 {
+  .section-1, .section-2, .section-3, .section-4, .section-5, .section-6, .section-7 {
     padding: 30px 20px;
   }
  
@@ -668,7 +692,7 @@ p {
     margin-left: auto;
   }
 
-  .section-6 .content {
+  .section-6 .content, .section-7 .content {
     text-align: left;
     margin-left: 0;
   }
@@ -767,7 +791,7 @@ p {
     padding: 20px 15px;
   }
  
-  .section-1, .section-2, .section-3, .section-4, .section-5, .section-6 {
+  .section-1, .section-2, .section-3, .section-4, .section-5, .section-6, .section-7 {
     padding: 20px 15px;
   }
  
