@@ -100,14 +100,40 @@
               <h1 class="reveal-text">
                 <span class="text-line">maintenance & support</span>
               </h1>
-              <p class="reveal-text">
-                <span class="text-line">Every project includes 5 years of free maintenance covering bug</span>
-                <span class="text-line">fixes, limited minor tweaks, and quarterly software updates to</span>
-                <span class="text-line">keep your application secure and current. Major feature additions</span>
-                <span class="text-line">or significant modifications are billed separately. We operate on</span>
-                <span class="text-line">a one-time payment model with no monthly or yearly subscription</span>
-                <span class="text-line">fees. Additional charges apply only when increased user traffic</span>
-                <span class="text-line">requires scaling your infrastructure beyond the initial scope.</span>
+              
+              <div class="maintenance-table reveal-text">
+                <div class="maintenance-row">
+                  <span class="maintenance-service">Free Maintenance Period</span>
+                  <span class="maintenance-detail">5 Years</span>
+                </div>
+                <div class="maintenance-row">
+                  <span class="maintenance-service">Bug Fixes & Security Patches</span>
+                  <span class="maintenance-detail">Included</span>
+                </div>
+                <div class="maintenance-row">
+                  <span class="maintenance-service">Limited Minor Tweaks</span>
+                  <span class="maintenance-detail">Included</span>
+                </div>
+                <div class="maintenance-row">
+                  <span class="maintenance-service">Quarterly Software Updates</span>
+                  <span class="maintenance-detail">Included</span>
+                </div>
+                <div class="maintenance-row">
+                  <span class="maintenance-service">Payment Model</span>
+                  <span class="maintenance-detail">One-Time Fee</span>
+                </div>
+                <div class="maintenance-row">
+                  <span class="maintenance-service">Monthly Subscription</span>
+                  <span class="maintenance-detail">Not Required</span>
+                </div>
+                <div class="maintenance-row">
+                  <span class="maintenance-service">Infrastructure Scaling</span>
+                  <span class="maintenance-detail">As Needed</span>
+                </div>
+              </div>
+
+              <p class="maintenance-note reveal-text">
+                <span class="text-line">Major feature additions or significant modifications are billed separately. Additional charges apply only when increased user traffic requires scaling your infrastructure beyond the initial scope.</span>
               </p>
             </div>
           </div>
@@ -120,19 +146,19 @@
               
               <div class="pricing-table reveal-text">
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱90k+ | $1.5k+</span>
+                  <span class="pricing-amount">₱90k+ <span class="dollar-amount">| $1.5k</span></span>
                   <span class="pricing-service">Web essentials</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱300k+ | &5k+</span>
+                  <span class="pricing-amount">₱300k+ <span class="dollar-amount">| $5k</span></span>
                   <span class="pricing-service">Advanced web</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱800K+ | $14k+</span>
+                  <span class="pricing-amount">₱800K+ <span class="dollar-amount">| $14k</span></span>
                   <span class="pricing-service">Mobile apps</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱3M+ | $50k+</span>
+                  <span class="pricing-amount">₱3M+ <span class="dollar-amount">| $50k</span></span>
                   <span class="pricing-service">SaaS & Platforms</span>
                 </div>
                 <div class="pricing-row">
@@ -142,7 +168,7 @@
               </div>
 
               <p class="pricing-note reveal-text">
-                <span class="text-line">Our project fees vary depending on scope, complexity, and timeline. Base pricing is tailored to your project’s requirements, with a maximum budget ceiling of ₱100M+ | $850k. Additional costs may apply for specialized services such as 3D motion graphics, personalized design elements, advanced interactivity, or other custom features.</span>
+                <span class="text-line">Our project fees vary depending on scope, complexity, and timeline. Base pricing is tailored to your project's requirements, with a maximum budget ceiling of ₱100M+ | $850k. Additional costs may apply for specialized services such as 3D motion graphics, personalized design elements, advanced interactivity, or other custom features.</span>
               </p>
 
               <p class="reveal-text contact-note">
@@ -473,6 +499,51 @@ p {
   margin-bottom: 0.2em;
 }
 
+.maintenance-table {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.maintenance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.maintenance-row:last-child {
+  border-bottom: none;
+}
+
+.maintenance-service {
+  font-family: 'Geist', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: black;
+}
+
+.maintenance-detail {
+  font-family: 'Geist', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: black;
+  text-align: right;
+  min-width: 150px;
+}
+
+.maintenance-note {
+  font-family: 'Geist', sans-serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 10px;
+}
+
+.maintenance-note .text-line {
+  font-weight: 400;
+}
+
 .pricing-table {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -496,6 +567,11 @@ p {
   font-size: 1.1rem;
   color: black;
   min-width: 150px;
+}
+
+.dollar-amount {
+  opacity: 0.3;
+  font-weight: 400;
 }
 
 .pricing-service {
@@ -594,6 +670,19 @@ p {
     max-width: 500px;
   }
 
+  .maintenance-service {
+    font-size: 0.9rem;
+  }
+
+  .maintenance-detail {
+    font-size: 1rem;
+    min-width: 130px;
+  }
+
+  .maintenance-note {
+    font-size: 0.85rem;
+  }
+
   .pricing-amount {
     font-size: 1rem;
     min-width: 130px;
@@ -632,6 +721,19 @@ p {
   .section-7 {
     padding-left: 20px;
     padding-right: 0px;
+  }
+
+  .maintenance-service {
+    font-size: 0.8rem;
+  }
+
+  .maintenance-detail {
+    font-size: 0.9rem;
+    min-width: 110px;
+  }
+
+  .maintenance-note {
+    font-size: 0.8rem;
   }
 
   .pricing-amount {
@@ -715,6 +817,32 @@ p {
   p .text-line {
     display: inline;
     width: 100%;
+  }
+
+  .maintenance-table {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .maintenance-row {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 0;
+    gap: 4px;
+  }
+
+  .maintenance-service {
+    font-size: 0.85rem;
+  }
+
+  .maintenance-detail {
+    font-size: 1.1rem;
+    min-width: auto;
+    text-align: left;
+  }
+
+  .maintenance-note {
+    font-size: 0.85rem;
   }
 
   .pricing-table {
@@ -802,6 +930,18 @@ p {
   p .text-line {
     display: inline;
     padding-right: 0.2em;
+  }
+
+  .maintenance-service {
+    font-size: 0.8rem;
+  }
+
+  .maintenance-detail {
+    font-size: 1rem;
+  }
+
+  .maintenance-note {
+    font-size: 0.8rem;
   }
 
   .pricing-amount {

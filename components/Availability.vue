@@ -2,7 +2,7 @@
   <div class="availability-container">
     <div class="availability-content">
       <div class="glow-dot"></div>
-      <span class="availability-text">Inquiries Open for February 2026</span>
+      <span class="availability-text">Limited slots for February 2026</span>
     </div>
   </div>
 </template>
