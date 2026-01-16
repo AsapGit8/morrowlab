@@ -10,50 +10,48 @@
     <!-- Main Content (Initially Hidden) -->
     <div v-show="!showLoadingScreen" ref="mainContent" class="main-container">
       <!-- Desktop Layout -->
-      <div class="desktop-layout" ref="desktopContainer">
-        <div class="desktop-sections-wrapper" ref="desktopWrapper">
-          <!-- DALIBOOK Section -->
-          <div class="main section-dalibook" ref="dalibookSection">
-            <div class="left-box">
-              <div class="left-text">DALIBOOK</div>
-              <div class="visit-site-container">
-                <a href="https://www.dalibook.io/" target="_blank" rel="noopener noreferrer" class="visit-site-link">
-                  <span class="visit-site-text">Visit Site</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-site-icon">
-                    <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-                    <path d="m21 21-9-9"/>
-                    <path d="M21 15v6h-6"/>
-                  </svg>
-                </a>
-              </div>
-            </div>
-            <div class="right-box" @click="() => handleSplineClick('/dalibook')">
-              <client-only>
-                <spline-viewer
-                  v-if="isSplineLoaded"
-                  ref="dalibookSplineViewer"
-                  url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
-                ></spline-viewer>
-              </client-only>
-              <div class="hover-text">View Project</div>
+      <div class="desktop-layout">
+        <!-- DALIBOOK Section -->
+        <div class="main section-dalibook">
+          <div class="left-box">
+            <div class="left-text">DALIBOOK</div>
+            <div class="visit-site-container">
+              <a href="https://www.dalibook.io/" target="_blank" rel="noopener noreferrer" class="visit-site-link">
+                <span class="visit-site-text">Visit Site</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-site-icon">
+                  <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                  <path d="m21 21-9-9"/>
+                  <path d="M21 15v6h-6"/>
+                </svg>
+              </a>
             </div>
           </div>
+          <div class="right-box" @click="() => handleSplineClick('/dalibook')">
+            <client-only>
+              <spline-viewer
+                v-if="isSplineLoaded"
+                ref="dalibookSplineViewer"
+                url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
+              ></spline-viewer>
+            </client-only>
+            <div class="hover-text">View Project</div>
+          </div>
+        </div>
 
-          <!-- FLIGHTPRO Section -->
-          <div class="main section-flightpro" ref="flightproSection">
-            <div class="left-box spline-box" @click="() => handleSplineClick('/flightpro')">
-              <client-only>
-                <spline-viewer
-                  v-if="isSplineLoaded"
-                  ref="flightproSplineViewer"
-                  url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
-                ></spline-viewer>
-              </client-only>
-              <div class="hover-text">View Project</div>
-            </div>
-            <div class="right-box text-box">
-              <div class="right-text">FLIGHTPRO</div>
-            </div>
+        <!-- FLIGHTPRO Section -->
+        <div class="main section-flightpro">
+          <div class="left-box spline-box" @click="() => handleSplineClick('/flightpro')">
+            <client-only>
+              <spline-viewer
+                v-if="isSplineLoaded"
+                ref="flightproSplineViewer"
+                url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
+              ></spline-viewer>
+            </client-only>
+            <div class="hover-text">View Project</div>
+          </div>
+          <div class="right-box text-box">
+            <div class="right-text">FLIGHTPRO</div>
           </div>
         </div>
       </div>
@@ -119,11 +117,6 @@ const mobileContainer = ref(null);
 const currentSection = ref(null);
 const mobileText = ref(null);
 const currentProjectIndex = ref(0);
-const desktopContainer = ref(null);
-const desktopWrapper = ref(null);
-const dalibookSection = ref(null);
-const flightproSection = ref(null);
-const currentDesktopIndex = ref(0);
 
 // Project data
 const projects = [
@@ -192,15 +185,11 @@ const handleSplineClick = (route) => {
   }, delay);
 };
 
-const transitionToProject = (direction) => {
+const transitionToNextProject = () => {
   if (!isMobile.value) return;
 
   const currentSplineViewer = getCurrentMobileSplineViewer();
   const currentSplineElement = currentSplineViewer?.$el || currentSplineViewer;
-
-  // Determine animation direction
-  const yOffset = direction === 'next' ? -20 : 20;
-  const yOffsetNew = direction === 'next' ? 20 : -20;
 
   // Fade out current content (text and spline)
   const elementsToFadeOut = [mobileText.value];
@@ -210,16 +199,12 @@ const transitionToProject = (direction) => {
 
   $gsap.to(elementsToFadeOut, {
     opacity: 0,
-    y: yOffset,
+    y: -20,
     duration: 0.4,
     ease: 'power2.out',
     onComplete: () => {
-      // Update project index with infinite loop
-      if (direction === 'next') {
-        currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
-      } else {
-        currentProjectIndex.value = (currentProjectIndex.value - 1 + projects.length) % projects.length;
-      }
+      // Update project index
+      currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
       
       // Wait for Vue to update the DOM with new spline viewer
       nextTick(() => {
@@ -233,7 +218,7 @@ const transitionToProject = (direction) => {
         }
 
         $gsap.set(elementsToFadeIn, {
-          y: yOffsetNew,
+          y: 20,
           opacity: 0
         });
         
@@ -248,113 +233,6 @@ const transitionToProject = (direction) => {
       });
     }
   });
-};
-
-const transitionDesktopSection = (direction) => {
-  if (isMobile.value || !desktopWrapper.value) return;
-
-  const sections = [dalibookSection.value, flightproSection.value];
-  const currentSectionElement = sections[currentDesktopIndex.value];
-
-  // Determine next section index with infinite loop
-  let nextIndex;
-  if (direction === 'next') {
-    nextIndex = (currentDesktopIndex.value + 1) % sections.length;
-  } else {
-    nextIndex = (currentDesktopIndex.value - 1 + sections.length) % sections.length;
-  }
-
-  const nextSectionElement = sections[nextIndex];
-
-  // Determine animation direction
-  const yOffset = direction === 'next' ? '-100%' : '100%';
-  const yOffsetNext = direction === 'next' ? '100%' : '-100%';
-
-  // Set initial position for next section
-  $gsap.set(nextSectionElement, {
-    yPercent: direction === 'next' ? 100 : -100
-  });
-
-  // Animate current section out and next section in
-  const timeline = $gsap.timeline();
-
-  timeline.to(currentSectionElement, {
-    yPercent: direction === 'next' ? -100 : 100,
-    duration: 0.8,
-    ease: 'power2.inOut'
-  }, 0);
-
-  timeline.to(nextSectionElement, {
-    yPercent: 0,
-    duration: 0.8,
-    ease: 'power2.inOut',
-    onComplete: () => {
-      // Update current index
-      currentDesktopIndex.value = nextIndex;
-    }
-  }, 0);
-};
-
-const setupDesktopScrollHandler = () => {
-  if (isMobile.value || !desktopContainer.value) return;
-
-  let isTransitioning = false;
-  let scrollThreshold = 50;
-
-  const handleWheel = (e) => {
-    if (isTransitioning) {
-      e.preventDefault();
-      return;
-    }
-
-    if (Math.abs(e.deltaY) > scrollThreshold) {
-      e.preventDefault();
-      isTransitioning = true;
-
-      // Determine scroll direction
-      if (e.deltaY > 0) {
-        // Scrolling down - go to next section
-        transitionDesktopSection('next');
-      } else {
-        // Scrolling up - go to previous section
-        transitionDesktopSection('prev');
-      }
-
-      setTimeout(() => {
-        isTransitioning = false;
-      }, 1000);
-    }
-  };
-
-  // Handle keyboard navigation
-  const handleKeydown = (e) => {
-    if (isTransitioning) return;
-
-    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-      e.preventDefault();
-      isTransitioning = true;
-      transitionDesktopSection('next');
-      setTimeout(() => {
-        isTransitioning = false;
-      }, 1000);
-    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-      e.preventDefault();
-      isTransitioning = true;
-      transitionDesktopSection('prev');
-      setTimeout(() => {
-        isTransitioning = false;
-      }, 1000);
-    }
-  };
-
-  desktopContainer.value.addEventListener('wheel', handleWheel, { passive: false });
-  window.addEventListener('keydown', handleKeydown);
-
-  // Cleanup function
-  return () => {
-    desktopContainer.value?.removeEventListener('wheel', handleWheel);
-    window.removeEventListener('keydown', handleKeydown);
-  };
 };
 
 const setupMobileScrollHandler = () => {
@@ -379,15 +257,7 @@ const setupMobileScrollHandler = () => {
 
     if (Math.abs(deltaY) > scrollThreshold) {
       isTransitioning = true;
-      
-      // Determine scroll direction
-      if (deltaY > 0) {
-        // Scrolling down - go to next project
-        transitionToProject('next');
-      } else {
-        // Scrolling up - go to previous project
-        transitionToProject('prev');
-      }
+      transitionToNextProject();
       
       setTimeout(() => {
         isTransitioning = false;
@@ -403,15 +273,7 @@ const setupMobileScrollHandler = () => {
 
     if (Math.abs(e.deltaY) > 10) {
       isTransitioning = true;
-      
-      // Determine scroll direction
-      if (e.deltaY > 0) {
-        // Scrolling down - go to next project
-        transitionToProject('next');
-      } else {
-        // Scrolling up - go to previous project
-        transitionToProject('prev');
-      }
+      transitionToNextProject();
       
       setTimeout(() => {
         isTransitioning = false;
@@ -428,15 +290,7 @@ onMounted(() => {
   // Check for mobile device
   if (process.client) {
     checkMobile();
-    window.addEventListener('resize', () => {
-      checkMobile();
-      // Reinitialize scroll handlers on resize
-      if (isMobile.value) {
-        setupMobileScrollHandler();
-      } else {
-        setupDesktopScrollHandler();
-      }
-    });
+    window.addEventListener('resize', checkMobile);
   }
 
   // Fixed GSAP animation for loading screen
@@ -468,13 +322,9 @@ onMounted(() => {
         isSplineLoaded.value = true;
         console.log('Spline Viewer loaded successfully');
         
-        // Setup scroll handlers after spline is loaded
+        // Setup mobile scroll handler after spline is loaded
         setTimeout(() => {
-          if (isMobile.value) {
-            setupMobileScrollHandler();
-          } else {
-            setupDesktopScrollHandler();
-          }
+          setupMobileScrollHandler();
         }, 1000);
       })
       .catch((err) => {
@@ -511,15 +361,6 @@ useHead({
 
 .desktop-layout {
   display: block;
-  height: 100dvh;
-  overflow: hidden;
-  position: relative;
-}
-
-.desktop-sections-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100dvh;
 }
 
 .mobile-layout {
@@ -529,10 +370,6 @@ useHead({
 .main {
   display: flex;
   height: 100dvh;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .left-box,
@@ -554,14 +391,7 @@ useHead({
   position: relative;
 }
 
-.section-dalibook {
-  z-index: 2;
-}
-
-.section-flightpro {
-  z-index: 1;
-}
-
+/* DALIBOOK Section Styles */
 .section-dalibook .left-box {
   background-color: white;
 }
@@ -575,6 +405,7 @@ useHead({
   position: relative;
 }
 
+/* FLIGHTPRO Section Styles */
 .section-flightpro .spline-box {
   background-color: #fafafa;
   display: flex;
@@ -654,7 +485,6 @@ useHead({
   color: black;
   opacity: 0;
   transition: opacity 0.3s ease;
-  pointer-events: none;
 }
 
 .right-box:hover .hover-text,
@@ -662,6 +492,7 @@ useHead({
   opacity: 1;
 }
 
+/* Mobile Optimization */
 @media screen and (max-width: 768px) {
   .desktop-layout {
     display: none;
@@ -672,7 +503,6 @@ useHead({
     height: 100dvh;
     overflow: hidden;
     position: relative;
-    touch-action: pan-y;
   }
 
   .mobile-section {
@@ -752,6 +582,7 @@ useHead({
   }
 }
 
+/* Small Mobile Devices */
 @media screen and (max-width: 480px) {
   .mobile-text {
     font-size: 2rem;
