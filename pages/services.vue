@@ -123,8 +123,8 @@
                   <span class="maintenance-detail">One-Time Fee</span>
                 </div>
                 <div class="maintenance-row">
-                  <span class="maintenance-service">Monthly Subscription</span>
-                  <span class="maintenance-detail">Not Required</span>
+                  <span class="maintenance-service">Monthly/Yearly Fees</span>
+                  <span class="maintenance-detail">None - charges apply as users grow</span>
                 </div>
                 <div class="maintenance-row">
                   <span class="maintenance-service">Infrastructure Scaling</span>
