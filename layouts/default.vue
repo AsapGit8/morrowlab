@@ -66,7 +66,7 @@ header {
   width: 100%;
   padding-right: 20px;
   padding-left: 20px;
-  z-index: 1000;
+  z-index: 10000;
   box-sizing: border-box;
 }
 

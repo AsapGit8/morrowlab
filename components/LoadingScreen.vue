@@ -16,7 +16,6 @@ const textContainer = ref(null);
 onMounted(() => {
   const tl = $gsap.timeline({
     onComplete: () => {
-      // Smooth top-to-bottom page transition
       $gsap.to(loadingScreen.value, {
         yPercent: -100,
         duration: 3,
@@ -26,7 +25,6 @@ onMounted(() => {
     },
   });
 
-  // Animation sequence
   tl.to(textContainer.value, {
     opacity: 1,
     y: 0,
@@ -37,7 +35,7 @@ onMounted(() => {
       opacity: 0,
       duration: 0.5,
       onComplete: () => {
-        textContainer.value.innerText = "Based in Manila"; // Change text manually
+        textContainer.value.innerText = "Based in Manila";
         $gsap.to(textContainer.value, {
           opacity: 1,
           y: 0,
@@ -61,7 +59,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  z-index: 9999;
+  z-index: 99999;
   overflow: hidden;
 }
 

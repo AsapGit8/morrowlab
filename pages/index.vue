@@ -168,7 +168,7 @@ useHead({
 
 const { $gsap } = useNuxtApp();
 const router = useRouter();
-const showLoadingScreen = ref(false);
+const showLoadingScreen = ref(true);
 const mainContent = ref(null);
 const dalibookSplineViewer = ref(null);
 const flightproSplineViewer = ref(null);
@@ -365,8 +365,6 @@ onMounted(() => {
         }
       });
     } else {
-      showLoadingScreen.value = true;
-
       setTimeout(() => {
         if (showLoadingScreen.value && loadingScreenRef.value) {
           const element = loadingScreenRef.value.$el || loadingScreenRef.value;
@@ -417,6 +415,7 @@ onBeforeUnmount(() => {
 .main-container {
   display: flex;
   flex-direction: column;
+  opacity: 0;
 }
 
 .desktop-layout {
