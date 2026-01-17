@@ -338,14 +338,6 @@ onMounted(() => {
     observer.observe(el);
   });
 });
-
-useHead({
-  title: 'Services | Web Development Philippines',
-  meta: [
-    { name: 'description',
-      content: 'MorrowLab offers premium web design and development, alongside custom cloud-based web application development for premium brands in the Philippines and beyond. We specialize in immersive 3D websites and scalable solutions for innovative digital transformation.' }
-  ]
-})
 </script>
 
 <style scoped>

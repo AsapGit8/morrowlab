@@ -1,17 +1,13 @@
 <template>
   <div>
-    <!-- Show LoadingScreen.vue before the main content -->
     <LoadingScreen
       v-if="showLoadingScreen"
       @finished="handleLoadingFinished"
       ref="loadingScreenRef"
     />
 
-    <!-- Main Content (Initially Hidden) -->
     <div v-show="!showLoadingScreen" ref="mainContent" class="main-container">
-      <!-- Desktop Layout -->
       <div class="desktop-layout">
-        <!-- DALIBOOK Section -->
         <div class="main section-dalibook">
           <div class="left-box">
             <div class="left-text">DALIBOOK</div>
@@ -38,7 +34,6 @@
           </div>
         </div>
 
-        <!-- FLIGHTPRO Section -->
         <div class="main section-flightpro">
           <div class="left-box spline-box" @click="() => handleSplineClick('/flightpro')">
             <client-only>
@@ -56,7 +51,6 @@
         </div>
       </div>
 
-      <!-- Mobile Layout -->
       <div class="mobile-layout" ref="mobileContainer">
         <div class="mobile-section" ref="currentSection">
           <div class="mobile-upper-div">
@@ -74,14 +68,12 @@
           </div>
           <div class="mobile-lower-div" @click="() => handleSplineClick(currentProject.route)">
             <client-only>
-              <!-- DALIBOOK Spline Viewer -->
               <spline-viewer
                 v-if="isSplineLoaded && currentProjectIndex === 0"
                 ref="mobiledalibookSplineViewer"
                 url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
               ></spline-viewer>
               
-              <!-- FLIGHTPRO Spline Viewer -->
               <spline-viewer
                 v-if="isSplineLoaded && currentProjectIndex === 1"
                 ref="mobileflightproSplineViewer"
@@ -118,7 +110,6 @@ const currentSection = ref(null);
 const mobileText = ref(null);
 const currentProjectIndex = ref(0);
 
-// Project data
 const projects = [
   {
     text: 'DALIBOOK',
@@ -134,7 +125,6 @@ const projects = [
 
 const currentProject = computed(() => projects[currentProjectIndex.value]);
 
-// Get current mobile spline viewer
 const getCurrentMobileSplineViewer = () => {
   if (currentProjectIndex.value === 0) {
     return mobiledalibookSplineViewer.value;
@@ -143,13 +133,11 @@ const getCurrentMobileSplineViewer = () => {
   }
 };
 
-// Check if device is mobile
 const checkMobile = () => {
   isMobile.value = window.innerWidth <= 768;
 };
 
 const handleLoadingFinished = () => {
-  // Page transition effect (smooth fade-in and slide-up)
   $gsap.fromTo(
     mainContent.value,
     { opacity: 0, y: 50 },
@@ -159,12 +147,10 @@ const handleLoadingFinished = () => {
 };
 
 const handleSplineClick = (route) => {
-  // Mark that user is navigating away
   if (process.client) {
     sessionStorage.setItem('navigatingFromHome', 'true');
   }
 
-  // Add a slight delay for mobile to ensure the touch is intentional
   const delay = isMobile.value ? 100 : 0;
 
   setTimeout(() => {
@@ -196,7 +182,6 @@ const transitionToNextProject = () => {
   const currentSplineViewer = getCurrentMobileSplineViewer();
   const currentSplineElement = currentSplineViewer?.$el || currentSplineViewer;
 
-  // Fade out current content (text and spline)
   const elementsToFadeOut = [mobileText.value];
   if (currentSplineElement) {
     elementsToFadeOut.push(currentSplineElement);
@@ -208,15 +193,12 @@ const transitionToNextProject = () => {
     duration: 0.4,
     ease: 'power2.out',
     onComplete: () => {
-      // Update project index
       currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
       
-      // Wait for Vue to update the DOM with new spline viewer
       nextTick(() => {
         const newSplineViewer = getCurrentMobileSplineViewer();
         const newSplineElement = newSplineViewer?.$el || newSplineViewer;
         
-        // Reset position for new content
         const elementsToFadeIn = [mobileText.value];
         if (newSplineElement) {
           elementsToFadeIn.push(newSplineElement);
@@ -227,7 +209,6 @@ const transitionToNextProject = () => {
           opacity: 0
         });
         
-        // Fade in new content
         $gsap.to(elementsToFadeIn, {
           opacity: 1,
           y: 0,
@@ -292,20 +273,16 @@ const setupMobileScrollHandler = () => {
 };
 
 onMounted(() => {
-  // Check for mobile device
   if (process.client) {
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
-    // Check if user is returning from navigation within the app
     const isReturning = sessionStorage.getItem('navigatingFromHome') === 'true';
     
     if (isReturning) {
-      // User is returning from another page - skip loading animation
       sessionStorage.removeItem('navigatingFromHome');
       showLoadingScreen.value = false;
       
-      // Simple fade in for main content
       nextTick(() => {
         if (mainContent.value) {
           $gsap.fromTo(
@@ -316,10 +293,8 @@ onMounted(() => {
         }
       });
     } else {
-      // Fresh page load or refresh - show loading animation
       showLoadingScreen.value = true;
 
-      // Fixed GSAP animation for loading screen
       setTimeout(() => {
         if (showLoadingScreen.value && loadingScreenRef.value) {
           const element = loadingScreenRef.value.$el || loadingScreenRef.value;
@@ -343,14 +318,12 @@ onMounted(() => {
     }
   }
 
-  // Load Spline viewer only on the client-side
   if (process.client) {
     import('@splinetool/viewer')
       .then(() => {
         isSplineLoaded.value = true;
         console.log('Spline Viewer loaded successfully');
         
-        // Setup mobile scroll handler after spline is loaded
         setTimeout(() => {
           setupMobileScrollHandler();
         }, 1000);
@@ -362,22 +335,9 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  // Clean up event listener
   if (process.client) {
     window.removeEventListener('resize', checkMobile);
   }
-});
-
-// SEO
-useHead({
-  title: 'MorrowLab | Web Development and Design Studio in the Philippines',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'The leading web development and design studio in the Philippines, based in Manila and Makati. Our expert web developers specialize in high-end web design, 3D animations, and front-end web and app services for premium brands seeking world-class digital expertise locally and internationally.',
-    },
-  ],
 });
 </script>
 

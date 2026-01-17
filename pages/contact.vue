@@ -1,9 +1,7 @@
 <template>
   <div class="wrapper">
-    <!-- Page Transition -->
     <PageTransition v-if="showLoadingScreen" @finished="handleLoadingFinished" />
 
-    <!-- Main Content (Hidden until transition finishes) -->
     <div v-show="!showLoadingScreen" class="content-container">
       <main class="main">
         <div class="cal-container">
@@ -11,10 +9,8 @@
         </div>
       </main>
 
-      <!-- Availability Component -->
       <Availability />
 
-      <!-- Footer (Hidden until transition finishes) -->
       <Footer />
     </div>
   </div>
@@ -34,7 +30,6 @@ const handleLoadingFinished = () => {
 };
 
 onMounted(() => {
-  // Detect mobile device for layout adjustment
   const isMobile = window.innerWidth <= 768;
 
   calScript = document.createElement("script");
@@ -91,11 +86,9 @@ onMounted(() => {
   `;
   document.head.appendChild(calScript);
 
-  // Add event listener for resize to handle orientation changes
   window.addEventListener('resize', handleResize);
 });
 
-// Clean up when component is destroyed
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
   if (calScript && calScript.parentNode) {
@@ -103,11 +96,9 @@ onUnmounted(() => {
   }
 });
 
-// Handle resize events (useful for orientation changes)
 const handleResize = () => {
   const isMobile = window.innerWidth <= 768;
 
-  // Dynamically update Cal widget settings on resize
   if (window.Cal && window.Cal.ns && window.Cal.ns["book-a-meeting"]) {
     try {
       window.Cal.ns["book-a-meeting"]("ui", { 
@@ -119,15 +110,6 @@ const handleResize = () => {
     }
   }
 };
-
-// SEO
-useHead({
-  title: 'Contact | Get in Touch',
-  meta: [
-    { name: 'description', 
-      content: 'Connect with MorrowLab top web developers in Manila and Makati. Ready to transform your digital vision with high-end web design, 3D animations, and innovative front-end solutions for your premium brand.' }
-  ]
-})
 </script>
 
 <style scoped>

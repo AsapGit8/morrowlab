@@ -32,9 +32,7 @@
         </video>
       </div>
 
-      <!-- Added scroll down indicator -->
       <div class="scroll-down-indicator" id="scroll-indicator">
-        <!-- Characters will be inserted via JS -->
       </div>
     </div>
     <div class="right-box">
@@ -55,7 +53,6 @@ const firstVideo = ref(null);
 const rightDescription = ref(null);
 
 onMounted(() => {
-  // Ensure the video element is loaded before animating
   if (firstVideo.value) {
     $gsap.fromTo(
       firstVideo.value,
@@ -64,7 +61,6 @@ onMounted(() => {
     );
   }
 
-  // Animate the right description text
   if (rightDescription.value) {
     $gsap.fromTo(
       rightDescription.value,
@@ -73,12 +69,10 @@ onMounted(() => {
     );
   }
 
-  // Set up letter-by-letter scroll down indicator animation
   const scrollIndicator = document.getElementById('scroll-indicator');
   const scrollText = "Scroll Down";
 
   if (scrollIndicator) {
-    // Split text into individual characters and wrap each in a span
     scrollIndicator.innerHTML = '';
     for (let i = 0; i < scrollText.length; i++) {
       const charSpan = document.createElement('span');
@@ -89,7 +83,6 @@ onMounted(() => {
 
     const characters = scrollIndicator.querySelectorAll('.scroll-char');
 
-    // Create a staggered animation for each character
     $gsap.fromTo(
       characters,
       { opacity: 0.3 },
@@ -105,7 +98,6 @@ onMounted(() => {
       }
     );
 
-    // Make the indicator fade out when scrolling down
     const leftBox = document.querySelector('.left-box');
     if (leftBox) {
       leftBox.addEventListener('scroll', () => {
@@ -125,18 +117,6 @@ onMounted(() => {
       });
     }
   }
-});
-
-// Add this inside your script setup
-useHead({
-  title: 'Clients | Flightpro',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'Discover Flightpro: FLIGHT PRO is set to revolutionize luxury travel in the Philippines with exclusive helicopter charters for business and leisure.',
-    },
-  ],
 });
 </script>
 
@@ -212,7 +192,6 @@ useHead({
   text-align: left;
 }
 
-/* Scroll down indicator styling */
 .scroll-down-indicator {
   position: fixed;
   bottom: 40px;
@@ -232,7 +211,6 @@ useHead({
   opacity: 0.3;
 }
 
-/* Mobile Optimization */
 @media screen and (max-width: 768px) {
   .main {
     flex-direction: column;
@@ -299,7 +277,6 @@ useHead({
   }
 }
 
-/* Small Mobile Devices */
 @media screen and (max-width: 480px) {
   .right-text {
     font-size: 2rem;

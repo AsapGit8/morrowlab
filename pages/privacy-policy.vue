@@ -59,18 +59,6 @@
   </div>
 </template>
 
-<script setup>
-useHead({
-  title: 'MorrowLab | Privacy Policy & Data Protection',
-  meta: [
-    {
-      name: 'description',
-      content: 'Learn about MorrowLab\'s Privacy Policy and how we protect your information in compliance with Philippine laws.',
-    },
-  ],
-});
-</script>
-
 <style scoped>
 .policy-container {
   max-width: 800px;
@@ -118,7 +106,6 @@ a:hover {
   opacity: 0.8;
 }
 
-/* Mobile Optimization */
 @media screen and (max-width: 768px) {
   h1 {
     font-size: 2rem;

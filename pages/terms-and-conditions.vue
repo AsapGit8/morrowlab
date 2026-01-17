@@ -36,18 +36,6 @@
   </div>
 </template>
 
-<script setup>
-useHead({
-  title: 'MorrowLab | Terms and Conditions of Web Development Services',
-  meta: [
-    {
-      name: 'description',
-      content: 'Official terms and conditions for web development services. Outlining our service agreements, client responsibilities, and professional standards for digital solutions, governed by Philippine laws.',
-    },
-  ],
-});
-</script>
-
 <style scoped>
 .policy-container {
   max-width: 800px;
@@ -95,7 +83,6 @@ a:hover {
   opacity: 0.8;
 }
 
-/* Mobile Optimization */
 @media screen and (max-width: 768px) {
   h1 {
     font-size: 2rem;

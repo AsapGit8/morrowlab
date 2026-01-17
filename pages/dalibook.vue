@@ -48,9 +48,7 @@
        </video>
      </div>
 
-     <!-- Added scroll down indicator -->
      <div class="scroll-down-indicator" id="scroll-indicator">
-       <!-- Characters will be inserted via JS -->
      </div>
    </div>
  </div>
@@ -65,7 +63,6 @@ const firstVideo = ref(null);
 const leftDescription = ref(null);
 
 onMounted(() => {
- // Ensure the video element is loaded before animating
  if (firstVideo.value) {
    $gsap.fromTo(
      firstVideo.value,
@@ -74,7 +71,6 @@ onMounted(() => {
    );
  }
 
- // Animate the left description text
  if (leftDescription.value) {
    $gsap.fromTo(
      leftDescription.value,
@@ -83,12 +79,10 @@ onMounted(() => {
    );
  }
 
- // Set up letter-by-letter scroll down indicator animation
  const scrollIndicator = document.getElementById('scroll-indicator');
  const scrollText = "Scroll Down";
 
  if (scrollIndicator) {
-   // Split text into individual characters and wrap each in a span
    scrollIndicator.innerHTML = '';
    for (let i = 0; i < scrollText.length; i++) {
      const charSpan = document.createElement('span');
@@ -99,7 +93,6 @@ onMounted(() => {
 
    const characters = scrollIndicator.querySelectorAll('.scroll-char');
 
-   // Create a staggered animation for each character
    $gsap.fromTo(
      characters,
      { opacity: 0.3 },
@@ -115,7 +108,6 @@ onMounted(() => {
      }
    );
 
-   // Make the indicator fade out when scrolling down
    const rightBox = document.querySelector('.right-box');
    if (rightBox) {
      rightBox.addEventListener('scroll', () => {
@@ -135,18 +127,6 @@ onMounted(() => {
      });
    }
  }
-});
-
-// Add this inside your script setup
-useHead({
- title: 'Clients | DaliBook',
- meta: [
-   {
-     name: 'description',
-     content:
-       'Discover DaliBook: The first-of-its-kind integrated platform designed to revolutionize property management for hotels and resorts across the Philippines.',
-   },
- ],
 });
 </script>
 
@@ -253,7 +233,6 @@ useHead({
  text-align: left;
 }
 
-/* Scroll down indicator styling */
 .scroll-down-indicator {
  position: fixed;
  bottom: 40px;
@@ -273,7 +252,6 @@ useHead({
  opacity: 0.3;
 }
 
-/* Mobile Optimization */
 @media screen and (max-width: 768px) {
  .main {
    flex-direction: column;
@@ -357,7 +335,6 @@ useHead({
  }
 }
 
-/* Small Mobile Devices */
 @media screen and (max-width: 480px) {
  .left-text {
    font-size: 2rem;
