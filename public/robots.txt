@@ -5,6 +5,6 @@ Allow: /contact
 Allow: /privacy-policy
 Allow: /terms-and-conditions
 Allow: /dalibook
-Disallow: /flightpro
+Allow: /flightpro
 
 Sitemap: https://morrowlab.studio/sitemap.xml
