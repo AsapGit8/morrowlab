@@ -22,6 +22,8 @@ import PageTransition from "@/components/PageTransition.vue";
 import Footer from "@/components/Footer.vue";
 import Availability from "@/components/Availability.vue";
 
+const config = useRuntimeConfig();
+
 useSeoMeta({
   title: 'Contact Us',
   description: 'Book a meeting with MorrowLab Studio. Limited slots available for February 2026. Get in touch to discuss your software development project.',
@@ -29,6 +31,31 @@ useSeoMeta({
   ogDescription: 'Schedule a consultation with our team. We are accepting new projects for February 2026.',
   ogImage: 'https://morrowlab.studio/og-image.jpg',
   ogUrl: 'https://morrowlab.studio/contact'
+});
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ContactPage',
+        '@id': `${config.public.siteUrl}/contact#webpage`,
+        url: `${config.public.siteUrl}/contact`,
+        name: 'Contact Us - MorrowLab Studio',
+        description: 'Book a meeting with MorrowLab Studio to discuss your software development project.',
+        isPartOf: {
+          '@id': `${config.public.siteUrl}/#website`
+        },
+        about: {
+          '@id': config.public.organizationId
+        },
+        datePublished: '2026-01-17',
+        dateModified: '2026-01-17',
+        inLanguage: 'en-US'
+      })
+    }
+  ]
 });
 
 const showLoadingScreen = ref(true);

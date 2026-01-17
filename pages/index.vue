@@ -94,6 +94,8 @@ import LoadingScreen from '@/components/LoadingScreen.vue';
 import { useNuxtApp } from '#app';
 import { useRouter } from 'vue-router';
 
+const config = useRuntimeConfig();
+
 useSeoMeta({
   title: 'Home',
   description: 'MorrowLab Studio - Software Development Studio based in Manila, Philippines. We create mobile apps, web applications, and digital solutions using modern technologies.',
@@ -102,6 +104,66 @@ useSeoMeta({
   ogImage: 'https://morrowlab.studio/og-image.jpg',
   ogUrl: 'https://morrowlab.studio',
   ogType: 'website'
+});
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        '@id': `${config.public.siteUrl}/#webpage`,
+        url: config.public.siteUrl,
+        name: 'Home - MorrowLab Studio',
+        description: 'Software Development Studio based in Manila, Philippines. We create mobile apps, web applications, and digital solutions.',
+        isPartOf: {
+          '@id': `${config.public.siteUrl}/#website`
+        },
+        about: {
+          '@id': config.public.organizationId
+        },
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          url: `${config.public.siteUrl}/og-image.jpg`
+        },
+        datePublished: '2026-01-17',
+        dateModified: '2026-01-17',
+        inLanguage: 'en-US'
+      })
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            item: {
+              '@type': 'CreativeWork',
+              name: 'DaliBook',
+              description: 'Philippines first Fintech-powered property management and booking platform',
+              url: `${config.public.siteUrl}/dalibook`,
+              image: `${config.public.siteUrl}/og-image.jpg`
+            }
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            item: {
+              '@type': 'CreativeWork',
+              name: 'FlightPro',
+              description: 'Luxury helicopter charter service platform',
+              url: `${config.public.siteUrl}/flightpro`,
+              image: `${config.public.siteUrl}/og-image.jpg`
+            }
+          }
+        ]
+      })
+    }
+  ]
 });
 
 const { $gsap } = useNuxtApp();

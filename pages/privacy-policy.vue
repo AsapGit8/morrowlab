@@ -60,6 +60,8 @@
 </template>
 
 <script setup>
+const config = useRuntimeConfig();
+
 useSeoMeta({
   title: 'Privacy Policy',
   description: 'MorrowLab Studio Privacy Policy. Learn how we collect, use, and protect your personal information in compliance with the Data Privacy Act of 2012 of the Philippines.',
@@ -68,6 +70,31 @@ useSeoMeta({
   ogImage: 'https://morrowlab.studio/og-image.jpg',
   ogUrl: 'https://morrowlab.studio/privacy-policy',
   robots: 'index, follow'
+});
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        '@id': `${config.public.siteUrl}/privacy-policy#webpage`,
+        url: `${config.public.siteUrl}/privacy-policy`,
+        name: 'Privacy Policy - MorrowLab Studio',
+        description: 'Privacy policy and data protection information for MorrowLab Studio.',
+        isPartOf: {
+          '@id': `${config.public.siteUrl}/#website`
+        },
+        about: {
+          '@id': config.public.organizationId
+        },
+        datePublished: '2026-01-17',
+        dateModified: '2026-01-17',
+        inLanguage: 'en-US'
+      })
+    }
+  ]
 });
 </script>
 

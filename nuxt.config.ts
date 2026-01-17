@@ -49,5 +49,12 @@ export default defineNuxtConfig({
       xl: 1280,
       xxl: 1536,
     },
+  },
+  runtimeConfig: {
+    public: {
+      siteUrl: 'https://morrowlab.studio',
+      siteName: 'MorrowLab Studio',
+      organizationId: 'https://morrowlab.studio/#organization'
+    }
   }
 });

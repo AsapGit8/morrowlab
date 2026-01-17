@@ -199,6 +199,8 @@ import Footer from "@/components/Footer.vue";
 import Availability from "@/components/Availability.vue";
 import gsap from "gsap";
 
+const config = useRuntimeConfig();
+
 useSeoMeta({
   title: 'Services',
   description: 'Full-stack software development, mobile app development for iOS and Android, creative web design, front-end and back-end development services. Modern tech stacks used in Silicon Valley.',
@@ -206,6 +208,158 @@ useSeoMeta({
   ogDescription: 'Professional software development services including mobile apps, web development, UI/UX design, and full-stack solutions.',
   ogImage: 'https://morrowlab.studio/og-image.jpg',
   ogUrl: 'https://morrowlab.studio/services'
+});
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        '@id': `${config.public.siteUrl}/services#webpage`,
+        url: `${config.public.siteUrl}/services`,
+        name: 'Services - MorrowLab Studio',
+        description: 'Full-stack software development, mobile app development, web design, and back-end development services.',
+        isPartOf: {
+          '@id': `${config.public.siteUrl}/#website`
+        },
+        about: {
+          '@id': config.public.organizationId
+        },
+        datePublished: '2026-01-17',
+        dateModified: '2026-01-17',
+        inLanguage: 'en-US'
+      })
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        serviceType: 'Software Development',
+        provider: {
+          '@id': config.public.organizationId
+        },
+        areaServed: {
+          '@type': 'Country',
+          name: 'Philippines'
+        },
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: 'Software Development Services',
+          itemListElement: [
+            {
+              '@type': 'OfferCatalog',
+              name: 'Mobile App Development',
+              itemListElement: [
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'iOS & Android Development',
+                    description: 'Native mobile app development for iOS and Android platforms'
+                  }
+                }
+              ]
+            },
+            {
+              '@type': 'OfferCatalog',
+              name: 'Web Development',
+              itemListElement: [
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Web Essentials',
+                    description: 'Essential web development services',
+                    offers: {
+                      '@type': 'Offer',
+                      price: '90000',
+                      priceCurrency: 'PHP'
+                    }
+                  }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Advanced Web',
+                    description: 'Advanced web applications and platforms',
+                    offers: {
+                      '@type': 'Offer',
+                      price: '300000',
+                      priceCurrency: 'PHP'
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              '@type': 'OfferCatalog',
+              name: 'Front-end Development',
+              itemListElement: [
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'UI/UX Design',
+                    description: 'Intuitive user interface and experience design'
+                  }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Brand Identity & Strategy',
+                    description: 'Brand development and strategic planning'
+                  }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: '2D/3D Animations & Motion Graphics',
+                    description: 'Advanced animation and motion design'
+                  }
+                }
+              ]
+            },
+            {
+              '@type': 'OfferCatalog',
+              name: 'Back-end Development',
+              itemListElement: [
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'API Development',
+                    description: 'RESTful and GraphQL API development'
+                  }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Database Design & Management',
+                    description: 'Scalable database architecture and management'
+                  }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Cloud Storage Implementation',
+                    description: 'Cloud-based storage solutions'
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      })
+    }
+  ]
 });
 
 const showLoadingScreen = ref(true);

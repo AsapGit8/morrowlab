@@ -37,6 +37,8 @@
 </template>
 
 <script setup>
+const config = useRuntimeConfig();
+
 useSeoMeta({
   title: 'Terms and Conditions',
   description: 'MorrowLab Studio Terms and Conditions. Review our terms of service, intellectual property policies, and user responsibilities governed by Philippine law.',
@@ -45,6 +47,31 @@ useSeoMeta({
   ogImage: 'https://morrowlab.studio/og-image.jpg',
   ogUrl: 'https://morrowlab.studio/terms-and-conditions',
   robots: 'index, follow'
+});
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        '@id': `${config.public.siteUrl}/terms-and-conditions#webpage`,
+        url: `${config.public.siteUrl}/terms-and-conditions`,
+        name: 'Terms and Conditions - MorrowLab Studio',
+        description: 'Terms and conditions for using MorrowLab Studio services.',
+        isPartOf: {
+          '@id': `${config.public.siteUrl}/#website`
+        },
+        about: {
+          '@id': config.public.organizationId
+        },
+        datePublished: '2026-01-17',
+        dateModified: '2026-01-17',
+        inLanguage: 'en-US'
+      })
+    }
+  ]
 });
 </script>
 
