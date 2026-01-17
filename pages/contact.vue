@@ -22,6 +22,15 @@ import PageTransition from "@/components/PageTransition.vue";
 import Footer from "@/components/Footer.vue";
 import Availability from "@/components/Availability.vue";
 
+useSeoMeta({
+  title: 'Contact Us',
+  description: 'Book a meeting with MorrowLab Studio. Limited slots available for February 2026. Get in touch to discuss your software development project.',
+  ogTitle: 'Contact Us | MorrowLab Studio',
+  ogDescription: 'Schedule a consultation with our team. We are accepting new projects for February 2026.',
+  ogImage: 'https://morrowlab.studio/og-image.jpg',
+  ogUrl: 'https://morrowlab.studio/contact'
+});
+
 const showLoadingScreen = ref(true);
 let calScript = null;
 

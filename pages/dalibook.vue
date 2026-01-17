@@ -58,75 +58,84 @@
 import { ref, onMounted } from 'vue';
 import { useNuxtApp } from '#app';
 
+useSeoMeta({
+  title: 'DaliBook Project',
+  description: 'DaliBook is the Philippines first Fintech-powered property management and booking platform designed to streamline hotel operations with real-time booking and integrated payment processing.',
+  ogTitle: 'DaliBook | MorrowLab Studio Portfolio',
+  ogDescription: 'Property management and booking platform with BSP-compliant payment processing supporting GCash, Maya, and international cards.',
+  ogImage: 'https://morrowlab.studio/og-image.jpg',
+  ogUrl: 'https://morrowlab.studio/dalibook'
+});
+
 const { $gsap } = useNuxtApp();
 const firstVideo = ref(null);
 const leftDescription = ref(null);
 
 onMounted(() => {
- if (firstVideo.value) {
-   $gsap.fromTo(
-     firstVideo.value,
-     { y: '100%', opacity: 0 },
-     { y: '0%', opacity: 1, duration: 2, ease: 'power2.out', delay: 0.5 }
-   );
- }
+  if (firstVideo.value) {
+    $gsap.fromTo(
+      firstVideo.value,
+      { y: '100%', opacity: 0 },
+      { y: '0%', opacity: 1, duration: 2, ease: 'power2.out', delay: 0.5 }
+    );
+  }
 
- if (leftDescription.value) {
-   $gsap.fromTo(
-     leftDescription.value,
-     { opacity: 0, y: 20 },
-     { opacity: 1, y: 0, duration: 1.5, ease: 'power2.out', delay: 0.5 }
-   );
- }
+  if (leftDescription.value) {
+    $gsap.fromTo(
+      leftDescription.value,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 1.5, ease: 'power2.out', delay: 0.5 }
+    );
+  }
 
- const scrollIndicator = document.getElementById('scroll-indicator');
- const scrollText = "Scroll Down";
+  const scrollIndicator = document.getElementById('scroll-indicator');
+  const scrollText = "Scroll Down";
 
- if (scrollIndicator) {
-   scrollIndicator.innerHTML = '';
-   for (let i = 0; i < scrollText.length; i++) {
-     const charSpan = document.createElement('span');
-     charSpan.classList.add('scroll-char');
-     charSpan.textContent = scrollText[i];
-     scrollIndicator.appendChild(charSpan);
-   }
+  if (scrollIndicator) {
+    scrollIndicator.innerHTML = '';
+    for (let i = 0; i < scrollText.length; i++) {
+      const charSpan = document.createElement('span');
+      charSpan.classList.add('scroll-char');
+      charSpan.textContent = scrollText[i];
+      scrollIndicator.appendChild(charSpan);
+    }
 
-   const characters = scrollIndicator.querySelectorAll('.scroll-char');
+    const characters = scrollIndicator.querySelectorAll('.scroll-char');
 
-   $gsap.fromTo(
-     characters,
-     { opacity: 0.3 },
-     {
-       opacity: 1,
-       stagger: {
-         each: 0.1,
-         repeat: -1,
-         yoyo: true,
-       },
-       duration: 0.8,
-       ease: "power1.inOut",
-     }
-   );
+    $gsap.fromTo(
+      characters,
+      { opacity: 0.3 },
+      {
+        opacity: 1,
+        stagger: {
+          each: 0.1,
+          repeat: -1,
+          yoyo: true,
+        },
+        duration: 0.8,
+        ease: "power1.inOut",
+      }
+    );
 
-   const rightBox = document.querySelector('.right-box');
-   if (rightBox) {
-     rightBox.addEventListener('scroll', () => {
-       if (rightBox.scrollTop > 50) {
-         $gsap.to(scrollIndicator, {
-           opacity: 0,
-           duration: 0.5,
-           ease: "power2.out",
-         });
-       } else {
-         $gsap.to(scrollIndicator, {
-           opacity: 1,
-           duration: 0.5,
-           ease: "power2.in",
-         });
-       }
-     });
-   }
- }
+    const rightBox = document.querySelector('.right-box');
+    if (rightBox) {
+      rightBox.addEventListener('scroll', () => {
+        if (rightBox.scrollTop > 50) {
+          $gsap.to(scrollIndicator, {
+            opacity: 0,
+            duration: 0.5,
+            ease: "power2.out",
+          });
+        } else {
+          $gsap.to(scrollIndicator, {
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.in",
+          });
+        }
+      });
+    }
+  }
 });
 </script>
 

@@ -94,6 +94,16 @@ import LoadingScreen from '@/components/LoadingScreen.vue';
 import { useNuxtApp } from '#app';
 import { useRouter } from 'vue-router';
 
+useSeoMeta({
+  title: 'Home',
+  description: 'MorrowLab Studio - Software Development Studio based in Manila, Philippines. We create mobile apps, web applications, and digital solutions using modern technologies.',
+  ogTitle: 'MorrowLab Studio | Software Development in Manila',
+  ogDescription: 'Full-stack software development studio specializing in mobile apps, web development, and creative design. Based in Manila, Philippines.',
+  ogImage: 'https://morrowlab.studio/og-image.jpg',
+  ogUrl: 'https://morrowlab.studio',
+  ogType: 'website'
+});
+
 const { $gsap } = useNuxtApp();
 const router = useRouter();
 const showLoadingScreen = ref(false);

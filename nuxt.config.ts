@@ -13,21 +13,25 @@ export default defineNuxtConfig({
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
     head: {
+      htmlAttrs: {
+        lang: 'en'
+      },
+      title: 'MorrowLab Studio',
+      titleTemplate: '%s | MorrowLab Studio',
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
         { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon-96x96.png' },
-        { rel: 'manifest', href: '/site.webmanifest' }
+        { rel: 'manifest', href: '/site.webmanifest' },
+        { rel: 'canonical', href: 'https://morrowlab.studio' }
       ],
       meta: [
         { name: 'msapplication-TileColor', content: '#ffffff' },
         { name: 'theme-color', content: '#ffffff' },
-        { name: 'description', content: 'MorrowLab - Software Development Studio based in Manila, Philippines. Full-stack development, mobile apps, and creative web design.' },
-        { property: 'og:title', content: 'MorrowLab Studio' },
-        { property: 'og:description', content: 'Software Development Studio based in Manila, Philippines' },
-        { property: 'og:type', content: 'website' },
-        { property: 'og:url', content: 'https://morrowlab.studio' },
-        { name: 'twitter:card', content: 'summary_large_image' }
+        { name: 'author', content: 'MorrowLab Studio' },
+        { name: 'robots', content: 'index, follow' }
       ]
     }
   },

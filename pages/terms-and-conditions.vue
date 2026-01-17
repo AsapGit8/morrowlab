@@ -36,6 +36,18 @@
   </div>
 </template>
 
+<script setup>
+useSeoMeta({
+  title: 'Terms and Conditions',
+  description: 'MorrowLab Studio Terms and Conditions. Review our terms of service, intellectual property policies, and user responsibilities governed by Philippine law.',
+  ogTitle: 'Terms and Conditions | MorrowLab Studio',
+  ogDescription: 'Terms of service and user agreement for MorrowLab Studio services.',
+  ogImage: 'https://morrowlab.studio/og-image.jpg',
+  ogUrl: 'https://morrowlab.studio/terms-and-conditions',
+  robots: 'index, follow'
+});
+</script>
+
 <style scoped>
 .policy-container {
   max-width: 800px;

@@ -199,6 +199,15 @@ import Footer from "@/components/Footer.vue";
 import Availability from "@/components/Availability.vue";
 import gsap from "gsap";
 
+useSeoMeta({
+  title: 'Services',
+  description: 'Full-stack software development, mobile app development for iOS and Android, creative web design, front-end and back-end development services. Modern tech stacks used in Silicon Valley.',
+  ogTitle: 'Services | MorrowLab Studio',
+  ogDescription: 'Professional software development services including mobile apps, web development, UI/UX design, and full-stack solutions.',
+  ogImage: 'https://morrowlab.studio/og-image.jpg',
+  ogUrl: 'https://morrowlab.studio/services'
+});
+
 const showLoadingScreen = ref(true);
 const isSplineLoaded = ref(false);
 

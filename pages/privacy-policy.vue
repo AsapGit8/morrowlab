@@ -59,6 +59,18 @@
   </div>
 </template>
 
+<script setup>
+useSeoMeta({
+  title: 'Privacy Policy',
+  description: 'MorrowLab Studio Privacy Policy. Learn how we collect, use, and protect your personal information in compliance with the Data Privacy Act of 2012 of the Philippines.',
+  ogTitle: 'Privacy Policy | MorrowLab Studio',
+  ogDescription: 'Our commitment to protecting your privacy and personal data in accordance with Philippine data privacy laws.',
+  ogImage: 'https://morrowlab.studio/og-image.jpg',
+  ogUrl: 'https://morrowlab.studio/privacy-policy',
+  robots: 'index, follow'
+});
+</script>
+
 <style scoped>
 .policy-container {
   max-width: 800px;

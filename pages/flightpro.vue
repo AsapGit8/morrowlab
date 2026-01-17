@@ -48,6 +48,15 @@
 import { ref, onMounted } from 'vue';
 import { useNuxtApp } from '#app';
 
+useSeoMeta({
+  title: 'FlightPro Project',
+  description: 'FlightPro is revolutionizing luxury travel in the Philippines with exclusive helicopter charters for business and leisure, offering seamless transfers and breathtaking aerial tours.',
+  ogTitle: 'FlightPro | MorrowLab Studio Portfolio',
+  ogDescription: 'Luxury helicopter charter service platform combining safety, elegance, and efficiency for business and leisure travel in the Philippines.',
+  ogImage: 'https://morrowlab.studio/og-image.jpg',
+  ogUrl: 'https://morrowlab.studio/flightpro'
+});
+
 const { $gsap } = useNuxtApp();
 const firstVideo = ref(null);
 const rightDescription = ref(null);
