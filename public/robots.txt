@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Allow: /services
+Allow: /contact
+Allow: /privacy-policy
+Allow: /terms-and-conditions
+Disallow: /dalibook
+Disallow: /flightpro
+
+Sitemap: https://morrowlab.studio/sitemap.xml

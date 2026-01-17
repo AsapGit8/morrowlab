@@ -21,7 +21,13 @@ export default defineNuxtConfig({
       ],
       meta: [
         { name: 'msapplication-TileColor', content: '#ffffff' },
-        { name: 'theme-color', content: '#ffffff' }
+        { name: 'theme-color', content: '#ffffff' },
+        { name: 'description', content: 'MorrowLab - Software Development Studio based in Manila, Philippines. Full-stack development, mobile apps, and creative web design.' },
+        { property: 'og:title', content: 'MorrowLab Studio' },
+        { property: 'og:description', content: 'Software Development Studio based in Manila, Philippines' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:url', content: 'https://morrowlab.studio' },
+        { name: 'twitter:card', content: 'summary_large_image' }
       ]
     }
   },
