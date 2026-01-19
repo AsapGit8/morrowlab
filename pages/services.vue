@@ -141,7 +141,7 @@
           <div class="section section-7">
             <div class="content">
               <h1 class="reveal-text">
-                <span class="text-line">pricing | project rates</span>
+                <span class="text-line">pricing | base project rates</span>
               </h1>
               
               <div class="pricing-table reveal-text">
@@ -168,7 +168,7 @@
               </div>
 
               <p class="pricing-note reveal-text">
-                <span class="text-line">Our project fees vary depending on scope, complexity, and timeline. Base pricing is tailored to your project's requirements, with a maximum budget ceiling of ₱100M+ | $850k. Additional costs may apply for specialized services such as 3D motion graphics, personalized design elements, advanced interactivity, or other custom features.</span>
+                <span class="text-line">Our project fees vary depending on scope, complexity, and timeline. Base pricing is tailored to your project's requirements, with a maximum budget ceiling of ₱100M+. Additional costs may apply for specialized services such as 3D motion graphics, personalized design elements, advanced interactivity, or other custom features.</span>
               </p>
 
               <p class="reveal-text contact-note">
