@@ -172,7 +172,7 @@
               </p>
 
               <p class="pricing-note reveal-text">
-                <span class="text-line">Simple projects can be delivered in a few months, while more complex applications may take up to a year or more to design, develop, test, and launch.</span>
+                <span class="text-line">Every project is created with a design mindset and a solid architecture, ensuring your website or application is both beautiful and built to scale.</span>
               </p>
 
               <p class="pricing-note reveal-text">
