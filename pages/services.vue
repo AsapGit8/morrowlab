@@ -176,7 +176,7 @@
               </p>
 
               <p class="pricing-note reveal-text">
-                <span class="text-line">From a simple business website to an industry-leading application, MorrowLab is your partner, managing every step so your project succeeds.</span>
+                <span class="text-line">From specialized business websites to industry-leading applications, MorrowLab serves as your end-to-end partner, transforming ideas and strategies into a successful, full-scale launch.</span>
               </p>
 
               <p class="reveal-text contact-note">
