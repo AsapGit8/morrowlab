@@ -38,7 +38,7 @@
               </h1>
               <p class="reveal-text">
                 <span class="text-line">Build the next industry giant. We create mobile apps capable of</span>
-                <span class="text-line">reaching unicorn-level scale like Grab, Angkas, and Airbnb. With</span>
+                <span class="text-line">reaching unicorn-level scale like Grab, Gcash, or Airbnb. With</span>
                 <span class="text-line">registered Google Play and Apple Organization Developer</span>
                 <span class="text-line">accounts, we launch applications built for speed, reliability,</span>
                 <span class="text-line">and real-world success.</span>
