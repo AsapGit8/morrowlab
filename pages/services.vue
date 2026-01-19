@@ -104,7 +104,7 @@
               <div class="maintenance-table reveal-text">
                 <div class="maintenance-row">
                   <span class="maintenance-service">Free Maintenance Period</span>
-                  <span class="maintenance-detail">5 Years</span>
+                  <span class="maintenance-detail">2 Years</span>
                 </div>
                 <div class="maintenance-row">
                   <span class="maintenance-service">Bug Fixes & Security Patches</span>
@@ -168,12 +168,20 @@
               </div>
 
               <p class="pricing-note reveal-text">
-                <span class="text-line">Our project fees vary depending on scope, complexity, and timeline. Base pricing is tailored to your project's requirements, with a maximum budget ceiling of ₱100M+. Additional costs may apply for specialized services such as 3D motion graphics, personalized design elements, advanced interactivity, or other custom features.</span>
+                <span class="text-line">Our project fees vary depending on scope, complexity, and timeline. Base pricing is tailored to your project's requirements, with a maximum budget ceiling of ₱100M+.</span>
+              </p>
+
+              <p class="pricing-note reveal-text">
+                <span class="text-line">Simple projects can be delivered in a few months, while more complex applications may take up to a year or more to design, develop, test, and launch.</span>
+              </p>
+
+              <p class="pricing-note reveal-text">
+                <span class="text-line">From a simple business website to an industry-leading application, MorrowLab is your partner, managing every step so your project succeeds.</span>
               </p>
 
               <p class="reveal-text contact-note">
                 <span class="text-line email-container">
-                  <NuxtLink to="/contact" class="modern-button">Book a 20 min meeting today</NuxtLink>
+                  <NuxtLink to="/contact" class="modern-button">Let's Meet</NuxtLink>
                 </span>
               </p>
             </div>
