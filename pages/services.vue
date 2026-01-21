@@ -181,7 +181,7 @@
 
               <p class="reveal-text contact-note">
                 <span class="text-line email-container">
-                  <NuxtLink to="/contact" class="modern-button">Book a 10m meeting today</NuxtLink>
+                  <NuxtLink to="/contact" class="modern-button">Book a 10 min meeting today</NuxtLink>
                 </span>
               </p>
             </div>
