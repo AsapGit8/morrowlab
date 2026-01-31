@@ -168,7 +168,7 @@
               </div>
 
               <p class="pricing-note reveal-text">
-                <span class="text-line">Our project fees vary depending on scope, complexity, and timeline. Base pricing is tailored to your project's requirements, with a maximum budget ceiling of ₱100M+.</span>
+                <span class="text-line">Our project fees vary depending on scope, complexity, and timeline. Base pricing is tailored to your project's requirements.</span>
               </p>
 
               <p class="pricing-note reveal-text">
