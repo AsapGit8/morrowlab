@@ -34,8 +34,37 @@
           </div>
         </div>
 
+        <div class="main section-seavo">
+          <div class="left-box spline-box" @click="() => handleSplineClick('/seavo')">
+            <client-only>
+              <spline-viewer
+                v-if="isSplineLoaded"
+                ref="seavoSplineViewer"
+                url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
+              ></spline-viewer>
+            </client-only>
+            <div class="hover-text">View Project</div>
+          </div>
+          <div class="right-box text-box">
+            <div class="right-text">SEAVO</div>
+            <div class="visit-site-container">
+              <a href="https://www.seavoimport.com" target="_blank" rel="noopener noreferrer" class="visit-site-link">
+                <span class="visit-site-text">Visit Site</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-site-icon">
+                  <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+                  <path d="m21 21-9-9"/>
+                  <path d="M21 15v6h-6"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
         <div class="main section-flightpro">
-          <div class="left-box spline-box" @click="() => handleSplineClick('/flightpro')">
+          <div class="left-box">
+            <div class="left-text">FLIGHTPRO</div>
+          </div>
+          <div class="right-box spline-box" @click="() => handleSplineClick('/flightpro')">
             <client-only>
               <spline-viewer
                 v-if="isSplineLoaded"
@@ -45,9 +74,6 @@
             </client-only>
             <div class="hover-text">View Project</div>
           </div>
-          <div class="right-box text-box">
-            <div class="right-text">FLIGHTPRO</div>
-          </div>
         </div>
       </div>
 
@@ -55,8 +81,8 @@
         <div class="mobile-section" ref="currentSection">
           <div class="mobile-upper-div">
             <div class="mobile-text" ref="mobileText">{{ currentProject.text }}</div>
-            <div v-if="currentProject.text === 'DALIBOOK'" class="mobile-visit-site-container">
-              <a href="https://www.dalibook.io/" target="_blank" rel="noopener noreferrer" class="mobile-visit-site-link">
+            <div v-if="currentProject.hasVisitLink" class="mobile-visit-site-container">
+              <a :href="currentProject.visitLink" target="_blank" rel="noopener noreferrer" class="mobile-visit-site-link">
                 <span class="mobile-visit-site-text">Visit Site</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mobile-visit-site-icon">
                   <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
@@ -76,6 +102,12 @@
               
               <spline-viewer
                 v-if="isSplineLoaded && currentProjectIndex === 1"
+                ref="mobileseavoSplineViewer"
+                url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
+              ></spline-viewer>
+
+              <spline-viewer
+                v-if="isSplineLoaded && currentProjectIndex === 2"
                 ref="mobileflightproSplineViewer"
                 url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
               ></spline-viewer>
@@ -154,6 +186,17 @@ useHead({
             position: 2,
             item: {
               '@type': 'CreativeWork',
+              name: 'Seavo',
+              description: 'Import and export platform for seafood and consumer goods',
+              url: `${config.public.siteUrl}/seavo`,
+              image: `${config.public.siteUrl}/og-image.jpg`
+            }
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            item: {
+              '@type': 'CreativeWork',
               name: 'FlightPro',
               description: 'Luxury helicopter charter service platform',
               url: `${config.public.siteUrl}/flightpro`,
@@ -172,8 +215,10 @@ const showLoadingScreen = ref(true);
 const mainContent = ref(null);
 const dalibookSplineViewer = ref(null);
 const flightproSplineViewer = ref(null);
+const seavoSplineViewer = ref(null);
 const mobiledalibookSplineViewer = ref(null);
 const mobileflightproSplineViewer = ref(null);
+const mobileseavoSplineViewer = ref(null);
 const isSplineLoaded = ref(false);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
@@ -186,12 +231,23 @@ const projects = [
   {
     text: 'DALIBOOK',
     route: '/dalibook',
-    splineUrl: 'https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode'
+    splineUrl: 'https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode',
+    hasVisitLink: true,
+    visitLink: 'https://www.dalibook.io/'
+  },
+  {
+    text: 'SEAVO',
+    route: '/seavo',
+    splineUrl: 'https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode',
+    hasVisitLink: true,
+    visitLink: 'https://www.seavoimport.com'
   },
   {
     text: 'FLIGHTPRO',
     route: '/flightpro',
-    splineUrl: 'https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode'
+    splineUrl: 'https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode',
+    hasVisitLink: false,
+    visitLink: ''
   }
 ];
 
@@ -200,6 +256,8 @@ const currentProject = computed(() => projects[currentProjectIndex.value]);
 const getCurrentMobileSplineViewer = () => {
   if (currentProjectIndex.value === 0) {
     return mobiledalibookSplineViewer.value;
+  } else if (currentProjectIndex.value === 1) {
+    return mobileseavoSplineViewer.value;
   } else {
     return mobileflightproSplineViewer.value;
   }
@@ -231,7 +289,13 @@ const handleSplineClick = (route) => {
     if (isMobile.value) {
       targetViewer = getCurrentMobileSplineViewer();
     } else {
-      targetViewer = route === '/dalibook' ? dalibookSplineViewer.value : flightproSplineViewer.value;
+      if (route === '/dalibook') {
+        targetViewer = dalibookSplineViewer.value;
+      } else if (route === '/seavo') {
+        targetViewer = seavoSplineViewer.value;
+      } else {
+        targetViewer = flightproSplineViewer.value;
+      }
     }
     
     const element = targetViewer?.$el || targetViewer;
@@ -463,7 +527,7 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-.section-flightpro .spline-box {
+.section-seavo .spline-box {
   background-color: #fafafa;
   display: flex;
   justify-content: center;
@@ -472,11 +536,24 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-.section-flightpro .text-box {
+.section-seavo .text-box {
   background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+.section-flightpro .left-box {
+  background-color: white;
+}
+
+.section-flightpro .spline-box {
+  background-color: #fafafa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
   position: relative;
 }
 
@@ -504,6 +581,11 @@ onBeforeUnmount(() => {
   position: absolute;
   bottom: 20px;
   right: 20px;
+}
+
+.section-seavo .visit-site-container {
+  right: auto;
+  left: 20px;
 }
 
 .visit-site-link {

@@ -1,46 +1,33 @@
 <template>
   <div class="main">
-    <div class="left-box">
-      <div class="left-text">FLIGHTPRO</div>
-    </div>
-    <div class="right-box" data-lenis-prevent>
+    <div class="left-box" data-lenis-prevent>
       <div class="section">
-        <video ref="firstVideo" class="video" autoplay muted loop playsinline preload="auto">
-          <source src="/fpmp4/fp1.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-      <div class="section">
-        <video class="video" autoplay muted loop playsinline preload="auto">
-          <source src="/fpmp4/fp2.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-      <div class="section">
-        <video class="video" autoplay muted loop playsinline preload="auto">
-          <source src="/fpmp4/fp3.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-      <div class="section">
-        <video class="video" autoplay muted loop playsinline preload="auto">
-          <source src="/fpmp4/fp4.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-      <div class="section">
-        <video class="video" autoplay muted loop playsinline preload="auto">
-          <source src="/fpmp4/fp5.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <client-only>
+          <spline-viewer
+            v-if="isSplineLoaded"
+            ref="firstSpline"
+            url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
+          ></spline-viewer>
+        </client-only>
       </div>
 
       <div class="scroll-down-indicator" id="scroll-indicator">
       </div>
     </div>
-    <div class="left-description-container">
-      <div ref="leftDescription" class="left-description">
-        FLIGHT PRO is set to revolutionize luxury travel in the Philippines with exclusive helicopter charters for business and leisure. Committed to safety, elegance, and efficiency, it plans to launch its services in the Philippines next year, offering seamless transfers and breathtaking aerial tours.
+    <div class="right-box">
+      <div class="right-text">SEAVO</div>
+      <div class="visit-site-container">
+        <a href="https://www.seavoimport.com" target="_blank" rel="noopener noreferrer" class="visit-site-link">
+          <span class="visit-site-text">Visit Site</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-site-icon">
+            <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
+            <path d="m21 21-9-9"/>
+            <path d="M21 15v6h-6"/>
+          </svg>
+        </a>
+      </div>
+      <div ref="rightDescription" class="right-description">
+        Seavo is an import and export company based in Xiamen, China. Specializing in sourcing, trading, and distributing high-quality seafood and consumer goods. Seavo handles international trade operations efficiently, compliantly, and at scale, connecting businesses worldwide with a variety of products and streamlined logistics.
       </div>
     </div>
   </div>
@@ -53,12 +40,12 @@ import { useNuxtApp } from '#app';
 const config = useRuntimeConfig();
 
 useSeoMeta({
-  title: 'FlightPro Project',
-  description: 'FlightPro is revolutionizing luxury travel in the Philippines with exclusive helicopter charters for business and leisure, offering seamless transfers and breathtaking aerial tours.',
-  ogTitle: 'FlightPro | MorrowLab Studio Portfolio',
-  ogDescription: 'Luxury helicopter charter service platform combining safety, elegance, and efficiency for business and leisure travel in the Philippines.',
+  title: 'Seavo Project',
+  description: 'Seavo is a leading import and export company based in Xiamen, China, specializing in sourcing, trading, and distributing high-quality seafood and consumer goods through reliable global import-export solutions.',
+  ogTitle: 'Seavo | MorrowLab Studio Portfolio',
+  ogDescription: 'Import and export platform connecting businesses worldwide with premium seafood and consumer goods through efficient, compliant, and scalable international trade solutions.',
   ogImage: 'https://morrowlab.studio/og-image.jpg',
-  ogUrl: 'https://morrowlab.studio/flightpro'
+  ogUrl: 'https://morrowlab.studio/seavo'
 });
 
 useHead({
@@ -68,10 +55,10 @@ useHead({
       children: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        '@id': `${config.public.siteUrl}/flightpro#webpage`,
-        url: `${config.public.siteUrl}/flightpro`,
-        name: 'FlightPro Project - MorrowLab Studio',
-        description: 'FlightPro is revolutionizing luxury travel in the Philippines with exclusive helicopter charters.',
+        '@id': `${config.public.siteUrl}/seavo#webpage`,
+        url: `${config.public.siteUrl}/seavo`,
+        name: 'Seavo Project - MorrowLab Studio',
+        description: 'Seavo is a leading import and export company based in Xiamen, China.',
         isPartOf: {
           '@id': `${config.public.siteUrl}/#website`
         },
@@ -88,30 +75,30 @@ useHead({
       children: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'CreativeWork',
-        name: 'FlightPro',
-        description: 'Luxury helicopter charter service platform combining safety, elegance, and efficiency for business and leisure travel in the Philippines.',
-        url: `${config.public.siteUrl}/flightpro`,
+        name: 'Seavo',
+        description: 'Import and export platform specializing in high-quality seafood and consumer goods distribution through reliable global trade solutions.',
+        url: `${config.public.siteUrl}/seavo`,
         image: `${config.public.siteUrl}/og-image.jpg`,
         creator: {
           '@id': config.public.organizationId
         },
         datePublished: '2026-01-17',
-        keywords: 'Helicopter Charter, Luxury Travel, Business Aviation, Aerial Tours, Philippines Transportation',
+        keywords: 'Import Export, International Trade, Seafood Distribution, Consumer Goods, Global Logistics, China Trade',
         about: [
           {
             '@type': 'Thing',
-            name: 'Luxury Transportation'
+            name: 'Import Export Solutions'
           },
           {
             '@type': 'Thing',
-            name: 'Helicopter Services'
+            name: 'International Trade Platform'
           },
           {
             '@type': 'Thing',
-            name: 'Business Travel Solutions'
+            name: 'Global Supply Chain'
           }
         ],
-        applicationCategory: 'TravelApplication',
+        applicationCategory: 'BusinessApplication',
         operatingSystem: 'Web Platform'
       })
     }
@@ -119,21 +106,33 @@ useHead({
 });
 
 const { $gsap } = useNuxtApp();
-const firstVideo = ref(null);
-const leftDescription = ref(null);
+const firstSpline = ref(null);
+const rightDescription = ref(null);
+const isSplineLoaded = ref(false);
 
 onMounted(() => {
-  if (firstVideo.value) {
+  if (process.client) {
+    import('@splinetool/viewer')
+      .then(() => {
+        isSplineLoaded.value = true;
+        console.log('Spline Viewer loaded successfully');
+      })
+      .catch((err) => {
+        console.error('Error loading Spline Viewer:', err);
+      });
+  }
+
+  if (firstSpline.value) {
     $gsap.fromTo(
-      firstVideo.value,
+      firstSpline.value,
       { y: '100%', opacity: 0 },
       { y: '0%', opacity: 1, duration: 2, ease: 'power2.out', delay: 0.5 }
     );
   }
 
-  if (leftDescription.value) {
+  if (rightDescription.value) {
     $gsap.fromTo(
-      leftDescription.value,
+      rightDescription.value,
       { opacity: 0, y: 20 },
       { opacity: 1, y: 0, duration: 1.5, ease: 'power2.out', delay: 0.5 }
     );
@@ -168,10 +167,10 @@ onMounted(() => {
       }
     );
 
-    const rightBox = document.querySelector('.right-box');
-    if (rightBox) {
-      rightBox.addEventListener('scroll', () => {
-        if (rightBox.scrollTop > 50) {
+    const leftBox = document.querySelector('.left-box');
+    if (leftBox) {
+      leftBox.addEventListener('scroll', () => {
+        if (leftBox.scrollTop > 50) {
           $gsap.to(scrollIndicator, {
             opacity: 0,
             duration: 0.5,
@@ -199,10 +198,19 @@ onMounted(() => {
 
 .left-box {
   flex: 1;
+  margin-right: 50%;
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  position: relative;
+}
+
+.right-box {
+  flex: 1;
   background-color: white;
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   bottom: 0;
   width: 50%;
   display: flex;
@@ -210,15 +218,6 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   text-align: center;
-}
-
-.right-box {
-  flex: 1;
-  margin-left: 50%;
-  height: 100dvh;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  position: relative;
 }
 
 .section {
@@ -231,11 +230,6 @@ onMounted(() => {
   scroll-snap-align: start;
 }
 
-.video {
-  width: 80%;
-  height: 80%;
-}
-
 .content {
   font-size: 2rem;
   font-family: 'Geist', sans-serif;
@@ -243,43 +237,60 @@ onMounted(() => {
   text-align: center;
 }
 
-.left-text {
+.right-text {
   position: absolute;
   bottom: 15px;
-  left: 20px;
+  right: 20px;
   font-size: 3rem;
   font-weight: 600;
   font-family: 'Geist', sans-serif;
   color: black;
 }
 
-.left-description-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
-  z-index: 1;
+.visit-site-container {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
 }
 
-.left-description {
+.visit-site-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: black;
+  transition: opacity 0.3s ease;
+}
+
+.visit-site-link:hover {
+  opacity: 0.7;
+}
+
+.visit-site-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'Geist', sans-serif;
+}
+
+.visit-site-icon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+.right-description {
   max-width: 600px;
   font-size: 1rem;
   font-family: 'Geist', sans-serif;
   font-weight: 500;
   color: black;
   text-align: left;
-  pointer-events: auto;
 }
 
 .scroll-down-indicator {
   position: fixed;
   bottom: 40px;
-  right: 40px;
+  left: 40px;
   font-family: 'Geist', sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
@@ -303,9 +314,18 @@ onMounted(() => {
   }
 
   .left-box {
+    position: absolute;
+    top: 50svh;
+    left: 0;
+    margin-right: 0;
+    width: 100%;
+    height: 50svh;
+  }
+
+  .right-box {
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
     width: 100%;
     height: 50svh;
     z-index: 10;
@@ -314,36 +334,38 @@ onMounted(() => {
     box-sizing: border-box;
   }
 
-  .right-box {
-    position: absolute;
-    top: 50svh;
-    left: 0;
-    margin-left: 0;
-    width: 100%;
-    height: 50svh;
-  }
-
   .section {
     height: 50svh;
   }
 
-  .left-text {
-    position: absolute;
-    bottom: 15px;
+  .right-text {
+    right: auto;
     left: 20px;
+    bottom: 15px;
     font-size: 2.5rem;
   }
 
-  .left-description-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50svh;
-    z-index: 5;
+  .visit-site-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    left: auto;
   }
 
-  .left-description {
+  .visit-site-link {
+    gap: 6px;
+  }
+
+  .visit-site-text {
+    font-size: 0.75rem;
+  }
+
+  .visit-site-icon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .right-description {
     font-size: 0.85rem;
     margin-left: 20px;
     margin-right: 20px;
@@ -356,26 +378,31 @@ onMounted(() => {
     box-sizing: border-box;
   }
 
-  .video {
-    width: 90%;
-    height: auto;
-    max-height: 90%;
-  }
-
   .scroll-down-indicator {
+    position: absolute;
     bottom: 15px;
-    right: 15px;
+    left: 15px;
+    z-index: 1;
   }
 }
 
 @media screen and (max-width: 480px) {
-  .left-text {
+  .right-text {
     font-size: 2rem;
-    bottom: 15px;
     left: 20px;
+    bottom: 15px;
   }
 
-  .left-description {
+  .visit-site-text {
+    font-size: 0.7rem;
+  }
+
+  .visit-site-icon {
+    width: 10px;
+    height: 10px;
+  }
+
+  .right-description {
     font-size: 0.8rem;
     margin-left: 20px;
     margin-right: 20px;
