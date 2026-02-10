@@ -2,13 +2,34 @@
   <div class="main">
     <div class="left-box" data-lenis-prevent>
       <div class="section">
-        <client-only>
-          <spline-viewer
-            v-if="isSplineLoaded"
-            ref="firstSpline"
-            url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
-          ></spline-viewer>
-        </client-only>
+        <video ref="firstVideo" class="video" autoplay muted loop playsinline preload="auto">
+          <source src="/smp4/seavo-1.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div class="section">
+        <video class="video" autoplay muted loop playsinline preload="auto">
+          <source src="/smp4/seavo-2.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div class="section">
+        <video class="video" autoplay muted loop playsinline preload="auto">
+          <source src="/smp4/seavo-3.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div class="section">
+        <video class="video" autoplay muted loop playsinline preload="auto">
+          <source src="/smp4/seavo-4.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div class="section">
+        <video class="video" autoplay muted loop playsinline preload="auto">
+          <source src="/smp4/seavo-5.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
       <div class="scroll-down-indicator" id="scroll-indicator">
@@ -106,25 +127,13 @@ useHead({
 });
 
 const { $gsap } = useNuxtApp();
-const firstSpline = ref(null);
+const firstVideo = ref(null);
 const rightDescription = ref(null);
-const isSplineLoaded = ref(false);
 
 onMounted(() => {
-  if (process.client) {
-    import('@splinetool/viewer')
-      .then(() => {
-        isSplineLoaded.value = true;
-        console.log('Spline Viewer loaded successfully');
-      })
-      .catch((err) => {
-        console.error('Error loading Spline Viewer:', err);
-      });
-  }
-
-  if (firstSpline.value) {
+  if (firstVideo.value) {
     $gsap.fromTo(
-      firstSpline.value,
+      firstVideo.value,
       { y: '100%', opacity: 0 },
       { y: '0%', opacity: 1, duration: 2, ease: 'power2.out', delay: 0.5 }
     );
@@ -228,6 +237,11 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   scroll-snap-align: start;
+}
+
+.video {
+  width: 80%;
+  height: 80%;
 }
 
 .content {
@@ -376,6 +390,12 @@ onMounted(() => {
     overflow-y: auto;
     max-height: 60%;
     box-sizing: border-box;
+  }
+
+  .video {
+    width: 90%;
+    height: auto;
+    max-height: 90%;
   }
 
   .scroll-down-indicator {
