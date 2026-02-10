@@ -321,8 +321,17 @@ const handleSplineClick = (route) => {
   }, delay);
 };
 
+let isTransitioning = false;
+let transitionTimeout = null;
+
 const transitionToNextProject = () => {
-  if (!isMobile.value) return;
+  if (!isMobile.value || isTransitioning) return;
+
+  isTransitioning = true;
+
+  if (transitionTimeout) {
+    clearTimeout(transitionTimeout);
+  }
 
   const currentSplineViewer = getCurrentMobileSplineViewer();
   const currentSplineElement = currentSplineViewer?.$el || currentSplineViewer?.splineRef || currentSplineViewer;
@@ -331,6 +340,8 @@ const transitionToNextProject = () => {
   if (currentSplineElement) {
     elementsToFadeOut.push(currentSplineElement);
   }
+
+  $gsap.killTweensOf(elementsToFadeOut);
 
   $gsap.to(elementsToFadeOut, {
     opacity: 0,
@@ -349,6 +360,8 @@ const transitionToNextProject = () => {
           elementsToFadeIn.push(newSplineElement);
         }
 
+        $gsap.killTweensOf(elementsToFadeIn);
+
         $gsap.set(elementsToFadeIn, {
           y: 20,
           opacity: 0
@@ -359,25 +372,34 @@ const transitionToNextProject = () => {
           y: 0,
           duration: 0.5,
           ease: 'power2.out',
-          stagger: 0.1
+          stagger: 0.1,
+          onComplete: () => {
+            isTransitioning = false;
+          }
         });
       });
     }
   });
 };
 
+let touchStartHandler = null;
+let touchMoveHandler = null;
+let wheelHandler = null;
+let debounceTimer = null;
+
 const setupMobileScrollHandler = () => {
   if (!isMobile.value || !mobileContainer.value) return;
 
-  let isTransitioning = false;
-  let startY = 0;
-  let scrollThreshold = 50;
+  cleanupMobileScrollHandler();
 
-  const handleTouchStart = (e) => {
+  let startY = 0;
+  const scrollThreshold = 50;
+
+  touchStartHandler = (e) => {
     startY = e.touches[0].clientY;
   };
 
-  const handleTouchMove = (e) => {
+  touchMoveHandler = (e) => {
     if (isTransitioning) {
       e.preventDefault();
       return;
@@ -387,34 +409,60 @@ const setupMobileScrollHandler = () => {
     const deltaY = startY - currentY;
 
     if (Math.abs(deltaY) > scrollThreshold) {
-      isTransitioning = true;
+      e.preventDefault();
       transitionToNextProject();
-      
-      setTimeout(() => {
-        isTransitioning = false;
-      }, 800);
     }
   };
 
-  const handleWheel = (e) => {
+  wheelHandler = (e) => {
     if (isTransitioning) {
       e.preventDefault();
       return;
     }
 
-    if (Math.abs(e.deltaY) > 10) {
-      isTransitioning = true;
-      transitionToNextProject();
-      
-      setTimeout(() => {
-        isTransitioning = false;
-      }, 800);
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
     }
+
+    debounceTimer = setTimeout(() => {
+      if (Math.abs(e.deltaY) > 10 && !isTransitioning) {
+        transitionToNextProject();
+      }
+    }, 50);
   };
 
-  mobileContainer.value.addEventListener('touchstart', handleTouchStart, { passive: true });
-  mobileContainer.value.addEventListener('touchmove', handleTouchMove, { passive: false });
-  mobileContainer.value.addEventListener('wheel', handleWheel, { passive: false });
+  mobileContainer.value.addEventListener('touchstart', touchStartHandler, { passive: true });
+  mobileContainer.value.addEventListener('touchmove', touchMoveHandler, { passive: false });
+  mobileContainer.value.addEventListener('wheel', wheelHandler, { passive: false });
+};
+
+const cleanupMobileScrollHandler = () => {
+  if (!mobileContainer.value) return;
+
+  if (touchStartHandler) {
+    mobileContainer.value.removeEventListener('touchstart', touchStartHandler);
+    touchStartHandler = null;
+  }
+  
+  if (touchMoveHandler) {
+    mobileContainer.value.removeEventListener('touchmove', touchMoveHandler);
+    touchMoveHandler = null;
+  }
+  
+  if (wheelHandler) {
+    mobileContainer.value.removeEventListener('wheel', wheelHandler);
+    wheelHandler = null;
+  }
+
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+    debounceTimer = null;
+  }
+
+  if (transitionTimeout) {
+    clearTimeout(transitionTimeout);
+    transitionTimeout = null;
+  }
 };
 
 onMounted(() => {
@@ -461,7 +509,9 @@ onMounted(() => {
     }
     
     setTimeout(() => {
-      setupMobileScrollHandler();
+      if (isMobile.value) {
+        setupMobileScrollHandler();
+      }
     }, 1000);
   }
 });
@@ -469,12 +519,20 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (process.client) {
     window.removeEventListener('resize', checkMobile);
+    cleanupMobileScrollHandler();
+    
+    $gsap.killTweensOf([mobileText.value]);
+    
+    const currentSplineViewer = getCurrentMobileSplineViewer();
+    const currentSplineElement = currentSplineViewer?.$el || currentSplineViewer?.splineRef || currentSplineViewer;
+    if (currentSplineElement) {
+      $gsap.killTweensOf(currentSplineElement);
+    }
   }
 });
 </script>
 
 <style scoped>
-/* Keep existing styles */
 .main-container {
   display: flex;
   flex-direction: column;
