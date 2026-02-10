@@ -95,24 +95,9 @@
           <div class="mobile-lower-div" @click="() => handleSplineClick(currentProject.route)">
             <client-only>
               <spline-viewer
-                v-if="isSplineLoaded && shouldRenderSpline && currentProjectIndex === 0"
-                :key="`dalibook-${splineKey}`"
-                ref="mobiledalibookSplineViewer"
-                url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
-              ></spline-viewer>
-              
-              <spline-viewer
-                v-if="isSplineLoaded && shouldRenderSpline && currentProjectIndex === 1"
-                :key="`seavo-${splineKey}`"
-                ref="mobileseavoSplineViewer"
-                url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
-              ></spline-viewer>
-
-              <spline-viewer
-                v-if="isSplineLoaded && shouldRenderSpline && currentProjectIndex === 2"
-                :key="`flightpro-${splineKey}`"
-                ref="mobileflightproSplineViewer"
-                url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
+                :key="`spline-${currentProjectIndex}-${splineKey}`"
+                v-if="isSplineLoaded && isSplineReady"
+                :url="currentProject.splineUrl"
               ></spline-viewer>
             </client-only>
             <div class="hover-text">View Project</div>
@@ -219,9 +204,6 @@ const mainContent = ref(null);
 const dalibookSplineViewer = ref(null);
 const flightproSplineViewer = ref(null);
 const seavoSplineViewer = ref(null);
-const mobiledalibookSplineViewer = ref(null);
-const mobileflightproSplineViewer = ref(null);
-const mobileseavoSplineViewer = ref(null);
 const isSplineLoaded = ref(false);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
@@ -229,8 +211,8 @@ const mobileContainer = ref(null);
 const currentSection = ref(null);
 const mobileText = ref(null);
 const currentProjectIndex = ref(0);
-const shouldRenderSpline = ref(true);
 const splineKey = ref(0);
+const isSplineReady = ref(true);
 
 const projects = [
   {
@@ -258,45 +240,6 @@ const projects = [
 
 const currentProject = computed(() => projects[currentProjectIndex.value]);
 
-const getCurrentMobileSplineViewer = () => {
-  if (currentProjectIndex.value === 0) {
-    return mobiledalibookSplineViewer.value;
-  } else if (currentProjectIndex.value === 1) {
-    return mobileseavoSplineViewer.value;
-  } else {
-    return mobileflightproSplineViewer.value;
-  }
-};
-
-const cleanupSplineViewer = () => {
-  const currentSplineViewer = getCurrentMobileSplineViewer();
-  
-  if (currentSplineViewer) {
-    try {
-      const element = currentSplineViewer.$el || currentSplineViewer;
-      
-      if (element && typeof element.dispose === 'function') {
-        element.dispose();
-      }
-      
-      if (element && element.shadowRoot) {
-        const canvas = element.shadowRoot.querySelector('canvas');
-        if (canvas) {
-          const context = canvas.getContext('webgl') || canvas.getContext('webgl2');
-          if (context && typeof context.getExtension === 'function') {
-            const loseContext = context.getExtension('WEBGL_lose_context');
-            if (loseContext) {
-              loseContext.loseContext();
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.warn('Error cleaning up Spline viewer:', error);
-    }
-  }
-};
-
 const checkMobile = () => {
   isMobile.value = window.innerWidth <= 768;
 };
@@ -321,7 +264,8 @@ const handleSplineClick = (route) => {
     let targetViewer;
     
     if (isMobile.value) {
-      targetViewer = getCurrentMobileSplineViewer();
+      const splineViewerElement = document.querySelector('spline-viewer');
+      targetViewer = splineViewerElement;
     } else {
       if (route === '/dalibook') {
         targetViewer = dalibookSplineViewer.value;
@@ -349,13 +293,9 @@ const handleSplineClick = (route) => {
 const transitionToNextProject = () => {
   if (!isMobile.value) return;
 
-  const currentSplineViewer = getCurrentMobileSplineViewer();
-  const currentSplineElement = currentSplineViewer?.$el || currentSplineViewer;
+  isSplineReady.value = false;
 
   const elementsToFadeOut = [mobileText.value];
-  if (currentSplineElement) {
-    elementsToFadeOut.push(currentSplineElement);
-  }
 
   $gsap.to(elementsToFadeOut, {
     opacity: 0,
@@ -363,25 +303,16 @@ const transitionToNextProject = () => {
     duration: 0.4,
     ease: 'power2.out',
     onComplete: () => {
-      cleanupSplineViewer();
+      currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
       
-      shouldRenderSpline.value = false;
+      splineKey.value += 1;
       
       nextTick(() => {
-        currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
-        splineKey.value += 1;
-        
         setTimeout(() => {
-          shouldRenderSpline.value = true;
+          isSplineReady.value = true;
           
           nextTick(() => {
-            const newSplineViewer = getCurrentMobileSplineViewer();
-            const newSplineElement = newSplineViewer?.$el || newSplineViewer;
-            
             const elementsToFadeIn = [mobileText.value];
-            if (newSplineElement) {
-              elementsToFadeIn.push(newSplineElement);
-            }
 
             $gsap.set(elementsToFadeIn, {
               y: 20,
@@ -396,7 +327,7 @@ const transitionToNextProject = () => {
               stagger: 0.1
             });
           });
-        }, 100);
+        }, 50);
       });
     }
   });
@@ -516,7 +447,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (process.client) {
     window.removeEventListener('resize', checkMobile);
-    cleanupSplineViewer();
   }
 });
 </script>
