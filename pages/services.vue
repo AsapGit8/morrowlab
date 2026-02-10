@@ -5,15 +5,11 @@
     <div v-show="!showLoadingScreen" class="main-container">
       <div class="main">
         <div class="left-box">
-          <GltfViewer
-            model-path="/glb/morrowlab.glb"
-            :camera-position="[0, 1, 4]"
-            :model-scale="1.5"
-            :auto-rotate="true"
-            :auto-rotate-speed="0.5"
-            viewer-class="services-gltf"
-            @load="onGltfLoad"
-            @error="onGltfError"
+          <SplineViewer
+            url="https://prod.spline.design/9Iyv-ENrpxDILmsu/scene.splinecode"
+            viewer-class="services-spline"
+            @load="onSplineLoad"
+            @error="onSplineError"
           />
         </div>
         <div class="right-box" data-lenis-prevent>
@@ -208,7 +204,7 @@
 import { ref, onMounted } from "vue";
 import PageTransition from "@/components/PageTransition.vue";
 import Footer from "@/components/Footer.vue";
-import GltfViewer from "@/components/GltfViewer.vue";
+import SplineViewer from "@/components/SplineViewer.vue";
 import gsap from "gsap";
 
 const config = useRuntimeConfig();
@@ -380,12 +376,12 @@ const handleLoadingFinished = () => {
   showLoadingScreen.value = false;
 };
 
-const onGltfLoad = () => {
-  console.log('Services GLTF model loaded successfully');
+const onSplineLoad = () => {
+  console.log('Services Spline viewer loaded successfully');
 };
 
-const onGltfError = (error) => {
-  console.error('Services GLTF loading error:', error);
+const onSplineError = (error) => {
+  console.error('Services Spline loading error:', error);
 };
 
 onMounted(() => {
@@ -568,7 +564,7 @@ p {
   z-index: 1;
 }
 
-.services-gltf {
+.services-spline {
   width: 100%;
   height: 100%;
 }
