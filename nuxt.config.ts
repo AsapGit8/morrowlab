@@ -36,7 +36,8 @@ export default defineNuxtConfig({
     }
   },
   modules: [
-    '@nuxt/image'
+    '@nuxt/image',
+    '@tresjs/nuxt'
   ],
   image: {
     quality: 80,

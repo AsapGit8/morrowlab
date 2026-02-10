@@ -22,24 +22,35 @@
               </a>
             </div>
           </div>
-          <div class="right-box" @click="() => handleSplineClick('/dalibook')">
-            <SplineViewer
-              ref="dalibookSplineViewer"
-              url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
-              @load="onSplineLoad('dalibook')"
-              @error="onSplineError"
+          <div class="right-box" @click="() => handleGltfClick('/dalibook')">
+            <GltfViewer
+              ref="dalibookGltfViewer"
+              model-path="/glb/dalibook.glb"
+              :camera-position="[0, 1, 4]"
+              :model-scale="1.5"
+              :auto-rotate="true"
+              :auto-rotate-speed="1"
+              viewer-class="dalibook-viewer"
+              @load="onGltfLoad('dalibook')"
+              @error="onGltfError"
             />
             <div class="hover-text">View Project</div>
           </div>
         </div>
 
         <div class="main section-seavo">
-          <div class="left-box spline-box" @click="() => handleSplineClick('/seavo')">
-            <SplineViewer
-              ref="seavoSplineViewer"
-              url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
-              @load="onSplineLoad('seavo')"
-              @error="onSplineError"
+          <div class="left-box gltf-box" @click="() => handleGltfClick('/seavo')">
+            <GltfViewer
+              ref="seavoGltfViewer"
+              model-path="/glb/seavo.glb"
+              :camera-position="[0, 1, 4]"
+              :model-scale="1.5"
+              :auto-rotate="true"
+              :auto-rotate-speed="1"
+              clear-color="#fafafa"
+              viewer-class="seavo-viewer"
+              @load="onGltfLoad('seavo')"
+              @error="onGltfError"
             />
             <div class="hover-text">View Project</div>
           </div>
@@ -62,12 +73,17 @@
           <div class="left-box">
             <div class="left-text">FLIGHTPRO</div>
           </div>
-          <div class="right-box spline-box" @click="() => handleSplineClick('/flightpro')">
-            <SplineViewer
-              ref="flightproSplineViewer"
-              url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
-              @load="onSplineLoad('flightpro')"
-              @error="onSplineError"
+          <div class="right-box gltf-box" @click="() => handleGltfClick('/flightpro')">
+            <GltfViewer
+              ref="flightproGltfViewer"
+              model-path="/glb/flightpro.glb"
+              :camera-position="[0, 1, 4]"
+              :model-scale="1.5"
+              :auto-rotate="true"
+              :auto-rotate-speed="1"
+              viewer-class="flightpro-viewer"
+              @load="onGltfLoad('flightpro')"
+              @error="onGltfError"
             />
             <div class="hover-text">View Project</div>
           </div>
@@ -89,29 +105,41 @@
               </a>
             </div>
           </div>
-          <div class="mobile-lower-div" @click="() => handleSplineClick(currentProject.route)">
-            <SplineViewer
+          <div class="mobile-lower-div" @click="() => handleGltfClick(currentProject.route)">
+            <GltfViewer
               v-if="currentProjectIndex === 0"
-              ref="mobiledalibookSplineViewer"
-              url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
-              @load="onSplineLoad('mobile-dalibook')"
-              @error="onSplineError"
+              ref="mobiledalibookGltfViewer"
+              model-path="/glb/dalibook.glb"
+              :camera-position="[0, 1, 3]"
+              :model-scale="1.2"
+              :auto-rotate="true"
+              viewer-class="mobile-dalibook-viewer"
+              @load="onGltfLoad('mobile-dalibook')"
+              @error="onGltfError"
             />
             
-            <SplineViewer
+            <GltfViewer
               v-if="currentProjectIndex === 1"
-              ref="mobileseavoSplineViewer"
-              url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
-              @load="onSplineLoad('mobile-seavo')"
-              @error="onSplineError"
+              ref="mobileseavoGltfViewer"
+              model-path="/glb/seavo.glb"
+              :camera-position="[0, 1, 3]"
+              :model-scale="1.2"
+              :auto-rotate="true"
+              viewer-class="mobile-seavo-viewer"
+              @load="onGltfLoad('mobile-seavo')"
+              @error="onGltfError"
             />
 
-            <SplineViewer
+            <GltfViewer
               v-if="currentProjectIndex === 2"
-              ref="mobileflightproSplineViewer"
-              url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
-              @load="onSplineLoad('mobile-flightpro')"
-              @error="onSplineError"
+              ref="mobileflightproGltfViewer"
+              model-path="/glb/flightpro.glb"
+              :camera-position="[0, 1, 3]"
+              :model-scale="1.2"
+              :auto-rotate="true"
+              viewer-class="mobile-flightpro-viewer"
+              @load="onGltfLoad('mobile-flightpro')"
+              @error="onGltfError"
             />
             <div class="hover-text">View Project</div>
           </div>
@@ -124,7 +152,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue';
 import LoadingScreen from '@/components/LoadingScreen.vue';
-import SplineViewer from '@/components/SplineViewer.vue';
+import GltfViewer from '@/components/GltfViewer.vue';
 import { useNuxtApp } from '#app';
 import { useRouter } from 'vue-router';
 
@@ -215,12 +243,12 @@ const { $gsap } = useNuxtApp();
 const router = useRouter();
 const showLoadingScreen = ref(true);
 const mainContent = ref(null);
-const dalibookSplineViewer = ref(null);
-const flightproSplineViewer = ref(null);
-const seavoSplineViewer = ref(null);
-const mobiledalibookSplineViewer = ref(null);
-const mobileflightproSplineViewer = ref(null);
-const mobileseavoSplineViewer = ref(null);
+const dalibookGltfViewer = ref(null);
+const flightproGltfViewer = ref(null);
+const seavoGltfViewer = ref(null);
+const mobiledalibookGltfViewer = ref(null);
+const mobileflightproGltfViewer = ref(null);
+const mobileseavoGltfViewer = ref(null);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
 const mobileContainer = ref(null);
@@ -232,21 +260,21 @@ const projects = [
   {
     text: 'DALIBOOK',
     route: '/dalibook',
-    splineUrl: 'https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode',
+    modelPath: '/glb/dalibook.glb',
     hasVisitLink: true,
     visitLink: 'https://www.dalibook.io/'
   },
   {
     text: 'SEAVO',
     route: '/seavo',
-    splineUrl: 'https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode',
+    modelPath: '/glb/seavo.glb',
     hasVisitLink: true,
     visitLink: 'https://www.seavoimport.com'
   },
   {
     text: 'FLIGHTPRO',
     route: '/flightpro',
-    splineUrl: 'https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode',
+    modelPath: '/glb/flightpro.glb',
     hasVisitLink: false,
     visitLink: ''
   }
@@ -254,21 +282,21 @@ const projects = [
 
 const currentProject = computed(() => projects[currentProjectIndex.value]);
 
-const onSplineLoad = (name) => {
-  console.log(`Spline viewer ${name} loaded successfully`);
+const onGltfLoad = (name) => {
+  console.log(`GLTF model ${name} loaded successfully`);
 };
 
-const onSplineError = (error) => {
-  console.error('Spline loading error:', error);
+const onGltfError = (error) => {
+  console.error('GLTF loading error:', error);
 };
 
-const getCurrentMobileSplineViewer = () => {
+const getCurrentMobileGltfViewer = () => {
   if (currentProjectIndex.value === 0) {
-    return mobiledalibookSplineViewer.value;
+    return mobiledalibookGltfViewer.value;
   } else if (currentProjectIndex.value === 1) {
-    return mobileseavoSplineViewer.value;
+    return mobileseavoGltfViewer.value;
   } else {
-    return mobileflightproSplineViewer.value;
+    return mobileflightproGltfViewer.value;
   }
 };
 
@@ -285,7 +313,7 @@ const handleLoadingFinished = () => {
   showLoadingScreen.value = false;
 };
 
-const handleSplineClick = (route) => {
+const handleGltfClick = (route) => {
   if (process.client) {
     sessionStorage.setItem('navigatingFromHome', 'true');
   }
@@ -296,18 +324,18 @@ const handleSplineClick = (route) => {
     let targetViewer;
     
     if (isMobile.value) {
-      targetViewer = getCurrentMobileSplineViewer();
+      targetViewer = getCurrentMobileGltfViewer();
     } else {
       if (route === '/dalibook') {
-        targetViewer = dalibookSplineViewer.value;
+        targetViewer = dalibookGltfViewer.value;
       } else if (route === '/seavo') {
-        targetViewer = seavoSplineViewer.value;
+        targetViewer = seavoGltfViewer.value;
       } else {
-        targetViewer = flightproSplineViewer.value;
+        targetViewer = flightproGltfViewer.value;
       }
     }
     
-    const element = targetViewer?.$el || targetViewer?.splineRef || targetViewer;
+    const element = targetViewer?.$el || targetViewer;
     if (element) {
       $gsap.to(element, {
         opacity: 0,
@@ -324,12 +352,12 @@ const handleSplineClick = (route) => {
 const transitionToNextProject = () => {
   if (!isMobile.value) return;
 
-  const currentSplineViewer = getCurrentMobileSplineViewer();
-  const currentSplineElement = currentSplineViewer?.$el || currentSplineViewer?.splineRef || currentSplineViewer;
+  const currentGltfViewer = getCurrentMobileGltfViewer();
+  const currentGltfElement = currentGltfViewer?.$el || currentGltfViewer;
 
   const elementsToFadeOut = [mobileText.value];
-  if (currentSplineElement) {
-    elementsToFadeOut.push(currentSplineElement);
+  if (currentGltfElement) {
+    elementsToFadeOut.push(currentGltfElement);
   }
 
   $gsap.to(elementsToFadeOut, {
@@ -341,12 +369,12 @@ const transitionToNextProject = () => {
       currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
       
       nextTick(() => {
-        const newSplineViewer = getCurrentMobileSplineViewer();
-        const newSplineElement = newSplineViewer?.$el || newSplineViewer?.splineRef || newSplineViewer;
+        const newGltfViewer = getCurrentMobileGltfViewer();
+        const newGltfElement = newGltfViewer?.$el || newGltfViewer;
         
         const elementsToFadeIn = [mobileText.value];
-        if (newSplineElement) {
-          elementsToFadeIn.push(newSplineElement);
+        if (newGltfElement) {
+          elementsToFadeIn.push(newGltfElement);
         }
 
         $gsap.set(elementsToFadeIn, {
@@ -474,7 +502,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* Keep existing styles */
 .main-container {
   display: flex;
   flex-direction: column;
@@ -526,7 +553,7 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-.section-seavo .spline-box {
+.section-seavo .gltf-box {
   background-color: #fafafa;
   display: flex;
   justify-content: center;
@@ -547,7 +574,7 @@ onBeforeUnmount(() => {
   background-color: white;
 }
 
-.section-flightpro .spline-box {
+.section-flightpro .gltf-box {
   background-color: #fafafa;
   display: flex;
   justify-content: center;
@@ -627,7 +654,7 @@ onBeforeUnmount(() => {
 }
 
 .right-box:hover .hover-text,
-.spline-box:hover .hover-text {
+.gltf-box:hover .hover-text {
   opacity: 1;
 }
 
