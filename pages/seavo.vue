@@ -399,10 +399,11 @@ onMounted(() => {
   }
 
   .scroll-down-indicator {
-    position: absolute;
+    position: fixed;
     bottom: 15px;
-    left: 15px;
-    z-index: 1;
+    right: 15px;
+    left: auto;
+    z-index: 11;
   }
 }
 

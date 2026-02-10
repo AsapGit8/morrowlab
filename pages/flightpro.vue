@@ -2,6 +2,9 @@
   <div class="main">
     <div class="left-box">
       <div class="left-text">FLIGHTPRO</div>
+      <div ref="leftDescription" class="left-description">
+        FLIGHT PRO is set to revolutionize luxury travel in the Philippines with exclusive helicopter charters for business and leisure. Committed to safety, elegance, and efficiency, it plans to launch its services in the Philippines next year, offering seamless transfers and breathtaking aerial tours.
+      </div>
     </div>
     <div class="right-box" data-lenis-prevent>
       <div class="section">
@@ -36,11 +39,6 @@
       </div>
 
       <div class="scroll-down-indicator" id="scroll-indicator">
-      </div>
-    </div>
-    <div class="left-description-container">
-      <div ref="leftDescription" class="left-description">
-        FLIGHT PRO is set to revolutionize luxury travel in the Philippines with exclusive helicopter charters for business and leisure. Committed to safety, elegance, and efficiency, it plans to launch its services in the Philippines next year, offering seamless transfers and breathtaking aerial tours.
       </div>
     </div>
   </div>
@@ -253,19 +251,6 @@ onMounted(() => {
   color: black;
 }
 
-.left-description-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
-  z-index: 1;
-}
-
 .left-description {
   max-width: 600px;
   font-size: 1rem;
@@ -273,7 +258,6 @@ onMounted(() => {
   font-weight: 500;
   color: black;
   text-align: left;
-  pointer-events: auto;
 }
 
 .scroll-down-indicator {
@@ -332,15 +316,6 @@ onMounted(() => {
     bottom: 15px;
     left: 20px;
     font-size: 2.5rem;
-  }
-
-  .left-description-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50svh;
-    z-index: 5;
   }
 
   .left-description {
