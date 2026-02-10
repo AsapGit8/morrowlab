@@ -23,26 +23,24 @@
             </div>
           </div>
           <div class="right-box" @click="() => handleSplineClick('/dalibook')">
-            <client-only>
-              <spline-viewer
-                v-if="isSplineLoaded"
-                ref="dalibookSplineViewer"
-                url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
-              ></spline-viewer>
-            </client-only>
+            <SplineViewer
+              ref="dalibookSplineViewer"
+              url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
+              @load="onSplineLoad('dalibook')"
+              @error="onSplineError"
+            />
             <div class="hover-text">View Project</div>
           </div>
         </div>
 
         <div class="main section-seavo">
           <div class="left-box spline-box" @click="() => handleSplineClick('/seavo')">
-            <client-only>
-              <spline-viewer
-                v-if="isSplineLoaded"
-                ref="seavoSplineViewer"
-                url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
-              ></spline-viewer>
-            </client-only>
+            <SplineViewer
+              ref="seavoSplineViewer"
+              url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
+              @load="onSplineLoad('seavo')"
+              @error="onSplineError"
+            />
             <div class="hover-text">View Project</div>
           </div>
           <div class="right-box text-box">
@@ -65,13 +63,12 @@
             <div class="left-text">FLIGHTPRO</div>
           </div>
           <div class="right-box spline-box" @click="() => handleSplineClick('/flightpro')">
-            <client-only>
-              <spline-viewer
-                v-if="isSplineLoaded"
-                ref="flightproSplineViewer"
-                url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
-              ></spline-viewer>
-            </client-only>
+            <SplineViewer
+              ref="flightproSplineViewer"
+              url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
+              @load="onSplineLoad('flightpro')"
+              @error="onSplineError"
+            />
             <div class="hover-text">View Project</div>
           </div>
         </div>
@@ -93,25 +90,29 @@
             </div>
           </div>
           <div class="mobile-lower-div" @click="() => handleSplineClick(currentProject.route)">
-            <client-only>
-              <spline-viewer
-                v-if="isSplineLoaded && currentProjectIndex === 0"
-                ref="mobiledalibookSplineViewer"
-                url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
-              ></spline-viewer>
-              
-              <spline-viewer
-                v-if="isSplineLoaded && currentProjectIndex === 1"
-                ref="mobileseavoSplineViewer"
-                url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
-              ></spline-viewer>
+            <SplineViewer
+              v-if="currentProjectIndex === 0"
+              ref="mobiledalibookSplineViewer"
+              url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
+              @load="onSplineLoad('mobile-dalibook')"
+              @error="onSplineError"
+            />
+            
+            <SplineViewer
+              v-if="currentProjectIndex === 1"
+              ref="mobileseavoSplineViewer"
+              url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
+              @load="onSplineLoad('mobile-seavo')"
+              @error="onSplineError"
+            />
 
-              <spline-viewer
-                v-if="isSplineLoaded && currentProjectIndex === 2"
-                ref="mobileflightproSplineViewer"
-                url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
-              ></spline-viewer>
-            </client-only>
+            <SplineViewer
+              v-if="currentProjectIndex === 2"
+              ref="mobileflightproSplineViewer"
+              url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
+              @load="onSplineLoad('mobile-flightpro')"
+              @error="onSplineError"
+            />
             <div class="hover-text">View Project</div>
           </div>
         </div>
@@ -123,6 +124,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue';
 import LoadingScreen from '@/components/LoadingScreen.vue';
+import SplineViewer from '@/components/SplineViewer.vue';
 import { useNuxtApp } from '#app';
 import { useRouter } from 'vue-router';
 
@@ -219,7 +221,6 @@ const seavoSplineViewer = ref(null);
 const mobiledalibookSplineViewer = ref(null);
 const mobileflightproSplineViewer = ref(null);
 const mobileseavoSplineViewer = ref(null);
-const isSplineLoaded = ref(false);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
 const mobileContainer = ref(null);
@@ -252,6 +253,14 @@ const projects = [
 ];
 
 const currentProject = computed(() => projects[currentProjectIndex.value]);
+
+const onSplineLoad = (name) => {
+  console.log(`Spline viewer ${name} loaded successfully`);
+};
+
+const onSplineError = (error) => {
+  console.error('Spline loading error:', error);
+};
 
 const getCurrentMobileSplineViewer = () => {
   if (currentProjectIndex.value === 0) {
@@ -298,7 +307,7 @@ const handleSplineClick = (route) => {
       }
     }
     
-    const element = targetViewer?.$el || targetViewer;
+    const element = targetViewer?.$el || targetViewer?.splineRef || targetViewer;
     if (element) {
       $gsap.to(element, {
         opacity: 0,
@@ -316,7 +325,7 @@ const transitionToNextProject = () => {
   if (!isMobile.value) return;
 
   const currentSplineViewer = getCurrentMobileSplineViewer();
-  const currentSplineElement = currentSplineViewer?.$el || currentSplineViewer;
+  const currentSplineElement = currentSplineViewer?.$el || currentSplineViewer?.splineRef || currentSplineViewer;
 
   const elementsToFadeOut = [mobileText.value];
   if (currentSplineElement) {
@@ -333,7 +342,7 @@ const transitionToNextProject = () => {
       
       nextTick(() => {
         const newSplineViewer = getCurrentMobileSplineViewer();
-        const newSplineElement = newSplineViewer?.$el || newSplineViewer;
+        const newSplineElement = newSplineViewer?.$el || newSplineViewer?.splineRef || newSplineViewer;
         
         const elementsToFadeIn = [mobileText.value];
         if (newSplineElement) {
@@ -450,21 +459,10 @@ onMounted(() => {
         }
       }, 1500);
     }
-  }
-
-  if (process.client) {
-    import('@splinetool/viewer')
-      .then(() => {
-        isSplineLoaded.value = true;
-        console.log('Spline Viewer loaded successfully');
-        
-        setTimeout(() => {
-          setupMobileScrollHandler();
-        }, 1000);
-      })
-      .catch((err) => {
-        console.error('Error loading Spline Viewer:', err);
-      });
+    
+    setTimeout(() => {
+      setupMobileScrollHandler();
+    }, 1000);
   }
 });
 
@@ -476,6 +474,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* Keep existing styles */
 .main-container {
   display: flex;
   flex-direction: column;
@@ -624,6 +623,7 @@ onBeforeUnmount(() => {
   color: black;
   opacity: 0;
   transition: opacity 0.3s ease;
+  z-index: 10;
 }
 
 .right-box:hover .hover-text,

@@ -5,12 +5,12 @@
     <div v-show="!showLoadingScreen" class="main-container">
       <div class="main">
         <div class="left-box">
-          <client-only>
-            <spline-viewer
-              v-if="isSplineLoaded"
-              url="https://prod.spline.design/9Iyv-ENrpxDILmsu/scene.splinecode"
-            ></spline-viewer>
-          </client-only>
+          <SplineViewer
+            url="https://prod.spline.design/9Iyv-ENrpxDILmsu/scene.splinecode"
+            viewer-class="services-spline"
+            @load="onSplineLoad"
+            @error="onSplineError"
+          />
         </div>
         <div class="right-box" data-lenis-prevent>
           <div class="section section-1">
@@ -204,7 +204,7 @@
 import { ref, onMounted } from "vue";
 import PageTransition from "@/components/PageTransition.vue";
 import Footer from "@/components/Footer.vue";
-import Availability from "@/components/Availability.vue";
+import SplineViewer from "@/components/SplineViewer.vue";
 import gsap from "gsap";
 
 const config = useRuntimeConfig();
@@ -371,24 +371,20 @@ useHead({
 });
 
 const showLoadingScreen = ref(true);
-const isSplineLoaded = ref(false);
 
 const handleLoadingFinished = () => {
   showLoadingScreen.value = false;
 };
 
-onMounted(() => {
-  if (process.client) {
-    import('@splinetool/viewer')
-      .then(() => {
-        isSplineLoaded.value = true;
-        console.log('Spline Viewer loaded successfully');
-      })
-      .catch((err) => {
-        console.error('Error loading Spline Viewer:', err);
-      });
-  }
+const onSplineLoad = () => {
+  console.log('Services Spline viewer loaded successfully');
+};
 
+const onSplineError = (error) => {
+  console.error('Services Spline loading error:', error);
+};
+
+onMounted(() => {
   const scrollIndicator = document.getElementById('scroll-indicator');
   const scrollText = "Scroll Down";
  
@@ -554,10 +550,6 @@ p {
   margin-bottom: 0.5em;
 }
 
-.app {
-  opacity: 0.3;
-}
-
 .left-box {
   flex: 1;
   background-color: #fdfdfd;
@@ -570,6 +562,11 @@ p {
   justify-content: center;
   align-items: center;
   z-index: 1;
+}
+
+.services-spline {
+  width: 100%;
+  height: 100%;
 }
 
 .right-box {
