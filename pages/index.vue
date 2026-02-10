@@ -95,19 +95,22 @@
           <div class="mobile-lower-div" @click="() => handleSplineClick(currentProject.route)">
             <client-only>
               <spline-viewer
-                v-if="isSplineLoaded && currentProjectIndex === 0"
+                v-if="isSplineLoaded && shouldRenderSpline && currentProjectIndex === 0"
+                :key="`dalibook-${splineKey}`"
                 ref="mobiledalibookSplineViewer"
                 url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
               ></spline-viewer>
               
               <spline-viewer
-                v-if="isSplineLoaded && currentProjectIndex === 1"
+                v-if="isSplineLoaded && shouldRenderSpline && currentProjectIndex === 1"
+                :key="`seavo-${splineKey}`"
                 ref="mobileseavoSplineViewer"
                 url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
               ></spline-viewer>
 
               <spline-viewer
-                v-if="isSplineLoaded && currentProjectIndex === 2"
+                v-if="isSplineLoaded && shouldRenderSpline && currentProjectIndex === 2"
+                :key="`flightpro-${splineKey}`"
                 ref="mobileflightproSplineViewer"
                 url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
               ></spline-viewer>
@@ -226,6 +229,8 @@ const mobileContainer = ref(null);
 const currentSection = ref(null);
 const mobileText = ref(null);
 const currentProjectIndex = ref(0);
+const shouldRenderSpline = ref(true);
+const splineKey = ref(0);
 
 const projects = [
   {
@@ -260,6 +265,35 @@ const getCurrentMobileSplineViewer = () => {
     return mobileseavoSplineViewer.value;
   } else {
     return mobileflightproSplineViewer.value;
+  }
+};
+
+const cleanupSplineViewer = () => {
+  const currentSplineViewer = getCurrentMobileSplineViewer();
+  
+  if (currentSplineViewer) {
+    try {
+      const element = currentSplineViewer.$el || currentSplineViewer;
+      
+      if (element && typeof element.dispose === 'function') {
+        element.dispose();
+      }
+      
+      if (element && element.shadowRoot) {
+        const canvas = element.shadowRoot.querySelector('canvas');
+        if (canvas) {
+          const context = canvas.getContext('webgl') || canvas.getContext('webgl2');
+          if (context && typeof context.getExtension === 'function') {
+            const loseContext = context.getExtension('WEBGL_lose_context');
+            if (loseContext) {
+              loseContext.loseContext();
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Error cleaning up Spline viewer:', error);
+    }
   }
 };
 
@@ -329,29 +363,40 @@ const transitionToNextProject = () => {
     duration: 0.4,
     ease: 'power2.out',
     onComplete: () => {
-      currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
+      cleanupSplineViewer();
+      
+      shouldRenderSpline.value = false;
       
       nextTick(() => {
-        const newSplineViewer = getCurrentMobileSplineViewer();
-        const newSplineElement = newSplineViewer?.$el || newSplineViewer;
+        currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
+        splineKey.value += 1;
         
-        const elementsToFadeIn = [mobileText.value];
-        if (newSplineElement) {
-          elementsToFadeIn.push(newSplineElement);
-        }
+        setTimeout(() => {
+          shouldRenderSpline.value = true;
+          
+          nextTick(() => {
+            const newSplineViewer = getCurrentMobileSplineViewer();
+            const newSplineElement = newSplineViewer?.$el || newSplineViewer;
+            
+            const elementsToFadeIn = [mobileText.value];
+            if (newSplineElement) {
+              elementsToFadeIn.push(newSplineElement);
+            }
 
-        $gsap.set(elementsToFadeIn, {
-          y: 20,
-          opacity: 0
-        });
-        
-        $gsap.to(elementsToFadeIn, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power2.out',
-          stagger: 0.1
-        });
+            $gsap.set(elementsToFadeIn, {
+              y: 20,
+              opacity: 0
+            });
+            
+            $gsap.to(elementsToFadeIn, {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              ease: 'power2.out',
+              stagger: 0.1
+            });
+          });
+        }, 100);
       });
     }
   });
@@ -383,7 +428,7 @@ const setupMobileScrollHandler = () => {
       
       setTimeout(() => {
         isTransitioning = false;
-      }, 800);
+      }, 1000);
     }
   };
 
@@ -399,7 +444,7 @@ const setupMobileScrollHandler = () => {
       
       setTimeout(() => {
         isTransitioning = false;
-      }, 800);
+      }, 1000);
     }
   };
 
@@ -471,6 +516,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (process.client) {
     window.removeEventListener('resize', checkMobile);
+    cleanupSplineViewer();
   }
 });
 </script>
