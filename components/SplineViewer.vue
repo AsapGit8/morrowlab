@@ -1,10 +1,10 @@
 <template>
-  <div class="spline-container">
+  <div ref="containerRef" class="spline-container">
     <div v-if="isLoading" class="spline-loading">
       <div class="loading-spinner"></div>
       <p>Loading 3D scene...</p>
     </div>
-    
+
     <div v-if="error" class="spline-error">
       <p>Failed to load 3D scene</p>
       <button @click="retry" class="retry-button">Retry</button>
@@ -23,40 +23,46 @@
 
 <script setup lang="ts">
 interface Props {
-  url: string;
-  autoLoad?: boolean;
-  viewerClass?: string;
+  url: string
+  autoLoad?: boolean
+  viewerClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   autoLoad: true,
   viewerClass: '',
-});
+})
 
 const emit = defineEmits<{
-  load: [];
-  error: [error: Error];
-}>();
+  load: []
+  error: [error: Error]
+}>()
 
-const { splineRef, isLoaded, isLoading, error, loadSpline } = useSpline({
+const containerRef = ref<HTMLDivElement | null>(null)
+
+const { splineRef, isLoaded, isLoading, error, loadSpline, dispose } = useSpline({
   url: props.url,
   autoLoad: props.autoLoad,
   onLoad: () => emit('load'),
   onError: (err) => emit('error', err),
-});
+})
 
 const retry = () => {
-  error.value = null;
-  loadSpline();
-};
+  error.value = null
+  loadSpline()
+}
 
+// Expose the container element ($el) so parent components can use GSAP on the
+// host node without needing to reach into the web component internals.
 defineExpose({
+  $el: containerRef,
   splineRef,
   isLoaded,
   isLoading,
   error,
   retry,
-});
+  dispose,
+})
 </script>
 
 <style scoped>

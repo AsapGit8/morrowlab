@@ -5,22 +5,29 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useNuxtApp } from "#app";
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useNuxtApp } from '#app';
 
 const { $gsap } = useNuxtApp();
 const showLoading = ref(true);
 const loadingScreen = ref(null);
 const textContainer = ref(null);
 
+let tl = null;
+
 onMounted(() => {
-  const tl = $gsap.timeline({
+  tl = $gsap.timeline({
     onComplete: () => {
+      // Guard: component may have unmounted before this fires
+      if (!loadingScreen.value) return;
+
       $gsap.to(loadingScreen.value, {
         yPercent: -100,
         duration: 3,
-        ease: "power2.inOut",
-        onComplete: () => (showLoading.value = false),
+        ease: 'power2.inOut',
+        onComplete: () => {
+          showLoading.value = false;
+        },
       });
     },
   });
@@ -29,20 +36,42 @@ onMounted(() => {
     opacity: 1,
     y: 0,
     duration: 0.5,
-    ease: "power3.out",
-  })
-    .to(textContainer.value, {
+    ease: 'power3.out',
+  }).to(
+    textContainer.value,
+    {
       opacity: 0,
       duration: 0.5,
       onComplete: () => {
-        textContainer.value.innerText = "Based in Manila";
+        // Guard: component may have unmounted before this fires
+        if (!textContainer.value) return;
+
+        textContainer.value.innerText = 'Based in Manila';
+
         $gsap.to(textContainer.value, {
           opacity: 1,
           y: 0,
           duration: 1,
         });
       },
-    }, "+=0.2");
+    },
+    '+=0.2'
+  );
+});
+
+onBeforeUnmount(() => {
+  // Kill all active tweens tied to this component's elements to prevent
+  // onComplete callbacks from firing after the refs have been nulled by Vue
+  if (tl) {
+    tl.kill();
+    tl = null;
+  }
+  if (textContainer.value) {
+    $gsap.killTweensOf(textContainer.value);
+  }
+  if (loadingScreen.value) {
+    $gsap.killTweensOf(loadingScreen.value);
+  }
 });
 </script>
 
@@ -64,7 +93,7 @@ onMounted(() => {
 }
 
 .loading-text {
-  font-family: "Geist", sans-serif;
+  font-family: 'Geist', sans-serif;
   font-weight: 700;
   text-transform: uppercase;
   opacity: 0;
