@@ -89,7 +89,7 @@
               </a>
             </div>
           </div>
-          <div class="mobile-lower-div" @click="() => handleSplineClick(currentProject.route)">
+          <div class="mobile-lower-div" ref="mobileLowerDiv" @click="() => handleSplineClick(currentProject.route)">
             <SplineViewer
               v-if="currentProjectIndex === 0"
               ref="mobiledalibookSplineViewer"
@@ -97,7 +97,7 @@
               @load="onSplineLoad('mobile-dalibook')"
               @error="onSplineError"
             />
-            
+
             <SplineViewer
               v-if="currentProjectIndex === 1"
               ref="mobileseavoSplineViewer"
@@ -122,11 +122,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue';
-import LoadingScreen from '@/components/LoadingScreen.vue';
-import SplineViewer from '@/components/SplineViewer.vue';
-import { useNuxtApp } from '#app';
-import { useRouter } from 'vue-router';
+// No manual Vue or Nuxt imports needed — ref, computed, onMounted,
+// onBeforeUnmount, nextTick, useNuxtApp, useRuntimeConfig, useSeoMeta,
+// useHead, and navigateTo are all auto-imported by Nuxt 4.x.
 
 const config = useRuntimeConfig();
 
@@ -151,12 +149,8 @@ useHead({
         url: config.public.siteUrl,
         name: 'Home - MorrowLab Studio',
         description: 'Software Development Studio based in Manila, Philippines. We create mobile apps, web applications, and digital solutions.',
-        isPartOf: {
-          '@id': `${config.public.siteUrl}/#website`
-        },
-        about: {
-          '@id': config.public.organizationId
-        },
+        isPartOf: { '@id': `${config.public.siteUrl}/#website` },
+        about: { '@id': config.public.organizationId },
         primaryImageOfPage: {
           '@type': 'ImageObject',
           url: `${config.public.siteUrl}/og-image.jpg`
@@ -212,41 +206,36 @@ useHead({
 });
 
 const { $gsap } = useNuxtApp();
-const router = useRouter();
+
 const showLoadingScreen = ref(true);
 const mainContent = ref(null);
 const dalibookSplineViewer = ref(null);
 const flightproSplineViewer = ref(null);
 const seavoSplineViewer = ref(null);
-const mobiledalibookSplineViewer = ref(null);
-const mobileflightproSplineViewer = ref(null);
-const mobileseavoSplineViewer = ref(null);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
 const mobileContainer = ref(null);
 const currentSection = ref(null);
 const mobileText = ref(null);
+const mobileLowerDiv = ref(null);
 const currentProjectIndex = ref(0);
 
 const projects = [
   {
     text: 'DALIBOOK',
     route: '/dalibook',
-    splineUrl: 'https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode',
     hasVisitLink: true,
     visitLink: 'https://www.dalibook.io/'
   },
   {
     text: 'SEAVO',
     route: '/seavo',
-    splineUrl: 'https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode',
     hasVisitLink: true,
     visitLink: 'https://www.seavoimport.com'
   },
   {
     text: 'FLIGHTPRO',
     route: '/flightpro',
-    splineUrl: 'https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode',
     hasVisitLink: false,
     visitLink: ''
   }
@@ -260,16 +249,6 @@ const onSplineLoad = (name) => {
 
 const onSplineError = (error) => {
   console.error('Spline loading error:', error);
-};
-
-const getCurrentMobileSplineViewer = () => {
-  if (currentProjectIndex.value === 0) {
-    return mobiledalibookSplineViewer.value;
-  } else if (currentProjectIndex.value === 1) {
-    return mobileseavoSplineViewer.value;
-  } else {
-    return mobileflightproSplineViewer.value;
-  }
 };
 
 const checkMobile = () => {
@@ -286,51 +265,65 @@ const handleLoadingFinished = () => {
 };
 
 const handleSplineClick = (route) => {
-  if (process.client) {
+  if (import.meta.client) {
     sessionStorage.setItem('navigatingFromHome', 'true');
   }
 
   const delay = isMobile.value ? 100 : 0;
 
   setTimeout(() => {
-    let targetViewer;
-    
     if (isMobile.value) {
-      targetViewer = getCurrentMobileSplineViewer();
-    } else {
-      if (route === '/dalibook') {
-        targetViewer = dalibookSplineViewer.value;
-      } else if (route === '/seavo') {
-        targetViewer = seavoSplineViewer.value;
+      const lowerEl = mobileLowerDiv.value;
+      if (lowerEl) {
+        $gsap.to(lowerEl, {
+          opacity: 0,
+          duration: 0.7,
+          ease: 'power2.out',
+          onComplete: () => navigateTo(route)
+        });
       } else {
-        targetViewer = flightproSplineViewer.value;
+        navigateTo(route);
       }
+      return;
     }
-    
-    const element = targetViewer?.$el || targetViewer?.splineRef || targetViewer;
+
+    let targetViewer;
+    if (route === '/dalibook') {
+      targetViewer = dalibookSplineViewer.value;
+    } else if (route === '/seavo') {
+      targetViewer = seavoSplineViewer.value;
+    } else {
+      targetViewer = flightproSplineViewer.value;
+    }
+
+    const element = targetViewer?.$el?.value || targetViewer?.$el || targetViewer;
     if (element) {
       $gsap.to(element, {
         opacity: 0,
-        duration: isMobile.value ? 0.7 : 1,
+        duration: 1,
         ease: 'power2.out',
-        onComplete: () => {
-          router.push(route);
-        },
+        onComplete: () => navigateTo(route)
       });
+    } else {
+      navigateTo(route);
     }
   }, delay);
 };
 
+// Advance to the next project regardless of scroll direction.
+// Animates stable DOM refs directly — no dependency on the
+// currently-mounted SplineViewer component ref.
 const transitionToNextProject = () => {
   if (!isMobile.value) return;
 
-  const currentSplineViewer = getCurrentMobileSplineViewer();
-  const currentSplineElement = currentSplineViewer?.$el || currentSplineViewer?.splineRef || currentSplineViewer;
+  const textEl = mobileText.value;
+  const lowerEl = mobileLowerDiv.value;
 
-  const elementsToFadeOut = [mobileText.value];
-  if (currentSplineElement) {
-    elementsToFadeOut.push(currentSplineElement);
-  }
+  const elementsToFadeOut = [];
+  if (textEl) elementsToFadeOut.push(textEl);
+  if (lowerEl) elementsToFadeOut.push(lowerEl);
+
+  if (elementsToFadeOut.length === 0) return;
 
   $gsap.to(elementsToFadeOut, {
     opacity: 0,
@@ -339,21 +332,15 @@ const transitionToNextProject = () => {
     ease: 'power2.out',
     onComplete: () => {
       currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
-      
-      nextTick(() => {
-        const newSplineViewer = getCurrentMobileSplineViewer();
-        const newSplineElement = newSplineViewer?.$el || newSplineViewer?.splineRef || newSplineViewer;
-        
-        const elementsToFadeIn = [mobileText.value];
-        if (newSplineElement) {
-          elementsToFadeIn.push(newSplineElement);
-        }
 
-        $gsap.set(elementsToFadeIn, {
-          y: 20,
-          opacity: 0
-        });
-        
+      nextTick(() => {
+        const elementsToFadeIn = [];
+        if (mobileText.value) elementsToFadeIn.push(mobileText.value);
+        if (mobileLowerDiv.value) elementsToFadeIn.push(mobileLowerDiv.value);
+
+        if (elementsToFadeIn.length === 0) return;
+
+        $gsap.set(elementsToFadeIn, { y: 20, opacity: 0 });
         $gsap.to(elementsToFadeIn, {
           opacity: 1,
           y: 0,
@@ -371,44 +358,33 @@ const setupMobileScrollHandler = () => {
 
   let isTransitioning = false;
   let startY = 0;
-  let scrollThreshold = 50;
+  const scrollThreshold = 50;
 
   const handleTouchStart = (e) => {
     startY = e.touches[0].clientY;
   };
 
   const handleTouchMove = (e) => {
-    if (isTransitioning) {
-      e.preventDefault();
-      return;
-    }
+    e.preventDefault();
 
-    const currentY = e.touches[0].clientY;
-    const deltaY = startY - currentY;
+    if (isTransitioning) return;
 
-    if (Math.abs(deltaY) > scrollThreshold) {
+    if (Math.abs(startY - e.touches[0].clientY) > scrollThreshold) {
       isTransitioning = true;
       transitionToNextProject();
-      
-      setTimeout(() => {
-        isTransitioning = false;
-      }, 800);
+      setTimeout(() => { isTransitioning = false; }, 800);
     }
   };
 
   const handleWheel = (e) => {
-    if (isTransitioning) {
-      e.preventDefault();
-      return;
-    }
+    e.preventDefault();
+
+    if (isTransitioning) return;
 
     if (Math.abs(e.deltaY) > 10) {
       isTransitioning = true;
       transitionToNextProject();
-      
-      setTimeout(() => {
-        isTransitioning = false;
-      }, 800);
+      setTimeout(() => { isTransitioning = false; }, 800);
     }
   };
 
@@ -418,63 +394,57 @@ const setupMobileScrollHandler = () => {
 };
 
 onMounted(() => {
-  if (process.client) {
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
 
-    const isReturning = sessionStorage.getItem('navigatingFromHome') === 'true';
-    
-    if (isReturning) {
-      sessionStorage.removeItem('navigatingFromHome');
-      showLoadingScreen.value = false;
-      
-      nextTick(() => {
-        if (mainContent.value) {
-          $gsap.fromTo(
-            mainContent.value,
-            { opacity: 0 },
-            { opacity: 1, duration: 0.5, ease: 'power2.out' }
-          );
-        }
-      });
-    } else {
-      setTimeout(() => {
-        if (showLoadingScreen.value && loadingScreenRef.value) {
-          const element = loadingScreenRef.value.$el || loadingScreenRef.value;
+  const isReturning = sessionStorage.getItem('navigatingFromHome') === 'true';
 
-          if (element) {
-            $gsap.to(element, {
-              yPercent: -100,
-              duration: 3,
-              ease: 'power2.inOut',
-              onComplete: () => {
-                showLoadingScreen.value = false;
-                handleLoadingFinished();
-              },
-            });
-          } else {
-            showLoadingScreen.value = false;
-            handleLoadingFinished();
-          }
-        }
-      }, 1500);
-    }
-    
+  if (isReturning) {
+    sessionStorage.removeItem('navigatingFromHome');
+    showLoadingScreen.value = false;
+
+    nextTick(() => {
+      if (mainContent.value) {
+        $gsap.fromTo(
+          mainContent.value,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.5, ease: 'power2.out' }
+        );
+      }
+    });
+  } else {
     setTimeout(() => {
-      setupMobileScrollHandler();
-    }, 1000);
+      if (showLoadingScreen.value && loadingScreenRef.value) {
+        const element = loadingScreenRef.value.$el || loadingScreenRef.value;
+        if (element) {
+          $gsap.to(element, {
+            yPercent: -100,
+            duration: 3,
+            ease: 'power2.inOut',
+            onComplete: () => {
+              showLoadingScreen.value = false;
+              handleLoadingFinished();
+            }
+          });
+        } else {
+          showLoadingScreen.value = false;
+          handleLoadingFinished();
+        }
+      }
+    }, 1500);
   }
+
+  setTimeout(() => {
+    setupMobileScrollHandler();
+  }, 1000);
 });
 
 onBeforeUnmount(() => {
-  if (process.client) {
-    window.removeEventListener('resize', checkMobile);
-  }
+  window.removeEventListener('resize', checkMobile);
 });
 </script>
 
 <style scoped>
-/* Keep existing styles */
 .main-container {
   display: flex;
   flex-direction: column;
@@ -724,7 +694,7 @@ onBeforeUnmount(() => {
   .mobile-text {
     font-size: 2rem;
   }
- 
+
   .mobile-lower-div .hover-text {
     font-size: 16px;
   }
