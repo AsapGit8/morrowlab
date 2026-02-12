@@ -817,7 +817,7 @@ p {
   p {
     font-size: 1rem;
   }
-  
+
   h1 {
     font-size: 0.875rem;
   }
@@ -825,7 +825,7 @@ p {
   h3 {
     font-size: 1.5rem;
   }
-  
+
   .content {
     max-width: 500px;
   }
@@ -865,15 +865,15 @@ p {
   h1 {
     font-size: 0.750rem;
   }
-  
+
   h3 {
     font-size: 1.25rem;
   }
-  
+
   .content {
     max-width: 400px;
   }
-  
+
   .section-1,
   .section-2,
   .section-3,
@@ -916,7 +916,7 @@ p {
     height: 100dvh;
     overflow: hidden;
   }
- 
+
   .left-box {
     position: fixed;
     width: 100%;
@@ -925,7 +925,7 @@ p {
     left: 0;
     z-index: 10;
   }
- 
+
   .right-box {
     position: absolute;
     top: 50dvh;
@@ -936,7 +936,7 @@ p {
     overflow-y: auto;
     padding-bottom: 0;
   }
- 
+
   .section {
     min-height: 50dvh;
     height: auto;
@@ -944,107 +944,175 @@ p {
     box-sizing: border-box;
     scroll-snap-align: start;
   }
- 
-  .section-1, .section-2, .section-3, .section-4, .section-5, .section-6, .section-7 {
+
+  .section-1,
+  .section-2,
+  .section-3,
+  .section-4,
+  .section-5 {
     padding: 30px 20px;
   }
- 
-  .section-4 .content, .section-5 .content {
+
+  .section-6,
+  .section-7 {
+    padding: 20px 16px;
+    align-items: flex-start;
+  }
+
+  .section-4 .content,
+  .section-5 .content {
     text-align: right;
     margin-left: auto;
   }
 
-  .section-6 .content, .section-7 .content {
+  .section-6 .content,
+  .section-7 .content {
     text-align: left;
     margin-left: 0;
+    width: 100%;
+    max-width: 100%;
   }
- 
-  h1, h2 {
+
+  h1,
+  h2 {
     font-size: 0.9rem;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
   }
- 
+
   h3 {
     font-size: 1.4rem;
     margin-bottom: 0.4em;
   }
- 
+
   p {
     font-size: 1rem;
     line-height: 1.4;
   }
- 
+
   p .text-line {
     display: inline;
     width: 100%;
   }
 
+  /* Section 6 - Maintenance table */
   .maintenance-table {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
   }
 
   .maintenance-row {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 0;
-    gap: 4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .maintenance-row:last-child {
+    border-bottom: none;
   }
 
   .maintenance-service {
-    font-size: 0.85rem;
+    font-size: 0.72rem;
+    font-weight: 400;
+    flex: 1 1 55%;
+    min-width: 0;
   }
 
   .maintenance-detail {
-    font-size: 1.1rem;
-    min-width: auto;
-    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 700;
+    min-width: 0;
+    flex: 0 0 auto;
+    text-align: right;
   }
 
   .maintenance-note {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
+    margin-top: 8px;
+    line-height: 1.4;
   }
 
+  .maintenance-note .text-line {
+    font-weight: 400;
+    display: inline;
+  }
+
+  /* Section 7 - Pricing table */
   .pricing-table {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
   }
 
   .pricing-row {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 0;
-    gap: 4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .pricing-row:last-child {
+    border-bottom: none;
   }
 
   .pricing-amount {
-    font-size: 1.1rem;
-    min-width: auto;
+    font-size: 0.78rem;
+    font-weight: 700;
+    min-width: 0;
+    flex: 0 0 auto;
+  }
+
+  .dollar-amount {
+    font-size: 0.68rem;
   }
 
   .pricing-service {
-    font-size: 0.85rem;
-    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 400;
+    text-align: right;
+    flex: 1 1 auto;
   }
 
   .pricing-note {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    color: rgba(0, 0, 0, 0.6);
   }
- 
+
+  .pricing-note .text-line {
+    font-weight: 400;
+    display: inline;
+  }
+
+  .contact-note {
+    margin-top: 12px;
+  }
+
   .scroll-down-indicator {
     bottom: 15px;
     right: 15px;
   }
- 
+
   .section .content {
     max-width: 100%;
     width: 100%;
   }
- 
+
   .desktop-footer {
     display: none;
   }
- 
+
   .mobile-footer {
     display: block;
     width: 100%;
@@ -1053,7 +1121,7 @@ p {
     position: relative;
     z-index: 5;
   }
- 
+
   .modern-button {
     padding: 10px 20px;
     font-size: 0.9rem;
@@ -1066,56 +1134,82 @@ p {
   h3 {
     font-size: 1rem;
   }
- 
+
   p {
     font-size: 0.9rem;
   }
- 
-  h1, h2 {
+
+  h1,
+  h2 {
     font-size: 0.8rem;
   }
- 
+
   .section {
     padding: 20px 15px;
   }
- 
-  .section-1, .section-2, .section-3, .section-4, .section-5, .section-6, .section-7 {
+
+  .section-1,
+  .section-2,
+  .section-3,
+  .section-4,
+  .section-5 {
     padding: 20px 15px;
   }
- 
+
+  .section-6,
+  .section-7 {
+    padding: 16px 14px;
+  }
+
   .section .content {
     max-width: 100%;
   }
- 
+
   p .text-line {
     display: inline;
     padding-right: 0.2em;
   }
 
+  .maintenance-row {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 6px 0;
+    gap: 1px;
+  }
+
   .maintenance-service {
-    font-size: 0.8rem;
+    font-size: 0.68rem;
   }
 
   .maintenance-detail {
-    font-size: 1rem;
+    font-size: 0.78rem;
+    text-align: left;
   }
 
   .maintenance-note {
-    font-size: 0.8rem;
+    font-size: 0.65rem;
+  }
+
+  .pricing-row {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 6px 0;
+    gap: 1px;
   }
 
   .pricing-amount {
-    font-size: 1rem;
+    font-size: 0.82rem;
   }
 
   .pricing-service {
-    font-size: 0.8rem;
+    font-size: 0.68rem;
+    text-align: left;
   }
 
   .pricing-note {
-    font-size: 0.8rem;
+    font-size: 0.65rem;
   }
- 
+
   .modern-button {
     display: block;
     padding: 8px 16px;
