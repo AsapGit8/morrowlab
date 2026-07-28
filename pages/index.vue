@@ -79,7 +79,6 @@
 
           <div
             class="mobile-lower-div"
-            ref="mobileLowerDiv"
             @click="handleProjectClick(currentProjectIndex)"
           >
             <!--
@@ -246,7 +245,6 @@ const loadingScreenRef = ref(null);
 const isMobile = ref(false);
 const mobileContainer = ref(null);
 const mobileText = ref(null);
-const mobileLowerDiv = ref(null);
 const mobileLogoStage = ref(null);
 const currentProjectIndex = ref(0);
 
@@ -335,26 +333,12 @@ const handleLoadingFinished = () => {
   playLogoIntro();
 };
 
+// Straight to the route, no fade. Each project page mirrors the section that
+// launched it — same panel on the same side — and the page transition is turned
+// off for this pair in `middleware/showcase-transition.global.ts`, so the two
+// views swap in place instead of dissolving through the page background.
 const handleProjectClick = (index) => {
-  const route = projects[index].route;
-
-  const delay = isMobile.value ? 100 : 0;
-
-  setTimeout(() => {
-    const element = isMobile.value ? mobileLowerDiv.value : splineBoxes.value[index];
-
-    if (!element) {
-      navigateTo(route);
-      return;
-    }
-
-    $gsap.to(element, {
-      opacity: 0,
-      duration: isMobile.value ? 0.7 : 1,
-      ease: 'power2.out',
-      onComplete: () => navigateTo(route)
-    });
-  }, delay);
+  navigateTo(projects[index].route);
 };
 
 const advanceProject = () => {
@@ -746,7 +730,7 @@ onBeforeUnmount(() => {
       The `dvh` term keeps the square inside the 50dvh panel on short screens,
       where the percentage alone would overflow into the "View Project" pill.
     */
-    width: min(72%, 300px, 34dvh);
+    width: min(80%, 340px, 38dvh);
     /* Logos are square, so the box is reserved before decode — no layout shift */
     aspect-ratio: 1 / 1;
     animation: logo-float 4s ease-in-out infinite;

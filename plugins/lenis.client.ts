@@ -38,9 +38,14 @@ export default defineNuxtPlugin((nuxtApp) => {
     })
   })
 
-  nuxtApp.hook('page:transition:finish', () => {
-    if (lenis) lenis.scrollTo(0, { immediate: true })
-  })
+  const resetScroll = () => lenis?.scrollTo(0, { immediate: true })
+
+  // `page:transition:finish` never fires for routes that opt out of the page
+  // transition (see middleware/showcase-transition.global.ts), so the reset also
+  // hangs off `page:finish`, which fires either way. Both landing on the same
+  // navigation is harmless — the second call is a no-op.
+  nuxtApp.hook('page:transition:finish', resetScroll)
+  nuxtApp.hook('page:finish', resetScroll)
 
   return {
     provide: {
