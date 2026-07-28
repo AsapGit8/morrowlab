@@ -83,19 +83,44 @@
             @click="handleProjectClick(currentProjectIndex)"
           >
             <!--
-              `v-if="isMobile"` keeps this viewer out of the DOM on desktop,
-              where `.mobile-layout` is `display: none` — a viewer inside a
-              collapsed layout renders at 0x0 and trips the WebGL size errors.
-              `:key` forces a remount per project so useSpline disposes the
-              previous WebGL context before the node is detached.
+              Mobile shows a flat logo instead of a Spline scene: no WebGL
+              context, no ~1MB runtime, no 0x0-canvas hazard. `v-if="isMobile"`
+              keeps the images out of the DOM on desktop, where `.mobile-layout`
+              is `display: none` and they would download but never be seen.
+
+              Plain `<img>`, deliberately, not `<NuxtImg>`. These are four
+              13-65KB PNGs rendered at 300px max, so an IPX round-trip saves a
+              trivial amount of bytes while adding a runtime transform that has
+              to hold up identically in dev, `nuxt generate` and on Vercel.
+              A static path out of `public/` cannot fail in any of them.
+
+              All four render at once and are toggled with `is-active`. They are
+              tiny, and having them decoded up front means the carousel swap
+              (which happens while the stage is faded out) can never flash an
+              empty box on a slow connection.
+
+              Two nested elements on purpose: GSAP owns the transform on
+              `.mobile-logo-stage`, CSS owns the idle float on
+              `.mobile-logo-float`, so the two never fight over one property.
             -->
-            <SplineViewer
-              v-if="isMobile"
-              :key="currentProject.slug"
-              :url="currentProject.scene"
-              @load="onSplineLoad(`mobile-${currentProject.slug}`)"
-              @error="onSplineError"
-            />
+            <div v-if="isMobile" ref="mobileLogoStage" class="mobile-logo-stage">
+              <div class="mobile-logo-float">
+                <img
+                  v-for="(project, index) in projects"
+                  :key="project.slug"
+                  :src="project.logo"
+                  alt=""
+                  class="mobile-logo"
+                  :class="{ 'is-active': index === currentProjectIndex }"
+                  width="1000"
+                  height="1000"
+                  :loading="index === 0 ? 'eager' : 'lazy'"
+                  :fetchpriority="index === 0 ? 'high' : 'low'"
+                  decoding="async"
+                  draggable="false"
+                />
+              </div>
+            </div>
             <div class="hover-text">View Project</div>
           </div>
         </div>
@@ -114,6 +139,9 @@ const config = useRuntimeConfig();
 // Single source of truth for the showcase. Order here drives the desktop
 // section order, the left/right alternation, the mobile carousel and the
 // ItemList structured data below — adding a project is a one-entry change.
+//
+// `scene` is desktop-only (Spline/WebGL); `logo` is its mobile stand-in and
+// lives in `public/logos/`, so the path is absolute from the site root.
 const projects = [
   {
     slug: 'bayud',
@@ -122,7 +150,8 @@ const projects = [
     description: 'Boutique resort and stay experience on Siargao Island, Philippines',
     route: '/bayud',
     visitLink: 'https://www.bayudboutiquesiargao.com',
-    scene: 'https://prod.spline.design/CDChtkkKnglh9gXh/scene.splinecode'
+    scene: 'https://prod.spline.design/CDChtkkKnglh9gXh/scene.splinecode',
+    logo: '/logos/bayud.png'
   },
   {
     slug: 'dalibook',
@@ -131,7 +160,8 @@ const projects = [
     description: 'Philippines first Fintech-powered property management and booking platform',
     route: '/dalibook',
     visitLink: 'https://www.dalibook.io/',
-    scene: 'https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode'
+    scene: 'https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode',
+    logo: '/logos/dalibook.png'
   },
   {
     slug: 'seavo',
@@ -140,7 +170,8 @@ const projects = [
     description: 'Import and export platform for seafood and consumer goods',
     route: '/seavo',
     visitLink: 'https://www.seavoimport.com',
-    scene: 'https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode'
+    scene: 'https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode',
+    logo: '/logos/seavo.png'
   },
   {
     slug: 'flightpro',
@@ -149,7 +180,8 @@ const projects = [
     description: 'Luxury helicopter charter service platform',
     route: '/flightpro',
     visitLink: '',
-    scene: 'https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode'
+    scene: 'https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode',
+    logo: '/logos/flightpro.png'
   }
 ];
 
@@ -215,9 +247,16 @@ const isMobile = ref(false);
 const mobileContainer = ref(null);
 const mobileText = ref(null);
 const mobileLowerDiv = ref(null);
+const mobileLogoStage = ref(null);
 const currentProjectIndex = ref(0);
 
 const currentProject = computed(() => projects[currentProjectIndex.value]);
+
+// Read live rather than cached at mount, so toggling the OS setting mid-session
+// takes effect on the next transition.
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Spline recommends no more than one or two viewers per page, so the desktop
 // scenes below the fold are only mounted once their section approaches the
@@ -263,6 +302,29 @@ const setupSceneLazyLoading = () => {
   splineBoxes.value.forEach((el) => el && sceneObserver.observe(el));
 };
 
+// Soft first appearance for the mobile logo, layered just behind the container
+// reveal. Desktop has no equivalent because the Spline scene fades itself in.
+const playLogoIntro = () => {
+  const stage = mobileLogoStage.value;
+  if (!stage || prefersReducedMotion()) return;
+
+  $gsap.fromTo(
+    stage,
+    { opacity: 0, y: 24, scale: 0.94 },
+    {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.15,
+      // Hand the element back to CSS once it lands, so its resting visibility
+      // never depends on a GSAP inline style surviving.
+      clearProps: 'opacity,transform'
+    }
+  );
+};
+
 const handleLoadingFinished = () => {
   $gsap.fromTo(
     mainContent.value,
@@ -270,6 +332,7 @@ const handleLoadingFinished = () => {
     { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
   );
   showLoadingScreen.value = false;
+  playLogoIntro();
 };
 
 const handleProjectClick = (index) => {
@@ -294,38 +357,55 @@ const handleProjectClick = (index) => {
   }, delay);
 };
 
+const advanceProject = () => {
+  currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
+};
+
 // Advance to the next project regardless of scroll direction.
-// Animates stable DOM refs directly — no dependency on the
-// currently-mounted SplineViewer component ref.
+//
+// Animates the title and the logo stage — not `.mobile-lower-div` itself, so
+// the panel's background stays put instead of flashing the white page through
+// it mid-swap. Both are stable DOM refs that outlive the project change, so
+// there is nothing to re-query after the index moves.
+let transitionTl = null;
+
 const transitionToNextProject = () => {
   if (!isMobile.value) return;
 
-  const elementsToFadeOut = [mobileText.value, mobileLowerDiv.value].filter(Boolean);
-  if (elementsToFadeOut.length === 0) return;
+  const text = mobileText.value;
+  const stage = mobileLogoStage.value;
+  if (!text || !stage) return;
 
-  $gsap.to(elementsToFadeOut, {
-    opacity: 0,
-    y: -20,
-    duration: 0.4,
-    ease: 'power2.out',
-    onComplete: () => {
-      currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
+  if (prefersReducedMotion()) {
+    advanceProject();
+    return;
+  }
 
-      nextTick(() => {
-        const elementsToFadeIn = [mobileText.value, mobileLowerDiv.value].filter(Boolean);
-        if (elementsToFadeIn.length === 0) return;
+  transitionTl?.kill();
 
-        $gsap.set(elementsToFadeIn, { y: 20, opacity: 0 });
-        $gsap.to(elementsToFadeIn, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power2.out',
-          stagger: 0.1
-        });
-      });
-    }
-  });
+  // `advanceProject` lands while the stage sits at opacity 0, so swapping the
+  // active logo and the title text is never visible as a pop.
+  //
+  // `immediateRender: false` is required on both `fromTo`s. GSAP renders a
+  // `fromTo`'s start values the moment the tween is *created*, not when the
+  // playhead reaches it — leaving it on snaps the logo straight to opacity 0 /
+  // y 20 as the timeline is built, so the fade-out never plays and the swap
+  // reads as a hard pop.
+  transitionTl = $gsap.timeline()
+    .to(stage, { opacity: 0, y: -16, scale: 0.96, duration: 0.35, ease: 'power2.in' }, 0)
+    .to(text, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in' }, 0)
+    .add(advanceProject)
+    .fromTo(
+      stage,
+      { opacity: 0, y: 20, scale: 0.96 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power2.out', immediateRender: false }
+    )
+    .fromTo(
+      text,
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', immediateRender: false },
+      '<0.08'
+    );
 };
 
 const setupMobileScrollHandler = () => {
@@ -387,6 +467,7 @@ onMounted(() => {
       if (mainContent.value) {
         $gsap.set(mainContent.value, { opacity: 1 });
       }
+      playLogoIntro();
     });
   } else {
     sessionStorage.setItem('hasSeenIntro', 'true');
@@ -421,6 +502,11 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', checkMobile);
   sceneObserver?.disconnect();
   sceneObserver = null;
+
+  // Otherwise a mid-flight timeline can run `advanceProject` (and touch refs)
+  // after the page has already navigated away.
+  transitionTl?.kill();
+  transitionTl = null;
 });
 </script>
 
@@ -635,6 +721,74 @@ onBeforeUnmount(() => {
     padding: 8px 16px;
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 20px;
+  }
+
+  /* ---- Mobile logo ----------------------------------------------------- */
+
+  /* GSAP owns this element's transform (entrance + carousel swap). */
+  .mobile-logo-stage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Clears the "View Project" pill at the bottom of the panel */
+    padding: 24px 24px 56px;
+    box-sizing: border-box;
+  }
+
+  /* CSS owns this element's transform (idle float), so the two never collide. */
+  .mobile-logo-float {
+    position: relative;
+    /*
+      The source PNGs are 1000x1000 with a lot of transparent padding, so the
+      visible mark is much smaller than its box — hence the generous sizing.
+      The `dvh` term keeps the square inside the 50dvh panel on short screens,
+      where the percentage alone would overflow into the "View Project" pill.
+    */
+    width: min(72%, 300px, 34dvh);
+    /* Logos are square, so the box is reserved before decode — no layout shift */
+    aspect-ratio: 1 / 1;
+    animation: logo-float 4s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .mobile-logo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.2s linear;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .mobile-logo.is-active {
+    opacity: 1;
+  }
+}
+
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+/* Entrance and carousel tweens are skipped in JS; this covers the idle loop. */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-logo-float {
+    animation: none;
+    will-change: auto;
+  }
+
+  .mobile-logo {
+    transition: none;
   }
 }
 

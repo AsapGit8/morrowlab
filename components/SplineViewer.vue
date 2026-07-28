@@ -1,13 +1,13 @@
 <template>
   <div ref="containerRef" class="spline-container">
-    <div v-if="!isLoaded && !error" class="spline-loading">
+    <div v-if="!isLoaded && !displayError" class="spline-loading">
       <div class="loading-spinner"></div>
       <p>Loading 3D scene...</p>
     </div>
 
-    <div v-if="error" class="spline-error">
+    <div v-if="displayError" class="spline-error">
       <p>Failed to load 3D scene</p>
-      <button @click="retry" class="retry-button">Retry</button>
+      <button @click="retryAll" class="retry-button">Retry</button>
     </div>
 
     <client-only>
@@ -17,17 +17,38 @@
         collapsed box reallocates its render targets at 0x0 and WebGL throws
         GL_INVALID_VALUE / GL_INVALID_FRAMEBUFFER_OPERATION. Fading with opacity
         keeps the layout box intact.
+
+        `v-if="runtimeReady"` guarantees `customElements.define('spline-viewer')`
+        has already run, so the element is never inserted as an unknown tag and
+        upgraded afterwards.
       -->
       <spline-viewer
+        v-if="runtimeReady"
         ref="splineRef"
         :url="url"
-        :class="[viewerClass, 'spline-viewer', { 'is-ready': isLoaded && !error }]"
+        :class="[viewerClass, 'spline-viewer', { 'is-ready': isLoaded && !displayError }]"
       />
     </client-only>
   </div>
 </template>
 
 <script setup lang="ts">
+/**
+ * The `@splinetool/viewer` runtime is ~1MB+ of WebGL code. It used to be pulled
+ * in eagerly by a global Nuxt plugin, which meant every route paid for it —
+ * including mobile `/`, which renders flat logos and never creates a viewer.
+ *
+ * Importing it here instead makes the cost follow actual usage: the chunk is
+ * fetched the first time a `<SplineViewer>` mounts, and the module registry
+ * dedupes it across every later instance.
+ */
+let runtimePromise: Promise<unknown> | null = null
+
+const loadSplineRuntime = () => {
+  runtimePromise ||= import('@splinetool/viewer')
+  return runtimePromise
+}
+
 interface Props {
   url: string
   viewerClass?: string
@@ -50,6 +71,35 @@ const { splineRef, isLoaded, isLoading, error, retry, dispose } = useSpline({
   onError: (err) => emit('error', err),
 })
 
+const runtimeReady = ref(false)
+const runtimeError = ref<Error | null>(null)
+
+// A failed runtime fetch and a failed scene load both mean "nothing to show",
+// so the template treats them as one state.
+const displayError = computed(() => runtimeError.value ?? error.value)
+
+const ensureRuntime = async () => {
+  runtimeError.value = null
+
+  try {
+    await loadSplineRuntime()
+    runtimeReady.value = true
+  } catch (err) {
+    // Drop the cached rejection so Retry re-attempts the network fetch.
+    runtimePromise = null
+
+    const failure = err instanceof Error ? err : new Error('Failed to load the Spline runtime')
+    runtimeError.value = failure
+    emit('error', failure)
+  }
+}
+
+onMounted(ensureRuntime)
+
+// Before the runtime lands there is no element to reload, so Retry means
+// "fetch the runtime again"; afterwards it means "reload the scene".
+const retryAll = () => (runtimeReady.value ? retry() : ensureRuntime())
+
 // Expose the container element ($el) so parent components can use GSAP on the
 // host node without needing to reach into the web component internals.
 defineExpose({
@@ -57,8 +107,9 @@ defineExpose({
   splineRef,
   isLoaded,
   isLoading,
-  error,
-  retry,
+  error: displayError,
+  runtimeReady,
+  retry: retryAll,
   dispose,
 })
 </script>
