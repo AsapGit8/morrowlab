@@ -7,12 +7,23 @@
     />
 
     <div v-show="!showLoadingScreen" ref="mainContent" class="main-container">
+      <!--
+        Desktop: one full-viewport section per project.
+        Even indexes render text on the left, odd indexes flip via `row-reverse`,
+        so the alternating pattern is derived from the array order rather than
+        hard-coded per section.
+      -->
       <div class="desktop-layout">
-        <div class="main section-dalibook">
-          <div class="left-box">
-            <div class="left-text">DALIBOOK</div>
-            <div class="visit-site-container">
-              <a href="https://www.dalibook.io/" target="_blank" rel="noopener noreferrer" class="visit-site-link">
+        <section
+          v-for="(project, index) in projects"
+          :key="project.slug"
+          class="main"
+          :class="index % 2 === 0 ? 'is-text-left' : 'is-text-right'"
+        >
+          <div class="text-box">
+            <div class="project-title">{{ project.title }}</div>
+            <div v-if="project.visitLink" class="visit-site-container">
+              <a :href="project.visitLink" target="_blank" rel="noopener noreferrer" class="visit-site-link">
                 <span class="visit-site-text">Visit Site</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-site-icon">
                   <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
@@ -22,63 +33,30 @@
               </a>
             </div>
           </div>
-          <div class="right-box" @click="() => handleSplineClick('/dalibook')">
-            <SplineViewer
-              ref="dalibookSplineViewer"
-              url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
-              @load="onSplineLoad('dalibook')"
-              @error="onSplineError"
-            />
-            <div class="hover-text">View Project</div>
-          </div>
-        </div>
 
-        <div class="main section-seavo">
-          <div class="left-box spline-box" @click="() => handleSplineClick('/seavo')">
+          <div
+            :ref="(el) => setSplineBox(el, index)"
+            :data-index="index"
+            class="spline-box"
+            @click="handleProjectClick(index)"
+          >
             <SplineViewer
-              ref="seavoSplineViewer"
-              url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
-              @load="onSplineLoad('seavo')"
+              v-if="sceneReady[index]"
+              :url="project.scene"
+              @load="onSplineLoad(project.slug)"
               @error="onSplineError"
             />
             <div class="hover-text">View Project</div>
           </div>
-          <div class="right-box text-box">
-            <div class="right-text">SEAVO</div>
-            <div class="visit-site-container">
-              <a href="https://www.seavoimport.com" target="_blank" rel="noopener noreferrer" class="visit-site-link">
-                <span class="visit-site-text">Visit Site</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visit-site-icon">
-                  <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-                  <path d="m21 21-9-9"/>
-                  <path d="M21 15v6h-6"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="main section-flightpro">
-          <div class="left-box">
-            <div class="left-text">FLIGHTPRO</div>
-          </div>
-          <div class="right-box spline-box" @click="() => handleSplineClick('/flightpro')">
-            <SplineViewer
-              ref="flightproSplineViewer"
-              url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
-              @load="onSplineLoad('flightpro')"
-              @error="onSplineError"
-            />
-            <div class="hover-text">View Project</div>
-          </div>
-        </div>
+        </section>
       </div>
 
+      <!-- Mobile: a single section that cycles through the same project list -->
       <div class="mobile-layout" ref="mobileContainer">
-        <div class="mobile-section" ref="currentSection">
+        <div class="mobile-section">
           <div class="mobile-upper-div">
-            <div class="mobile-text" ref="mobileText">{{ currentProject.text }}</div>
-            <div v-if="currentProject.hasVisitLink" class="mobile-visit-site-container">
+            <div class="mobile-text" ref="mobileText">{{ currentProject.title }}</div>
+            <div v-if="currentProject.visitLink" class="mobile-visit-site-container">
               <a :href="currentProject.visitLink" target="_blank" rel="noopener noreferrer" class="mobile-visit-site-link">
                 <span class="mobile-visit-site-text">Visit Site</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mobile-visit-site-icon">
@@ -89,28 +67,17 @@
               </a>
             </div>
           </div>
-          <div class="mobile-lower-div" ref="mobileLowerDiv" @click="() => handleSplineClick(currentProject.route)">
-            <SplineViewer
-              v-if="currentProjectIndex === 0"
-              ref="mobiledalibookSplineViewer"
-              url="https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode"
-              @load="onSplineLoad('mobile-dalibook')"
-              @error="onSplineError"
-            />
 
+          <div
+            class="mobile-lower-div"
+            ref="mobileLowerDiv"
+            @click="handleProjectClick(currentProjectIndex)"
+          >
+            <!-- `:key` forces a remount per project so useSpline disposes the previous WebGL context -->
             <SplineViewer
-              v-if="currentProjectIndex === 1"
-              ref="mobileseavoSplineViewer"
-              url="https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode"
-              @load="onSplineLoad('mobile-seavo')"
-              @error="onSplineError"
-            />
-
-            <SplineViewer
-              v-if="currentProjectIndex === 2"
-              ref="mobileflightproSplineViewer"
-              url="https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode"
-              @load="onSplineLoad('mobile-flightpro')"
+              :key="currentProject.slug"
+              :url="currentProject.scene"
+              @load="onSplineLoad(`mobile-${currentProject.slug}`)"
               @error="onSplineError"
             />
             <div class="hover-text">View Project</div>
@@ -127,6 +94,48 @@
 // useHead, and navigateTo are all auto-imported by Nuxt 4.x.
 
 const config = useRuntimeConfig();
+
+// Single source of truth for the showcase. Order here drives the desktop
+// section order, the left/right alternation, the mobile carousel and the
+// ItemList structured data below — adding a project is a one-entry change.
+const projects = [
+  {
+    slug: 'bayud',
+    title: 'BAYUD SIARGAO',
+    name: 'Bayud Siargao',
+    description: 'Boutique resort and stay experience on Siargao Island, Philippines',
+    route: '/bayud',
+    visitLink: 'https://www.bayudboutiquesiargao.com',
+    scene: 'https://prod.spline.design/CDChtkkKnglh9gXh/scene.splinecode'
+  },
+  {
+    slug: 'dalibook',
+    title: 'DALIBOOK',
+    name: 'DaliBook',
+    description: 'Philippines first Fintech-powered property management and booking platform',
+    route: '/dalibook',
+    visitLink: 'https://www.dalibook.io/',
+    scene: 'https://prod.spline.design/d5QlJ5sAq9cUqPKh/scene.splinecode'
+  },
+  {
+    slug: 'seavo',
+    title: 'SEAVO',
+    name: 'Seavo',
+    description: 'Import and export platform for seafood and consumer goods',
+    route: '/seavo',
+    visitLink: 'https://www.seavoimport.com',
+    scene: 'https://prod.spline.design/y-ofQM9q1MW9jS9Q/scene.splinecode'
+  },
+  {
+    slug: 'flightpro',
+    title: 'FLIGHTPRO',
+    name: 'FlightPro',
+    description: 'Luxury helicopter charter service platform',
+    route: '/flightpro',
+    visitLink: '',
+    scene: 'https://prod.spline.design/S3bkCAClsYA5Odsz/scene.splinecode'
+  }
+];
 
 useSeoMeta({
   title: 'Home',
@@ -165,41 +174,17 @@ useHead({
       children: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'ItemList',
-        itemListElement: [
-          {
-            '@type': 'ListItem',
-            position: 1,
-            item: {
-              '@type': 'CreativeWork',
-              name: 'DaliBook',
-              description: 'Philippines first Fintech-powered property management and booking platform',
-              url: `${config.public.siteUrl}/dalibook`,
-              image: `${config.public.siteUrl}/og-image.jpg`
-            }
-          },
-          {
-            '@type': 'ListItem',
-            position: 2,
-            item: {
-              '@type': 'CreativeWork',
-              name: 'Seavo',
-              description: 'Import and export platform for seafood and consumer goods',
-              url: `${config.public.siteUrl}/seavo`,
-              image: `${config.public.siteUrl}/og-image.jpg`
-            }
-          },
-          {
-            '@type': 'ListItem',
-            position: 3,
-            item: {
-              '@type': 'CreativeWork',
-              name: 'FlightPro',
-              description: 'Luxury helicopter charter service platform',
-              url: `${config.public.siteUrl}/flightpro`,
-              image: `${config.public.siteUrl}/og-image.jpg`
-            }
+        itemListElement: projects.map((project, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'CreativeWork',
+            name: project.name,
+            description: project.description,
+            url: `${config.public.siteUrl}${project.route}`,
+            image: `${config.public.siteUrl}/og-image.jpg`
           }
-        ]
+        }))
       })
     }
   ]
@@ -209,39 +194,26 @@ const { $gsap } = useNuxtApp();
 
 const showLoadingScreen = ref(true);
 const mainContent = ref(null);
-const dalibookSplineViewer = ref(null);
-const flightproSplineViewer = ref(null);
-const seavoSplineViewer = ref(null);
 const loadingScreenRef = ref(null);
 const isMobile = ref(false);
 const mobileContainer = ref(null);
-const currentSection = ref(null);
 const mobileText = ref(null);
 const mobileLowerDiv = ref(null);
 const currentProjectIndex = ref(0);
 
-const projects = [
-  {
-    text: 'DALIBOOK',
-    route: '/dalibook',
-    hasVisitLink: true,
-    visitLink: 'https://www.dalibook.io/'
-  },
-  {
-    text: 'SEAVO',
-    route: '/seavo',
-    hasVisitLink: true,
-    visitLink: 'https://www.seavoimport.com'
-  },
-  {
-    text: 'FLIGHTPRO',
-    route: '/flightpro',
-    hasVisitLink: false,
-    visitLink: ''
-  }
-];
-
 const currentProject = computed(() => projects[currentProjectIndex.value]);
+
+// Spline recommends no more than one or two viewers per page, so the desktop
+// scenes below the fold are only mounted once their section approaches the
+// viewport. On mobile `.desktop-layout` is `display: none`, so the observer
+// never fires there and only the single mobile viewer is ever created.
+const sceneReady = ref(projects.map(() => false));
+const splineBoxes = ref([]);
+let sceneObserver = null;
+
+const setSplineBox = (el, index) => {
+  splineBoxes.value[index] = el;
+};
 
 const onSplineLoad = (name) => {
   console.log(`Spline viewer ${name} loaded successfully`);
@@ -255,6 +227,26 @@ const checkMobile = () => {
   isMobile.value = window.innerWidth <= 768;
 };
 
+const setupSceneLazyLoading = () => {
+  if (typeof IntersectionObserver === 'undefined') {
+    sceneReady.value = projects.map(() => true);
+    return;
+  }
+
+  sceneObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        sceneReady.value[Number(entry.target.dataset.index)] = true;
+        sceneObserver.unobserve(entry.target);
+      });
+    },
+    { rootMargin: '300px 0px' }
+  );
+
+  splineBoxes.value.forEach((el) => el && sceneObserver.observe(el));
+};
+
 const handleLoadingFinished = () => {
   $gsap.fromTo(
     mainContent.value,
@@ -264,7 +256,9 @@ const handleLoadingFinished = () => {
   showLoadingScreen.value = false;
 };
 
-const handleSplineClick = (route) => {
+const handleProjectClick = (index) => {
+  const route = projects[index].route;
+
   if (import.meta.client) {
     sessionStorage.setItem('navigatingFromHome', 'true');
   }
@@ -272,41 +266,19 @@ const handleSplineClick = (route) => {
   const delay = isMobile.value ? 100 : 0;
 
   setTimeout(() => {
-    if (isMobile.value) {
-      const lowerEl = mobileLowerDiv.value;
-      if (lowerEl) {
-        $gsap.to(lowerEl, {
-          opacity: 0,
-          duration: 0.7,
-          ease: 'power2.out',
-          onComplete: () => navigateTo(route)
-        });
-      } else {
-        navigateTo(route);
-      }
+    const element = isMobile.value ? mobileLowerDiv.value : splineBoxes.value[index];
+
+    if (!element) {
+      navigateTo(route);
       return;
     }
 
-    let targetViewer;
-    if (route === '/dalibook') {
-      targetViewer = dalibookSplineViewer.value;
-    } else if (route === '/seavo') {
-      targetViewer = seavoSplineViewer.value;
-    } else {
-      targetViewer = flightproSplineViewer.value;
-    }
-
-    const element = targetViewer?.$el?.value || targetViewer?.$el || targetViewer;
-    if (element) {
-      $gsap.to(element, {
-        opacity: 0,
-        duration: 1,
-        ease: 'power2.out',
-        onComplete: () => navigateTo(route)
-      });
-    } else {
-      navigateTo(route);
-    }
+    $gsap.to(element, {
+      opacity: 0,
+      duration: isMobile.value ? 0.7 : 1,
+      ease: 'power2.out',
+      onComplete: () => navigateTo(route)
+    });
   }, delay);
 };
 
@@ -316,13 +288,7 @@ const handleSplineClick = (route) => {
 const transitionToNextProject = () => {
   if (!isMobile.value) return;
 
-  const textEl = mobileText.value;
-  const lowerEl = mobileLowerDiv.value;
-
-  const elementsToFadeOut = [];
-  if (textEl) elementsToFadeOut.push(textEl);
-  if (lowerEl) elementsToFadeOut.push(lowerEl);
-
+  const elementsToFadeOut = [mobileText.value, mobileLowerDiv.value].filter(Boolean);
   if (elementsToFadeOut.length === 0) return;
 
   $gsap.to(elementsToFadeOut, {
@@ -334,10 +300,7 @@ const transitionToNextProject = () => {
       currentProjectIndex.value = (currentProjectIndex.value + 1) % projects.length;
 
       nextTick(() => {
-        const elementsToFadeIn = [];
-        if (mobileText.value) elementsToFadeIn.push(mobileText.value);
-        if (mobileLowerDiv.value) elementsToFadeIn.push(mobileLowerDiv.value);
-
+        const elementsToFadeIn = [mobileText.value, mobileLowerDiv.value].filter(Boolean);
         if (elementsToFadeIn.length === 0) return;
 
         $gsap.set(elementsToFadeIn, { y: 20, opacity: 0 });
@@ -360,32 +323,26 @@ const setupMobileScrollHandler = () => {
   let startY = 0;
   const scrollThreshold = 50;
 
+  const advance = () => {
+    isTransitioning = true;
+    transitionToNextProject();
+    setTimeout(() => { isTransitioning = false; }, 800);
+  };
+
   const handleTouchStart = (e) => {
     startY = e.touches[0].clientY;
   };
 
   const handleTouchMove = (e) => {
     e.preventDefault();
-
     if (isTransitioning) return;
-
-    if (Math.abs(startY - e.touches[0].clientY) > scrollThreshold) {
-      isTransitioning = true;
-      transitionToNextProject();
-      setTimeout(() => { isTransitioning = false; }, 800);
-    }
+    if (Math.abs(startY - e.touches[0].clientY) > scrollThreshold) advance();
   };
 
   const handleWheel = (e) => {
     e.preventDefault();
-
     if (isTransitioning) return;
-
-    if (Math.abs(e.deltaY) > 10) {
-      isTransitioning = true;
-      transitionToNextProject();
-      setTimeout(() => { isTransitioning = false; }, 800);
-    }
+    if (Math.abs(e.deltaY) > 10) advance();
   };
 
   mobileContainer.value.addEventListener('touchstart', handleTouchStart, { passive: true });
@@ -396,6 +353,13 @@ const setupMobileScrollHandler = () => {
 onMounted(() => {
   checkMobile();
   window.addEventListener('resize', checkMobile);
+
+  // Start the first desktop scene immediately so the hero section is never
+  // waiting on the observer; the rest stream in on scroll.
+  if (!isMobile.value) {
+    sceneReady.value[0] = true;
+  }
+  setupSceneLazyLoading();
 
   const isReturning = sessionStorage.getItem('navigatingFromHome') === 'true';
 
@@ -441,6 +405,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', checkMobile);
+  sceneObserver?.disconnect();
+  sceneObserver = null;
 });
 </script>
 
@@ -459,87 +425,41 @@ onBeforeUnmount(() => {
   display: none;
 }
 
+/* ---- Alternating section pattern -------------------------------------- */
+
 .main {
   display: flex;
   height: 100dvh;
 }
 
-.left-box,
-.right-box {
+/* Odd sections mirror the layout without changing the DOM order */
+.main.is-text-right {
+  flex-direction: row-reverse;
+}
+
+.text-box,
+.spline-box {
   flex: 1;
   position: relative;
 }
 
-.left-box {
+.text-box {
   background-color: white;
 }
 
-.right-box {
+.spline-box {
   background-color: #fafafa;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  position: relative;
 }
 
-.section-dalibook .left-box {
-  background-color: white;
-}
-
-.section-dalibook .right-box {
-  background-color: #fafafa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-}
-
-.section-seavo .spline-box {
-  background-color: #fafafa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-}
-
-.section-seavo .text-box {
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.section-flightpro .left-box {
-  background-color: white;
-}
-
-.section-flightpro .spline-box {
-  background-color: #fafafa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-}
-
-.left-text {
+/* Title hugs the outer edge of the viewport, Visit Site hugs the inner edge */
+.project-title {
   position: absolute;
   bottom: 15px;
   left: 20px;
-  font-size: 3rem;
-  font-weight: 600;
-  font-family: 'Geist', sans-serif;
-  color: black;
-}
-
-.right-text {
-  position: absolute;
-  bottom: 15px;
-  right: 20px;
   font-size: 3rem;
   font-weight: 600;
   font-family: 'Geist', sans-serif;
@@ -552,10 +472,17 @@ onBeforeUnmount(() => {
   right: 20px;
 }
 
-.section-seavo .visit-site-container {
+.is-text-right .project-title {
+  left: auto;
+  right: 20px;
+}
+
+.is-text-right .visit-site-container {
   right: auto;
   left: 20px;
 }
+
+/* ---- Shared bits ------------------------------------------------------- */
 
 .visit-site-link {
   display: flex;
@@ -596,7 +523,6 @@ onBeforeUnmount(() => {
   z-index: 10;
 }
 
-.right-box:hover .hover-text,
 .spline-box:hover .hover-text {
   opacity: 1;
 }
@@ -648,6 +574,8 @@ onBeforeUnmount(() => {
     font-weight: 600;
     font-family: 'Geist', sans-serif;
     color: black;
+    /* Keeps longer titles clear of the Visit Site link */
+    max-width: calc(100% - 140px);
   }
 
   .mobile-visit-site-container {
@@ -693,6 +621,7 @@ onBeforeUnmount(() => {
 @media screen and (max-width: 480px) {
   .mobile-text {
     font-size: 2rem;
+    max-width: calc(100% - 120px);
   }
 
   .mobile-lower-div .hover-text {
