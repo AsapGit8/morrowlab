@@ -6,7 +6,16 @@
       ref="loadingScreenRef"
     />
 
-    <div v-show="!showLoadingScreen" ref="mainContent" class="main-container">
+    <!--
+      Hidden with `visibility`, never `display: none`. A collapsed box makes the
+      Spline runtime resize its WebGL render targets to 0x0, which throws
+      GL_INVALID_VALUE / GL_INVALID_FRAMEBUFFER_OPERATION.
+    -->
+    <div
+      ref="mainContent"
+      class="main-container"
+      :class="{ 'is-hidden': showLoadingScreen }"
+    >
       <!--
         Desktop: one full-viewport section per project.
         Even indexes render text on the left, odd indexes flip via `row-reverse`,
@@ -41,7 +50,7 @@
             @click="handleProjectClick(index)"
           >
             <SplineViewer
-              v-if="sceneReady[index]"
+              v-if="!isMobile && sceneReady[index]"
               :url="project.scene"
               @load="onSplineLoad(project.slug)"
               @error="onSplineError"
@@ -73,8 +82,15 @@
             ref="mobileLowerDiv"
             @click="handleProjectClick(currentProjectIndex)"
           >
-            <!-- `:key` forces a remount per project so useSpline disposes the previous WebGL context -->
+            <!--
+              `v-if="isMobile"` keeps this viewer out of the DOM on desktop,
+              where `.mobile-layout` is `display: none` — a viewer inside a
+              collapsed layout renders at 0x0 and trips the WebGL size errors.
+              `:key` forces a remount per project so useSpline disposes the
+              previous WebGL context before the node is detached.
+            -->
             <SplineViewer
+              v-if="isMobile"
               :key="currentProject.slug"
               :url="currentProject.scene"
               @load="onSplineLoad(`mobile-${currentProject.slug}`)"
@@ -415,6 +431,12 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   opacity: 0;
+}
+
+/* `visibility` instead of `display: none` so mounted viewers keep a layout box */
+.main-container.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .desktop-layout {

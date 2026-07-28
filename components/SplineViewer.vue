@@ -1,6 +1,6 @@
 <template>
   <div ref="containerRef" class="spline-container">
-    <div v-if="isLoading" class="spline-loading">
+    <div v-if="!isLoaded && !error" class="spline-loading">
       <div class="loading-spinner"></div>
       <p>Loading 3D scene...</p>
     </div>
@@ -11,11 +11,17 @@
     </div>
 
     <client-only>
+      <!--
+        Never use `v-show`/`display: none` on a live viewer. The Spline runtime
+        pipes the canvas' measured size straight into `renderer.setSize()`, so a
+        collapsed box reallocates its render targets at 0x0 and WebGL throws
+        GL_INVALID_VALUE / GL_INVALID_FRAMEBUFFER_OPERATION. Fading with opacity
+        keeps the layout box intact.
+      -->
       <spline-viewer
-        v-show="isLoaded && !error"
         ref="splineRef"
         :url="url"
-        :class="viewerClass"
+        :class="[viewerClass, 'spline-viewer', { 'is-ready': isLoaded && !error }]"
       />
     </client-only>
   </div>
@@ -24,12 +30,10 @@
 <script setup lang="ts">
 interface Props {
   url: string
-  autoLoad?: boolean
   viewerClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  autoLoad: true,
   viewerClass: '',
 })
 
@@ -40,17 +44,11 @@ const emit = defineEmits<{
 
 const containerRef = ref<HTMLDivElement | null>(null)
 
-const { splineRef, isLoaded, isLoading, error, loadSpline, dispose } = useSpline({
+const { splineRef, isLoaded, isLoading, error, retry, dispose } = useSpline({
   url: props.url,
-  autoLoad: props.autoLoad,
   onLoad: () => emit('load'),
   onError: (err) => emit('error', err),
 })
-
-const retry = () => {
-  error.value = null
-  loadSpline()
-}
 
 // Expose the container element ($el) so parent components can use GSAP on the
 // host node without needing to reach into the web component internals.
@@ -70,6 +68,22 @@ defineExpose({
   position: relative;
   width: 100%;
   height: 100%;
+  /* Hard floor so the canvas can never be measured at zero, whatever the
+     parent layout does. */
+  min-width: 1px;
+  min-height: 1px;
+}
+
+.spline-viewer {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.spline-viewer.is-ready {
+  opacity: 1;
 }
 
 .spline-loading,

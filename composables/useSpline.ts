@@ -1,104 +1,132 @@
 import type { Ref } from 'vue'
 
+/**
+ * The parts of the `<spline-viewer>` custom element we actually rely on.
+ *
+ * `url` is a Lit reactive property (assigning it triggers load/unload) and
+ * `unload()` is the element's synchronous teardown for the WebGL runtime.
+ * There is no public `load(url)` / `play()` / `pause()` / `stop()` on this
+ * element — scene state is reported through DOM events instead.
+ */
 export interface SplineViewerElement extends HTMLElement {
-  load?: (url: string) => Promise<void>
-  play?: () => void
-  pause?: () => void
-  stop?: () => void
+  url: string | null
+  unload?: () => void
 }
 
 export interface UseSplineOptions {
   url: string
-  autoLoad?: boolean
   onLoad?: () => void
   onError?: (error: Error) => void
 }
 
+/**
+ * Lifecycle wrapper around `<spline-viewer>`.
+ *
+ * The viewer loads itself lazily via its own IntersectionObserver as soon as
+ * it is on screen with a real layout box, so this composable never forces a
+ * load — it only mirrors the element's state into refs and guarantees the
+ * WebGL runtime is torn down *before* Vue detaches the node.
+ */
 export const useSpline = (options: UseSplineOptions) => {
   const splineRef: Ref<SplineViewerElement | null> = ref(null)
   const isLoaded = ref(false)
   const isLoading = ref(false)
   const error = ref<Error | null>(null)
 
-  const loadSpline = async () => {
-    if (!splineRef.value || isLoading.value || isLoaded.value) return
-
+  const handleLoadStart = () => {
     isLoading.value = true
     error.value = null
-
-    try {
-      if (splineRef.value.load) {
-        await splineRef.value.load(options.url)
-        isLoaded.value = true
-        options.onLoad?.()
-      }
-    } catch (err) {
-      error.value = err instanceof Error ? err : new Error('Failed to load Spline scene')
-      options.onError?.(error.value)
-      console.error('Spline loading error:', err)
-    } finally {
-      isLoading.value = false
-    }
   }
 
-  const play = () => {
-    splineRef.value?.play?.()
+  const handleLoadComplete = () => {
+    isLoading.value = false
+    isLoaded.value = true
+    options.onLoad?.()
   }
 
-  const pause = () => {
-    splineRef.value?.pause?.()
+  const handleUnload = () => {
+    isLoading.value = false
+    isLoaded.value = false
   }
 
-  const stop = () => {
-    splineRef.value?.stop?.()
+  const handleContextLoss = () => {
+    isLoading.value = false
+    isLoaded.value = false
+    error.value = new Error('WebGL context lost')
+    options.onError?.(error.value)
   }
 
-  // Halt the WebGL rendering loop and disconnect the web component fully.
-  // Clearing the URL attribute is the correct signal to @splinetool/viewer
-  // to stop its internal animation frame and release GPU resources.
+  const listeners = [
+    ['load-start', handleLoadStart],
+    ['load-complete', handleLoadComplete],
+    ['unload', handleUnload],
+    ['context-loss', handleContextLoss],
+  ] as const
+
+  const bind = (el: SplineViewerElement) => {
+    listeners.forEach(([type, fn]) => el.addEventListener(type, fn))
+  }
+
+  const unbind = (el: SplineViewerElement) => {
+    listeners.forEach(([type, fn]) => el.removeEventListener(type, fn))
+  }
+
+  // `<client-only>` means the element may resolve a tick after setup, so bind
+  // reactively rather than assuming it exists at mount.
+  watch(
+    splineRef,
+    (el, prev) => {
+      if (prev) unbind(prev)
+      if (el) bind(el)
+    },
+    { immediate: true, flush: 'post' }
+  )
+
+  // Re-assigning `url` is the supported way to force a reload.
+  const retry = () => {
+    const el = splineRef.value
+    if (!el) return
+
+    error.value = null
+    el.url = null
+
+    nextTick(() => {
+      if (splineRef.value) splineRef.value.url = options.url
+    })
+  }
+
+  /**
+   * Release the WebGL context while the element still has a layout box.
+   *
+   * Order matters: the Spline runtime observes the canvas with a
+   * ResizeObserver that forwards `clientWidth`/`clientHeight` straight into
+   * `renderer.setSize()` with no zero-guard. Detaching (or `display: none`-ing)
+   * the node first collapses the canvas to 0x0, the observer fires, and the
+   * renderer reallocates its targets at zero — which is what produces
+   * `glTexStorage2D: Texture dimensions must all be greater than zero` and
+   * `glClear: Framebuffer is incomplete: Attachment has zero size`.
+   * Unloading first disconnects that observer, so the collapse is harmless.
+   */
   const dispose = () => {
     const el = splineRef.value
     if (!el) return
 
-    // Pause any active animation before teardown
-    el.pause?.()
-    el.stop?.()
-
-    // Clearing the URL causes the viewer to unload its scene and stop
-    // its internal requestAnimationFrame loop
-    if (el.hasAttribute('url')) {
-      el.removeAttribute('url')
-    }
-
-    // Remove from DOM to ensure the WebGL context is released
-    if (el.parentNode) {
-      el.parentNode.removeChild(el)
-    }
+    unbind(el)
+    el.unload?.()
 
     isLoaded.value = false
     isLoading.value = false
-    splineRef.value = null
   }
 
-  onMounted(() => {
-    if (options.autoLoad !== false) {
-      nextTick(() => loadSpline())
-    }
-  })
-
-  onBeforeUnmount(() => {
-    dispose()
-  })
+  // Runs before Vue removes the node from the DOM.
+  onBeforeUnmount(dispose)
 
   return {
     splineRef,
     isLoaded,
     isLoading,
     error,
-    loadSpline,
-    play,
-    pause,
-    stop,
+    retry,
     dispose,
   }
 }
