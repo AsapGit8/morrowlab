@@ -1,8 +1,6 @@
 <template>
   <div class="wrapper">
-    <PageTransition v-if="showLoadingScreen" @finished="handleLoadingFinished" />
-
-    <div v-show="!showLoadingScreen" class="content-container">
+    <div class="content-container">
       <main class="main">
         <div class="cal-container">
           <div class="cal" id="my-cal-inline"></div>
@@ -17,8 +15,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import PageTransition from "@/components/PageTransition.vue";
+import { onMounted, onUnmounted } from "vue";
 import Footer from "@/components/Footer.vue";
 import Availability from "@/components/Availability.vue";
 
@@ -58,12 +55,7 @@ useHead({
   ]
 });
 
-const showLoadingScreen = ref(true);
 let calScript = null;
-
-const handleLoadingFinished = () => {
-  showLoadingScreen.value = false;
-};
 
 onMounted(() => {
   const isMobile = window.innerWidth <= 768;

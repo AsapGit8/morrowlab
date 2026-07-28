@@ -275,10 +275,6 @@ const handleLoadingFinished = () => {
 const handleProjectClick = (index) => {
   const route = projects[index].route;
 
-  if (import.meta.client) {
-    sessionStorage.setItem('navigatingFromHome', 'true');
-  }
-
   const delay = isMobile.value ? 100 : 0;
 
   setTimeout(() => {
@@ -377,22 +373,24 @@ onMounted(() => {
   }
   setupSceneLazyLoading();
 
-  const isReturning = sessionStorage.getItem('navigatingFromHome') === 'true';
+  // The intro slider is a first-impression animation, so it runs once per
+  // browser session. Every later arrival at `/` — back from a project page,
+  // /services, /contact, or the logo — is handled by the global page fade.
+  const hasSeenIntro = sessionStorage.getItem('hasSeenIntro') === 'true';
 
-  if (isReturning) {
-    sessionStorage.removeItem('navigatingFromHome');
+  if (hasSeenIntro) {
     showLoadingScreen.value = false;
 
+    // `.main-container` ships at opacity 0 so the intro can reveal it. With no
+    // intro to run, just unhide it and let the page transition do the fading.
     nextTick(() => {
       if (mainContent.value) {
-        $gsap.fromTo(
-          mainContent.value,
-          { opacity: 0 },
-          { opacity: 1, duration: 0.5, ease: 'power2.out' }
-        );
+        $gsap.set(mainContent.value, { opacity: 1 });
       }
     });
   } else {
+    sessionStorage.setItem('hasSeenIntro', 'true');
+
     setTimeout(() => {
       if (showLoadingScreen.value && loadingScreenRef.value) {
         const element = loadingScreenRef.value.$el || loadingScreenRef.value;

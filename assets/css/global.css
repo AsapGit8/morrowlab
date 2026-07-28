@@ -19,6 +19,37 @@ body::-webkit-scrollbar {
   display: none; /* Chrome, Safari, and Opera */
 }
 
+/* Page Transition Section
+ *
+ * Backs `app.pageTransition: { name: 'page', mode: 'out-in' }` in nuxt.config.ts.
+ * `out-in` means the two halves run sequentially, so the pair reads as one
+ * ~0.7s crossfade through the page background.
+ *
+ * Opacity only — deliberately no transform. A transform on the page root
+ * creates a containing block, which would break the `position: fixed`
+ * panels the project pages rely on (.left-box, .scroll-down-indicator).
+ */
+
+.page-enter-active {
+  transition: opacity 0.35s cubic-bezier(0.33, 1, 0.68, 1); /* ~power2.out */
+}
+
+.page-leave-active {
+  transition: opacity 0.35s cubic-bezier(0.32, 0, 0.67, 0); /* ~power2.in */
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-active,
+  .page-leave-active {
+    transition-duration: 0.01ms;
+  }
+}
+
 /* Lenis Scroll Section */
 
 html.lenis {

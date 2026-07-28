@@ -2,7 +2,7 @@
   <div>
     <header>
       <nav>
-        <a @click.prevent="handleLogoClick" class="logo" style="cursor: pointer;">morrowlab</a>
+        <NuxtLink to="/" class="logo">morrowlab</NuxtLink>
 
         <ul class="nav-links">
           <li><NuxtLink to="/services" class="services">services</NuxtLink></li>
@@ -11,46 +11,11 @@
       </nav>
     </header>
 
-    <main ref="mainContent">
+    <main>
       <slot />
     </main>
-
-    <div ref="whiteFade" class="white-fade-overlay"></div>
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-import { useNuxtApp } from '#app';
-import { useRouter } from 'vue-router';
-
-const { $gsap } = useNuxtApp();
-const router = useRouter();
-const mainContent = ref(null);
-const whiteFade = ref(null);
-
-const handleLogoClick = () => {
-  if (router.currentRoute.value.path === '/') {
-    return;
-  }
-
-  $gsap.to(whiteFade.value, {
-    opacity: 1,
-    duration: 0.6,
-    ease: 'power2.inOut',
-    onComplete: () => {
-      router.push('/');
-      setTimeout(() => {
-        $gsap.to(whiteFade.value, {
-          opacity: 0,
-          duration: 0.6,
-          ease: 'power2.inOut'
-        });
-      }, 100);
-    }
-  });
-};
-</script>
 
 <style scoped>
 ul {
@@ -111,18 +76,6 @@ nav {
 .contact {
   font-family: 'Geist', sans-serif;
   font-weight: 500;
-}
-
-.white-fade-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: white;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 9998;
 }
 
 @media (max-width: 768px) {

@@ -1,13 +1,6 @@
 <template>
   <div>
-    <PageTransition v-if="showLoadingScreen" @finished="handleLoadingFinished" />
-
-    <!--
-      Hidden with `visibility`, never `display: none`. A collapsed box makes the
-      Spline runtime resize its WebGL render targets to 0x0, which throws
-      GL_INVALID_VALUE / GL_INVALID_FRAMEBUFFER_OPERATION.
-    -->
-    <div class="main-container" :class="{ 'is-hidden': showLoadingScreen }">
+    <div class="main-container">
       <div class="main">
         <div class="left-box">
           <SplineViewer
@@ -206,8 +199,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import PageTransition from "@/components/PageTransition.vue";
+import { onMounted } from "vue";
 import Footer from "@/components/Footer.vue";
 import SplineViewer from "@/components/SplineViewer.vue";
 import gsap from "gsap";
@@ -375,12 +367,6 @@ useHead({
   ]
 });
 
-const showLoadingScreen = ref(true);
-
-const handleLoadingFinished = () => {
-  showLoadingScreen.value = false;
-};
-
 const onSplineLoad = () => {
   console.log('Services Spline viewer loaded successfully');
 };
@@ -517,12 +503,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-/* `visibility` instead of `display: none` so the mounted viewer keeps a layout box */
-.main-container.is-hidden {
-  visibility: hidden;
-  pointer-events: none;
 }
 
 .main {
