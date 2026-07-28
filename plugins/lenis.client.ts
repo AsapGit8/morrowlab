@@ -38,7 +38,13 @@ export default defineNuxtPlugin((nuxtApp) => {
     })
   })
 
-  const resetScroll = () => lenis?.scrollTo(0, { immediate: true })
+  const resetScroll = () => {
+    // A route can opt out when it means to land somewhere other than the top —
+    // see middleware/showcase-transition.global.ts, which sets this when
+    // returning to `/` from a project page.
+    if (nuxtApp.$router.currentRoute.value.meta.scrollToTop === false) return
+    lenis?.scrollTo(0, { immediate: true })
+  }
 
   // `page:transition:finish` never fires for routes that opt out of the page
   // transition (see middleware/showcase-transition.global.ts), so the reset also

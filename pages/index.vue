@@ -25,6 +25,7 @@
       <div class="desktop-layout">
         <section
           v-for="(project, index) in projects"
+          :id="project.slug"
           :key="project.slug"
           class="main"
           :class="index % 2 === 0 ? 'is-text-left' : 'is-text-right'"
@@ -237,7 +238,7 @@ useHead({
   ]
 });
 
-const { $gsap } = useNuxtApp();
+const { $gsap, $lenis } = useNuxtApp();
 
 const showLoadingScreen = ref(true);
 const mainContent = ref(null);
@@ -247,6 +248,11 @@ const mobileContainer = ref(null);
 const mobileText = ref(null);
 const mobileLogoStage = ref(null);
 const currentProjectIndex = ref(0);
+
+// Set by `middleware/showcase-transition.global.ts` when this page is reached
+// from a project page — `/flightpro`, say — so the logo drops the visitor back
+// on the section that opened it rather than at the top of the list.
+const showcaseReturn = useShowcaseReturn();
 
 const currentProject = computed(() => projects[currentProjectIndex.value]);
 
@@ -430,16 +436,45 @@ onMounted(() => {
   checkMobile();
   window.addEventListener('resize', checkMobile);
 
-  // Start the first desktop scene immediately so the hero section is never
-  // waiting on the observer; the rest stream in on scroll.
-  if (!isMobile.value) {
-    sceneReady.value[0] = true;
+  // -1 when the visitor arrived from anywhere but a project page, in which case
+  // the page opens at the top as usual.
+  const returnIndex = projects.findIndex((project) => project.route === showcaseReturn.value);
+  const landingIndex = returnIndex === -1 ? 0 : returnIndex;
+
+  if (isMobile.value) {
+    // No scrolling on mobile — the carousel just starts on that project.
+    currentProjectIndex.value = landingIndex;
+  } else {
+    // Start the landing scene immediately so that section is never waiting on
+    // the observer; the rest stream in on scroll.
+    sceneReady.value[landingIndex] = true;
   }
+
   setupSceneLazyLoading();
 
+  // Placed after the observer is wired, and before the browser paints this
+  // mount, so the section is already in place rather than scrolled to.
+  if (!isMobile.value && returnIndex !== -1) {
+    const section = document.getElementById(projects[returnIndex].slug);
+
+    if (section) {
+      const top = section.getBoundingClientRect().top + window.scrollY;
+      const lenis = $lenis?.();
+
+      // Going through Lenis rather than `window.scrollTo` keeps its internal
+      // target in step; otherwise the next wheel event snaps back to the top.
+      if (lenis) {
+        lenis.scrollTo(top, { immediate: true });
+      } else {
+        window.scrollTo({ top, left: 0, behavior: 'instant' });
+      }
+    }
+  }
+
   // The intro slider is a first-impression animation, so it runs once per
-  // browser session. Every later arrival at `/` — back from a project page,
-  // /services, /contact, or the logo — is handled by the global page fade.
+  // browser session. Every later arrival at `/` just reveals the container:
+  // from /services or /contact through the global page fade, from a project
+  // page as a straight swap onto the section placed above.
   const hasSeenIntro = sessionStorage.getItem('hasSeenIntro') === 'true';
 
   if (hasSeenIntro) {
