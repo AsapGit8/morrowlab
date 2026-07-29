@@ -6,7 +6,7 @@
 
         <ul class="nav-links">
           <li><NuxtLink to="/services" class="services">services</NuxtLink></li>
-          <li><NuxtLink to="/contact" class="contact">book meeting</NuxtLink></li>
+          <li><NuxtLink to="/contact" class="contact">contact</NuxtLink></li>
         </ul>
       </nav>
     </header>

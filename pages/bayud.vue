@@ -5,9 +5,7 @@
     visit-link="https://www.bayudboutiquesiargao.com"
     text-side="left"
   >
-    Bayud Boutique Siargao is a boutique stay on Siargao Island, Philippines. The site pairs an immersive
-    presentation of the property with a direct booking experience — room availability, rates and enquiries
-    handled in a single, unhurried flow that mirrors the pace of the island itself.
+    Bayud Boutique Resort is an exclusive beachfront resort in Siargao that delivers a refined island experience through contemporary design, exceptional hospitality, and breathtaking natural surroundings. Away from the crowds, the resort has become a preferred destination for celebrities and international travelers, offering a tranquil escape that highlights the beauty and charm of island life.
   </ProjectShowcase>
 </template>
 

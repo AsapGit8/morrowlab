@@ -2,7 +2,7 @@
   <div class="availability-container">
     <div class="availability-content">
       <div class="glow-dot"></div>
-      <span class="availability-text">Available for Bookings</span>
+      <span class="availability-text">Available for New Projects</span>
     </div>
   </div>
 </template>
