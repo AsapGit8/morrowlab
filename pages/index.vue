@@ -27,6 +27,7 @@
           v-for="(project, index) in projects"
           :id="project.slug"
           :key="project.slug"
+          :ref="(el) => setSection(el, index)"
           class="main"
           :class="index % 2 === 0 ? 'is-text-left' : 'is-text-right'"
         >
@@ -130,9 +131,15 @@
 </template>
 
 <script setup>
-// No manual Vue or Nuxt imports needed — ref, computed, onMounted,
+// No manual Vue or Nuxt imports needed — ref, computed, watch, onMounted,
 // onBeforeUnmount, nextTick, useNuxtApp, useRuntimeConfig, useSeoMeta,
 // useHead, and navigateTo are all auto-imported by Nuxt 4.x.
+//
+// `lenis/snap` is the one exception: it is a subpath of the `lenis` package
+// already installed for the smooth scroll, not a Nuxt auto-import. Nothing in
+// the module touches `window` until it is constructed, so importing it at the
+// top level is safe during SSR.
+import Snap from 'lenis/snap';
 
 const config = useRuntimeConfig();
 
@@ -274,6 +281,15 @@ const setSplineBox = (el, index) => {
   splineBoxes.value[index] = el;
 };
 
+// The full-viewport `<section>` elements, which are what the desktop scroll
+// snaps to. Collected by index rather than queried, so the order always matches
+// `projects` regardless of how Vue schedules the ref callbacks.
+const sections = ref([]);
+
+const setSection = (el, index) => {
+  sections.value[index] = el;
+};
+
 const onSplineLoad = (name) => {
   console.log(`Spline viewer ${name} loaded successfully`);
 };
@@ -305,6 +321,74 @@ const setupSceneLazyLoading = () => {
 
   splineBoxes.value.forEach((el) => el && sceneObserver.observe(el));
 };
+
+// ---- Desktop section snap ------------------------------------------------
+//
+// Each desktop section is exactly one viewport tall, so the scroll settles on
+// a section boundary instead of leaving two projects half-shown. This is
+// Lenis's own Snap addon rather than a hand-rolled wheel handler or CSS
+// `scroll-snap-type`: the site already scrolls through Lenis, and CSS snapping
+// does not apply to Lenis's programmatic scrolling, so the addon is the only
+// option that shares one scroll engine — no second rAF loop, no `preventDefault`
+// on wheel, no fighting over the scroll position.
+let snap = null;
+let snapFrame = null;
+
+const destroySnap = () => {
+  snap?.destroy();
+  snap = null;
+};
+
+const syncSnap = () => {
+  snapFrame = null;
+
+  // Mobile drives its carousel from its own gesture handler on a page that
+  // does not scroll, and the intro owns the viewport until it finishes.
+  // Reduced motion opts out altogether — the snap is a viewport-length
+  // animated scroll the visitor did not ask for.
+  const wanted = !isMobile.value && !showLoadingScreen.value && !prefersReducedMotion();
+
+  if (!wanted) {
+    destroySnap();
+    return;
+  }
+
+  if (snap) return;
+
+  const lenis = $lenis?.();
+  const elements = sections.value.filter(Boolean);
+  if (!lenis || elements.length === 0) return;
+
+  snap = new Snap(lenis, {
+    // Always settles on the nearest section once the wheel stops, but leaves
+    // the scroll free while it is moving — unlike 'lock', which would allow
+    // only one section per gesture.
+    type: 'mandatory',
+    // Idle time after the last wheel event before the section settles. The
+    // addon defaults to 500ms, which reads as a hang on full-viewport
+    // sections; 250ms still sits clear of trackpad inertia.
+    debounce: 250
+    // `duration`, `easing` and `lerp` are deliberately omitted: `scrollTo`
+    // then falls back to the values in `plugins/lenis.client.ts`, so a snap
+    // travels on exactly the same curve as an ordinary scroll.
+  });
+
+  // Snap positions are measured off the elements at this moment, so this has
+  // to land after the showcase-return scroll in `onMounted` — which the frame
+  // delay in `scheduleSnapSync` guarantees.
+  snap.addElements(elements, { align: 'start' });
+};
+
+// Coalesced onto a frame boundary for two reasons: the sections have to be in
+// the DOM before they can be measured, and `$lenis()` is still null while this
+// page mounts on a cold load — the plugin creates the instance on
+// `app:mounted`, which resolves in microtasks, always before the next frame.
+const scheduleSnapSync = () => {
+  if (snapFrame !== null) return;
+  snapFrame = requestAnimationFrame(syncSnap);
+};
+
+watch([isMobile, showLoadingScreen], scheduleSnapSync);
 
 // Soft first appearance for the mobile logo, layered just behind the container
 // reveal. Desktop has no equivalent because the Spline scene fades itself in.
@@ -455,7 +539,7 @@ onMounted(() => {
   // Placed after the observer is wired, and before the browser paints this
   // mount, so the section is already in place rather than scrolled to.
   if (!isMobile.value && returnIndex !== -1) {
-    const section = document.getElementById(projects[returnIndex].slug);
+    const section = sections.value[returnIndex];
 
     if (section) {
       const top = section.getBoundingClientRect().top + window.scrollY;
@@ -464,6 +548,14 @@ onMounted(() => {
       // Going through Lenis rather than `window.scrollTo` keeps its internal
       // target in step; otherwise the next wheel event snaps back to the top.
       if (lenis) {
+        // `scrollTo` clamps every target to Lenis's cached scroll limit, and
+        // that cache is only refreshed by a ResizeObserver, which has not
+        // fired yet this tick. The project page we just came from never
+        // scrolls — `.media-panel` is the scroller and the page itself is a
+        // single `100dvh` box — so the cached limit is still 0 on arrival and
+        // the target collapses to the top of the page. Recomputing first is
+        // what makes the return land on the right section on desktop.
+        lenis.resize();
         lenis.scrollTo(top, { immediate: true });
       } else {
         window.scrollTo({ top, left: 0, behavior: 'instant' });
@@ -515,12 +607,26 @@ onMounted(() => {
   setTimeout(() => {
     setupMobileScrollHandler();
   }, 1000);
+
+  // The watcher only fires on a *change*, so the mount path starts the snap
+  // explicitly and leaves every later state change to the watcher. Repeat
+  // calls coalesce onto one frame, so this and the intro finishing on the same
+  // tick cannot build two instances.
+  scheduleSnapSync();
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', checkMobile);
   sceneObserver?.disconnect();
   sceneObserver = null;
+
+  // Otherwise a queued sync can build a Snap over detached sections after the
+  // page has navigated away, and its listeners would outlive the page.
+  if (snapFrame !== null) {
+    cancelAnimationFrame(snapFrame);
+    snapFrame = null;
+  }
+  destroySnap();
 
   // Otherwise a mid-flight timeline can run `advanceProject` (and touch refs)
   // after the page has already navigated away.
