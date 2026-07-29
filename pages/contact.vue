@@ -5,7 +5,6 @@
         <div class="contact-grid">
           <!-- Left: intro + direct channels -->
           <section class="intro">
-            <h1>Hello</h1>
             <p class="lead">
               Tell us what you're building. Pick a budget range, edit the
               draft we've written for you, and send it straight to our inbox.
