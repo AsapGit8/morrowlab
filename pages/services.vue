@@ -175,7 +175,7 @@
                   <span class="pricing-service">Web essentials</span>
                 </div>
                 <div class="pricing-row">
-                  <span class="pricing-amount">₱500k+ <span class="dollar-amount">| $5k</span></span>
+                  <span class="pricing-amount">₱500k+ <span class="dollar-amount">| $8k</span></span>
                   <span class="pricing-service">Business Software</span>
                 </div>
                 <div class="pricing-row">
@@ -323,7 +323,7 @@ useHead({
                     description: 'Billing, payroll, booking, and back-office systems built around existing business workflows',
                     offers: {
                       '@type': 'Offer',
-                      price: '300000',
+                      price: '500000',
                       priceCurrency: 'PHP'
                     }
                   }

@@ -202,8 +202,8 @@ const BUDGET_TIERS = [
   {
     id: "advanced-web",
     label: "Advanced web",
-    peso: "₱300k+",
-    usd: "$5k",
+    peso: "₱500k+",
+    usd: "$8k",
     brief:
       "A larger web build — custom functionality, integrations and a design-led front end.",
   },
