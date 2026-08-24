@@ -141,7 +141,7 @@
                 </div>
                 <div class="maintenance-row">
                   <span class="maintenance-service">Payment Model</span>
-                  <span class="maintenance-detail">One-Time Fee</span>
+                  <span class="maintenance-detail">One-Time Fee | 50/50 Split</span>
                 </div>
                 <div class="maintenance-row">
                   <span class="maintenance-service">Monthly/Yearly Fees</span>
