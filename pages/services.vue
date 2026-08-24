@@ -53,11 +53,12 @@
                 <span class="text-line">business systems | POS & inventory management</span>
               </h1>
               <p class="reveal-text">
-                <span class="text-line">We build the systems your business runs on: point of sale,</span>
-                <span class="text-line">inventory and stock control, billing, payroll, booking, and</span>
-                <span class="text-line">back-office dashboards. Each system is shaped around how your</span>
-                <span class="text-line">team actually works, with offline-ready terminals, role-based</span>
-                <span class="text-line">access, and reporting you can act on.</span>
+                <span class="text-line">We build the systems your business runs on, from POS systems</span>
+                <span class="text-line">for restaurants, cafés, and retail stores to inventory and stock</span>
+                <span class="text-line">control, billing, payroll, booking, and back-office dashboards.</span>
+                <span class="text-line">Each system is tailored to how your team actually works, with</span>
+                <span class="text-line">features like offline-ready terminals, role-based access, and</span>
+                <span class="text-line">actionable reporting.</span>
               </p>
             </div>
           </div>
@@ -175,7 +176,7 @@
                 </div>
                 <div class="pricing-row">
                   <span class="pricing-amount">₱300k+ <span class="dollar-amount">| $5k</span></span>
-                  <span class="pricing-service">Advanced web</span>
+                  <span class="pricing-service">Business Software</span>
                 </div>
                 <div class="pricing-row">
                   <span class="pricing-amount">₱800K+ <span class="dollar-amount">| $14k</span></span>
@@ -245,7 +246,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'WebPage',
         '@id': `${config.public.siteUrl}/services#webpage`,
@@ -265,7 +266,7 @@ useHead({
     },
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Service',
         serviceType: 'Software Development',
@@ -318,8 +319,13 @@ useHead({
                   '@type': 'Offer',
                   itemOffered: {
                     '@type': 'Service',
-                    name: 'Business Operations Software',
-                    description: 'Billing, payroll, booking, and back-office systems built around existing business workflows'
+                    name: 'Business Software',
+                    description: 'Billing, payroll, booking, and back-office systems built around existing business workflows',
+                    offers: {
+                      '@type': 'Offer',
+                      price: '300000',
+                      priceCurrency: 'PHP'
+                    }
                   }
                 }
               ]
@@ -337,19 +343,6 @@ useHead({
                     offers: {
                       '@type': 'Offer',
                       price: '90000',
-                      priceCurrency: 'PHP'
-                    }
-                  }
-                },
-                {
-                  '@type': 'Offer',
-                  itemOffered: {
-                    '@type': 'Service',
-                    name: 'Advanced Web',
-                    description: 'Advanced web applications and platforms',
-                    offers: {
-                      '@type': 'Offer',
-                      price: '300000',
                       priceCurrency: 'PHP'
                     }
                   }
