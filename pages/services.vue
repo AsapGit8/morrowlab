@@ -46,6 +46,24 @@
 
           <div class="section section-3">
             <div class="content">
+              <div class="badge-row reveal-text">
+                <span class="text-line"><span class="badge-new">New Service</span></span>
+              </div>
+              <h1 class="reveal-text">
+                <span class="text-line">business systems | POS & inventory management</span>
+              </h1>
+              <p class="reveal-text">
+                <span class="text-line">We build the systems your business runs on: point of sale,</span>
+                <span class="text-line">inventory and stock control, billing, payroll, booking, and</span>
+                <span class="text-line">back-office dashboards. Each system is shaped around how your</span>
+                <span class="text-line">team actually works, with offline-ready terminals, role-based</span>
+                <span class="text-line">access, and reporting you can act on.</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="section section-4">
+            <div class="content">
               <h1 class="reveal-text">
                 <span class="text-line">creative web design & motion</span>
               </h1>
@@ -58,7 +76,7 @@
             </div>
           </div>
 
-          <div class="section section-4">
+          <div class="section section-5">
             <div class="content">
               <h1 class="reveal-text">
                 <span class="text-line">front-end development services</span>
@@ -75,7 +93,7 @@
             </div>
           </div>
 
-          <div class="section section-5">
+          <div class="section section-6">
             <div class="content">
               <h1 class="reveal-text">
                 <span class="text-line">back-end development services</span>
@@ -93,7 +111,7 @@
             </div>
           </div>
 
-          <div class="section section-6">
+          <div class="section section-7">
             <div class="content">
               <h1 class="reveal-text">
                 <span class="text-line">maintenance & support</span>
@@ -103,6 +121,10 @@
                 <div class="maintenance-row">
                   <span class="maintenance-service">Free Maintenance Period</span>
                   <span class="maintenance-detail">2 Years</span>
+                </div>
+                <div class="maintenance-row">
+                  <span class="maintenance-service">Ownership After 2 Years</span>
+                  <span class="maintenance-detail">Yours to Keep Forever</span>
                 </div>
                 <div class="maintenance-row">
                   <span class="maintenance-service">Bug Fixes & Security Patches</span>
@@ -131,12 +153,16 @@
               </div>
 
               <p class="maintenance-note reveal-text">
+                <span class="text-line">When the 2-year maintenance period ends, the software stays yours forever. There are no license renewals, no subscription lock-in, and nothing switches off - you keep running the system exactly as it is. Extended support after that is optional and quoted only if you want it.</span>
+              </p>
+
+              <p class="maintenance-note reveal-text">
                 <span class="text-line">Major feature additions or significant modifications are billed separately. Additional charges apply only when increased user traffic requires scaling your infrastructure beyond the initial scope.</span>
               </p>
             </div>
           </div>
           
-          <div class="section section-7">
+          <div class="section section-8">
             <div class="content">
               <h1 class="reveal-text">
                 <span class="text-line">pricing | base project rates</span>
@@ -208,9 +234,9 @@ const config = useRuntimeConfig();
 
 useSeoMeta({
   title: 'Services',
-  description: 'Full-stack software development, mobile app development for iOS and Android, creative web design, front-end and back-end development services. Modern tech stacks used in Silicon Valley.',
+  description: 'Full-stack software development, mobile app development for iOS and Android, custom business systems such as POS and inventory management, creative web design, front-end and back-end development services. Modern tech stacks used in Silicon Valley.',
   ogTitle: 'Services | MorrowLab Studio',
-  ogDescription: 'Professional software development services including mobile apps, web development, UI/UX design, and full-stack solutions.',
+  ogDescription: 'Professional software development services including mobile apps, POS and inventory systems, web development, UI/UX design, and full-stack solutions.',
   ogImage: 'https://morrowlab.studio/og-image.jpg',
   ogUrl: 'https://morrowlab.studio/services'
 });
@@ -225,7 +251,7 @@ useHead({
         '@id': `${config.public.siteUrl}/services#webpage`,
         url: `${config.public.siteUrl}/services`,
         name: 'Services - MorrowLab Studio',
-        description: 'Full-stack software development, mobile app development, web design, and back-end development services.',
+        description: 'Full-stack software development, mobile app development, business systems such as POS and inventory management, web design, and back-end development services.',
         isPartOf: {
           '@id': `${config.public.siteUrl}/#website`
         },
@@ -264,6 +290,36 @@ useHead({
                     '@type': 'Service',
                     name: 'iOS & Android Development',
                     description: 'Native mobile app development for iOS and Android platforms'
+                  }
+                }
+              ]
+            },
+            {
+              '@type': 'OfferCatalog',
+              name: 'Business Systems',
+              itemListElement: [
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Point of Sale (POS) Systems',
+                    description: 'Custom POS systems with offline-ready terminals, role-based access, and sales reporting'
+                  }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Inventory Management Systems',
+                    description: 'Inventory and stock control systems with real-time tracking and back-office dashboards'
+                  }
+                },
+                {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Business Operations Software',
+                    description: 'Billing, payroll, booking, and back-office systems built around existing business workflows'
                   }
                 }
               ]
@@ -601,13 +657,8 @@ p {
 
 .section-4 {
   background-color: white;
-  padding-right: 40px;
   padding-left: 40px;
-}
-
-.section-4 .content {
-  margin-left: auto;
-  text-align: right;
+  padding-right: 40px;
 }
 
 .section-5 {
@@ -623,11 +674,22 @@ p {
 
 .section-6 {
   background-color: white;
+  padding-right: 40px;
+  padding-left: 40px;
+}
+
+.section-6 .content {
+  margin-left: auto;
+  text-align: right;
+}
+
+.section-7 {
+  background-color: white;
   padding-left: 40px;
   padding-right: 40px;
 }
 
-.section-7 {
+.section-8 {
   background-color: white;
   padding-left: 40px;
   padding-right: 40px;
@@ -648,6 +710,55 @@ p {
 
 .services-list .reveal-text {
   margin-bottom: 0.2em;
+}
+
+.badge-row {
+  padding-bottom: 6px;
+}
+
+.badge-new {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Geist', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.badge-new::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.55) 50%,
+      transparent 65%);
+  transform: translateX(-100%);
+  animation: badge-shine 3.2s ease-in-out infinite;
+}
+
+@keyframes badge-shine {
+  0%,
+  55% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge-new::after {
+    animation: none;
+  }
 }
 
 .maintenance-table {
@@ -868,8 +979,9 @@ p {
   .section-1,
   .section-2,
   .section-3,
-  .section-6,
-  .section-7 {
+  .section-4,
+  .section-7,
+  .section-8 {
     padding-left: 20px;
     padding-right: 0px;
   }
@@ -940,24 +1052,25 @@ p {
   .section-2,
   .section-3,
   .section-4,
-  .section-5 {
+  .section-5,
+  .section-6 {
     padding: 30px 20px;
   }
 
-  .section-6,
-  .section-7 {
+  .section-7,
+  .section-8 {
     padding: 20px 16px;
     align-items: flex-start;
   }
 
-  .section-4 .content,
-  .section-5 .content {
+  .section-5 .content,
+  .section-6 .content {
     text-align: right;
     margin-left: auto;
   }
 
-  .section-6 .content,
-  .section-7 .content {
+  .section-7 .content,
+  .section-8 .content {
     text-align: left;
     margin-left: 0;
     width: 100%;
@@ -968,6 +1081,11 @@ p {
   h2 {
     font-size: 0.9rem;
     padding-bottom: 10px;
+  }
+
+  .badge-new {
+    font-size: 0.6rem;
+    padding: 3px 8px;
   }
 
   h3 {
@@ -985,7 +1103,7 @@ p {
     width: 100%;
   }
 
-  /* Section 6 - Maintenance table */
+  /* Section 7 - Maintenance table */
   .maintenance-table {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -1033,7 +1151,7 @@ p {
     display: inline;
   }
 
-  /* Section 7 - Pricing table */
+  /* Section 8 - Pricing table */
   .pricing-table {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -1143,12 +1261,13 @@ p {
   .section-2,
   .section-3,
   .section-4,
-  .section-5 {
+  .section-5,
+  .section-6 {
     padding: 20px 15px;
   }
 
-  .section-6,
-  .section-7 {
+  .section-7,
+  .section-8 {
     padding: 16px 14px;
   }
 
